@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Gallery Example</title>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			// 扩展API加载完毕后调用onPlusReady回调函数  
+			document.addEventListener("plusready", function() {
+				plus.screen.lockOrientation("portrait-primary");
+				document.getElementById("btn").addEventListener('tap', saveNetPicture("http://img4.imgtn.bdimg.com/it/u=1487602242,2635818034&fm=23&gp=0.jpg"));
+			});
+
+			function saveNetPicture(imgUrl) {
+				console.log('图片地址：' + imgUrl);
+				var suffix = cutImageSuffix(imgUrl);
+				/**
+				 * http://dev.dcloud.net.cn/mui/ui/#dialog
+				 */
+				/**
+				 * 创建下载任务
+				 * http://www.html5plus.org/doc/zh_cn/downloader.html#plus.downloader.createDownload
+				 */
+				var downLoader = plus.downloader.createDownload(imgUrl, {
+					method: 'GET',
+					filename: '_downloads/erweima' + suffix
+				}, function(download, status) {
+					var fileName = download.filename;
+					console.log('文件名:' + fileName);
+					console.log('下载状态：' + status);
+					/**
+					 * 保存至本地相册
+					 * http://www.html5plus.org/doc/zh_cn/gallery.html#plus.gallery.save
+					 */
+					plus.gallery.save(fileName, function() {
+						/**
+						 * 保存后，弹出对话框是否查看；
+						 * http://dev.dcloud.net.cn/mui/ui/#dialog
+						 */
+						mui.toast("二维码保存成功，请到系统相册查看");
+					});
+				});
+				/**
+				 * 开始下载任务
+				 * http://www.html5plus.org/doc/zh_cn/downloader.html#plus.downloader.Download.start
+				 */
+				downLoader.start();
+			}
+			// 截取图片后缀用于重命名图片，防止%E5%85%89%E6%98%8E%E8%A1%8C编码的文件不被系统相册识别；
+			function cutImageSuffix(imageUrl) {
+				var index = imageUrl.lastIndexOf('.');
+				return imageUrl.substring(index);
+			}
+		</script>
+	</head>
+
+	<body>
+
+
+				
+	</body>
+
+</html>

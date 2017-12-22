@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.my-card {
+				margin: 0;
+				border-radius: 0;
+				box-shadow: 0 0.008rem 0.002rem rgba(0, 0, 0, .3);
+				;
+			}
+			
+			.mui-content>.mui-card:first-child {
+				margin-top: 0;
+			}
+			
+			.my-box-new {
+				padding: 0;
+				border-right: 0.02rem solid #DCDCDC;
+				border-bottom: 0.02rem solid #DCDCDC;
+				text-align: center;
+			}
+			
+			.my-image-style {
+				height: 1.6rem;
+			}
+			
+			.my-h-thingname {
+				margin-left: 0.2rem;
+				color: #333333;
+				font-size: 0.28rem;
+				text-align: left;
+			}
+			
+			.my-span-describle {
+				margin-left: 0.2rem;
+				color: #999999;
+				font-size: 0.24rem;
+				text-align: left;
+			}
+			
+			.my-span-price {
+				margin-left: 0.2rem;
+				color: #FB5237;
+				font-size: 0.32rem;
+				text-align: left;
+			}
+		</style>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				var contentbox = document.getElementById("content");
+				var loadingbox = document.getElementById("loading");
+				/*var propList = new Array();*/
+				var giftList = new Array();
+				var totalBeans = 0;
+				getList();
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+
+				document.getElementById('exchangerecord').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'exchangerecord.html',
+						id: 'exchangerecord',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				document.getElementById('withdrawbtn').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'withdraw.html',
+						id: 'withdraw',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				mui('.row').on('tap', '.my-box-new', function(event) {
+					//					alert(this.getAttribute("myid"));
+					mui.openWindow({
+						url: 'commoditydetail.html',
+						id: 'commoditydetail',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							itemId: this.getAttribute("myid"),
+							totalBeans: totalBeans,
+							type: this.getAttribute("myType")
+						}
+					});
+				});
+
+				function getList() {
+					var url = getBaseUrl() + 'person/goods/cashbean?phoneNumber=' + localStorage.phonenumber;
+					console.log(url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log("成功");
+							console.log('data=' + JSON.stringify(data));
+							if(data.status == 'success') {
+								data = data.data;
+								totalBeans = parseInt(data.totalBeans);
+								console.log("dangqian =" + totalBeans);
+								document.getElementById("totalBeans").innerText = data.totalBeans;
+								document.getElementById("money").innerText = (parseFloat(data.totalBeans) / 100.0).toFixed(2);
+
+								/*propList = data.propList;*/
+								giftList = data.giftList;
+								/*var props = document.getElementById("props");
+								var items = "";
+								for(id in propList) {
+									console.log(JSON.stringify(propList[id]));
+									var item =
+										'<div class="col-6 my-box-new" myid="' + propList[id].id + '" myType="0">' +
+										'<img class="my-image-style" src=' + getBaseUrl() + propList[id].icon + ' />' +
+										'<h5 class="my-h-thingname">' + propList[id].title + '</h5>' +
+										'<span class="my-span-describle">' + propList[id].description + '</span><br/>' +
+										'<span class="my-span-price">' + propList[id].integral + '</span><span class="my-span-describle">薪豆</span>' +
+										'</div>'
+									items += item;
+								}
+								props.innerHTML = items;*/
+
+								var items = "";
+								for(id in giftList) {
+									console.log(JSON.stringify(giftList[id]));
+									var time = new Date().getTime();
+									var item =
+										'<div class="col-6 my-box-new" myid="' + giftList[id].id + '" myType="1">' +
+										'<img class="my-image-style" src=' + getBaseUrl() + giftList[id].icon + '?x=' + time + '/>' +
+										'<h5 class="my-h-thingname">' + giftList[id].title + '</h5>' +
+										'<h5 class="my-span-describle">' + giftList[id].instruction + '</h5>' +
+										'<h5 class="my-span-price">' + giftList[id].integral + '<span class="my-span-describle"> 薪豆</span></h5>' +
+										'</div>'
+									items += item;
+								}
+								gifts.innerHTML = items;
+								$("#loading").fadeOut("slow", function() {
+									$("#content").fadeIn("slow");
+								});
+
+								//var beantext = document.getElementById("beantext");
+								//var moneytext = document.getElementById("moneytext");
+								//$("#beantext").slideDown(500);
+								//$("#moneytext").slideDown(500);
+								//$("#props").slideDown(700);
+								//$("#gifts").slideDown(1000);
+
+							} else {
+								$("#loading").fadeOut("slow", function() {
+									mui.toast("数据加载失败");
+								});
+								console.log('获取可兑换列表时出错：' + data.error_code);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+							$("#loading").fadeOut("slow", function() {
+								mui.toast("数据加载失败");
+							});
+						}
+					});
+				}
+				window.addEventListener('loaddata', function(event) {
+					//					console.log('那消息');
+					getList();
+				});
+				/*mui.back=function(){
+					plus.webview.currentWebview().hide();
+					return;
+				}*/
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<a id="exchangerecord" class="mui-pull-right" style="color: #333333;text-align: center;font-size:0.24rem;line-height: 0.88rem;">兑换记录</a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">薪豆兑换</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="spinner" id="loading">
+				<div class="double-bounce1"></div>
+				<div class="double-bounce2"></div>
+			</div>
+			<div id="content" style="display: none;">
+				<div class="mui-card my-card">
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner" style="padding-top: 0.5rem;text-align: center;">
+							<img src="../images/pointexchange.png" style="width: 1.4rem;height: 1.2rem;" />
+							<div style="margin-top: 0.2rem;">
+								<span id='totalBeans' style="color: #fb5237;font-size: 0.5rem;"></span>
+								<span style="color: #999999;font-size: 0.24rem;line-height: 0.36rem;">薪豆</span>
+							</div>
+							<div id='moneytext' style="text-align: center;margin-top: 0.1rem;">
+								<span style="color: #333333;font-size: 0.24rem;line-height: 0.36rem;">账户余额：</span>
+								<span id="money" style="color: #FB5237;font-size:0.24rem;line-height: 0.36rem;"></span>
+								<span style="color: #333333;font-size: 0.24rem;line-height: 0.36rem;">元</span>
+								<span id="withdrawbtn" style="color: #FB5237;padding: 0.02rem 0.16rem;line-height: 0.36rem;border-radius: 0.04rem;border: 0.02rem solid #FB5237;font-size: 0.24rem;">提现</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="mui-card my-card" style="margin-top: 0.4rem;">
+					<div class="mui-card-header" style="">
+						<p style="padding-top: 0.1rem;color: #333333;font-size: 0.36rem;">兑换道具</p>
+					</div>
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner" style="padding: 0;">
+							<div class="row" id="props" style="">
+
+							</div>
+						</div>
+					</div>
+				</div>-->
+				<div class="mui-card my-card" style="margin-top: 0.2rem;">
+					<div class="mui-card-header" style="">
+						<p style="color: #333333;font-size: 0.36rem;line-height: 0.54rem;">礼品兑换</p>
+					</div>
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner" style="padding: 0;">
+							<div id="gifts" class="row" style="border-bottom: 0.02rem solid #DCDCDC;">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+
+		<link rel="stylesheet" href="../css/cropper.css" />
+		<link rel="stylesheet" href="../css/mui.min.css" />
+
+		<script type="text/javascript" src="../js/mui.js"></script>
+		<script type="text/javascript" src="../js/cropper.js"></script>
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<script type="text/javascript">
+			document.addEventListener('plusready', plusReady, false);
+
+			function plusReady() {
+				// 用户侧滑返回时关闭显示的图片
+				var self = plus.webview.currentWebview();
+				//alert(self.name);
+				var image = document.getElementById('image');
+				image.src = self.name;
+				//alert(image.src);
+				var cropper = null;
+				var resImg = null;
+				//在选择或者拍摄完成后跳出裁剪页面并把图片路径传递到此页面
+				//image.src = plus.webview.currentWebview().imgSrc;
+				image.src = self.name;
+				initCropper();
+				document.getElementById("save").addEventListener("tap", getImg);
+				document.getElementById("redo").addEventListener("tap", function() {
+					cropper.rotate(90);
+				});
+				document.getElementById("undo").addEventListener("tap", function() {
+					cropper.rotate(-90);
+				});
+
+				function initCropper() {
+					cropper = new Cropper(image, {
+						aspectRatio: 13 / 8,
+						dragMode: 'move',
+						//					rotatable:true,
+						minCropBoxWidth: 200,
+						minCropBoxHeight: 200,
+						minCanvasWidth: 200,
+						minCanvasHeight: 200,
+						minContainerWidth: 200,
+						minContainerHeight: 200,
+						crop: function(data) {}
+					});
+				}
+
+				function getImg() {
+					resImg = cropper.getCroppedCanvas({
+						width: 390,
+						height: 240
+					}).toDataURL();
+					//裁剪完毕后将新的图片路径传递到需要显示的页面即可显示 结果为base64格式
+					mui.fire(plus.webview.getWebviewById("provideClue"), "idimagedata", {
+						resImg: resImg
+					});
+					mui.back();					
+
+				}
+			}
+		</script>
+		<style>
+			#redo {
+				position: fixed;
+				bottom: 20px;
+				left: 20px;
+				color: white;
+				font-size: 30px;
+				border: 1px solid #FFFFFF;
+			}
+			
+			#undo {
+				color: white;
+				position: fixed;
+				border: 1px solid #FFFFFF;
+				bottom: 20px;
+				right: 20px;
+				font-size: 30px;
+			}
+			html{
+				height: 100%;
+			}
+			body{
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<h1 id="patientId" class="mui-title">截取名片</h1>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;"></a>
+			<a id="save" style="vertical-align: middle;color:#333333;line-height:2.5em;" class="mui-pull-right"><span>保存</span></a>
+		</header>
+		
+		<div style="height: 100%;" class="mui-content">
+			<div style="height: 100%;">
+				<img style="height:100%;" id="image" src="">
+			</div>
+			<button id="redo" type="button" class="mui-btn mui-btn-danger mui-btn-outlined mui-pull-left"><span class="mui-icon mui-icon-redo"></span></button>
+			<button id="undo" type="button" class="mui-btn mui-btn-danger mui-btn-outlined mui-pull-right"><span class="mui-icon mui-icon-undo"></button>
+		</div>
+
+	</body>
+
+</html>

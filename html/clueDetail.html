@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<script src="../js/mui.picker.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<link rel="stylesheet" href="../css/style1.css">
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			
+			html {
+				height: 100%;
+			}
+			
+			body {
+				height: 100%;
+			}
+			
+			input {
+				font-size: 0.31rem;
+				color: #333333;
+			}
+			
+			.my-label-style {
+				font-size: 0.29rem;
+				height: 0.63rem;
+				line-height: 0.63rem;
+				color: #333333;
+				margin-left: 0.2rem;
+			}
+		</style>
+		<style>
+			.my-input {
+				position: absolute;
+				text-align: right;
+				right: 0rem;
+				margin: 0;
+				padding: auto 0.2rem auto auto;
+			}
+			
+			#provide_icon,
+			#register_icon {
+				transform: rotate(-30deg);
+				-ms-transform: rotate(-30deg);
+				/* IE 9 */
+				-moz-transform: rotate(-30deg);
+				/* Firefox */
+				-webkit-transform: rotate(-30deg);
+				-o-transform: rotate(-30deg);
+				/* Safari 和 Chrome */
+				/* Opera */
+			}
+			
+			.mui-input-clear {
+				position: absolute;
+				text-align: right;
+				right: 0.42rem;
+			}
+			
+			.mui-input-group .mui-input-row:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 0.02rem;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.mui-input-row {
+				color: #333333;
+				font-size: 0.31rem;
+				padding: 0;
+				padding-left: 0.2rem;
+				height: 1.04rem !important;
+				line-height: 1.04rem !important;
+				position: relative !important;
+				text-align: left !important;
+			}
+			
+			input {
+				height: 1.04rem !important;
+			}
+			
+			.mui-icon-clear {
+				padding: 0;
+				height: 1.04rem !important;
+				line-height: 0.63rem !important;
+			}
+			
+			.mui-bar-nav~.mui-content{
+            		padding-top: 0.88rem;
+        		}
+		</style>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+
+				var clueid = plus.webview.currentWebview().clueid;
+				var cluetype = plus.webview.currentWebview().cluetype;
+
+				if(cluetype == "销售线索") { //销售线索
+					document.getElementById("providediv").style.display = "block";
+					document.getElementById("registerdiv").style.display = "none";
+				} else { //分享注册
+					document.getElementById("providediv").style.display = "none";
+					document.getElementById("registerdiv").style.display = "block";
+				}
+
+				var url = getBaseUrl() + 'salesleadsmanage/SellClue/clueDetail';
+				mui.ajax(url, {
+					data: {
+						clueid: clueid,
+						clueclass: cluetype
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(data.status == "success") {
+							var data = data.data;
+
+							if(cluetype == '销售线索') {
+								document.getElementById("provide_state").innerHTML = data.cluestate;
+
+								//设置理由
+								if(data.cluestate == '审核驳回') {
+									if(data.reason && data.reason.length > 0) {
+										document.getElementById("provide_reason").innerHTML = data.reason;
+									} else {
+										document.getElementById("provide_reason").innerHTML = '—';
+									}
+								} else {
+									if(data.notes && data.notes.length > 0) {
+										document.getElementById("provide_reason").innerHTML = data.notes;
+									} else {
+										document.getElementById("provide_reason").innerHTML = '—';
+									}
+								}
+
+								switch(data.cluestate) {
+									case "待确认":
+										document.getElementById("provide_icon").className = "mui-icon icon-queren";
+										break;
+									case "跟进中":
+										document.getElementById("provide_icon").className = "mui-icon icon-genjin";
+										break;
+									case "客户无购买意向":
+										document.getElementById("provide_icon").className = "mui-icon icon-wugoumai";
+										break;
+									case "已废弃":
+										document.getElementById("provide_icon").className = "mui-icon icon-feiqi";
+										break;
+									case "审核驳回":
+										document.getElementById("provide_icon").className = "mui-icon icon-shenhe";
+										break;
+									case "成单":
+										document.getElementById("provide_icon").className = "mui-icon icon-chengdan";
+										break;
+								}
+								document.getElementById("provide_time").innerHTML = data.time;
+								setValue(document.getElementById("provide_companyname"), data.companyname);
+								setValue(document.getElementById("provide_area"), data.area);
+								setValue(document.getElementById("provide_industrytype"), data.industrytype);
+								setValue(document.getElementById("provide_peoplecount"), data.peoplecount);
+								setValue(document.getElementById("provide_contactname"), data.contactname);
+								setValue(document.getElementById("provide_position"), data.position);
+								setValue(document.getElementById("provide_phone"), data.phone);
+								setValue(document.getElementById("provide_detail"), data.detail);
+
+								if(data.businesscard != null && data.businesscard != "") {
+									document.getElementById("card").src = data.businesscard;
+									document.getElementById("popcard").src = data.businesscard;
+									document.getElementById("card").style.display = "block";
+								}
+							} else {
+								document.getElementById("register_cluestate").innerHTML = data.cluestate;
+								if(data.cluestate == '审核驳回') {
+									if(data.reason && data.reason.length > 0) {
+										document.getElementById("register_reason").innerHTML = data.reason;
+									} else {
+										document.getElementById("register_reason").innerHTML = '—';
+									}
+								} else {
+									if(data.notes && data.notes.length > 0) {
+										document.getElementById("register_reason").innerHTML = data.notes;
+									} else {
+										document.getElementById("register_reason").innerHTML = '—';
+									}
+								}
+								switch(data.cluestate) {
+									case "待确认":
+										document.getElementById("register_icon").className = "mui-icon icon-queren";
+										break;
+									case "跟进中":
+										document.getElementById("register_icon").className = "mui-icon icon-genjin";
+										break;
+									case "客户无购买意向":
+										document.getElementById("register_icon").className = "mui-icon icon-wugoumai";
+										break;
+									case "已废弃":
+										document.getElementById("register_icon").className = "mui-icon icon-feiqi";
+										break;
+									case "审核驳回":
+										document.getElementById("register_icon").className = "mui-icon icon-shenhe";
+										break;
+									case "成单":
+										document.getElementById("register_icon").className = "mui-icon icon-chengdan";
+										break;
+								}
+
+								if(data.time == null || data.time.length == 0) {
+									data.time = '-';
+								}
+								document.getElementById("register_time").innerHTML = data.time;
+								
+								if(data.companyname == null || data.companyname.length == 0) {
+									data.companyname = '-';
+								}
+								document.getElementById("register_companyname").value = data.companyname;
+								
+								if(data.phone == null || data.phone.length == 0) {
+									data.phone = '-';
+								}
+								document.getElementById("register_phone").value = data.phone;
+								
+								if(data.companystate == null || data.companystate.length == 0) {
+									data.companystate = '-';
+								}
+//								document.getElementById("register_companystate").value = data.companystate;
+							}
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log("error!");
+						console.log(JSON.stringify(xhr) + errorThrown);
+						console.log(type);
+					}
+				});
+
+				function setValue(e, v) {
+					if(v == null || v.length == 0) {
+						v = '-';
+					}
+					if(v != null && v != "") {
+						e.value = v;
+					} else {
+						e.value = "-";
+					}
+				}
+				document.getElementById("card").addEventListener('tap', function() {
+					var screenwidth = $(window).width();
+					var offsetleft = (screenwidth - 275) / 2 + "px";
+					var scrollheight = $(window).scrollTop();
+					var cardoffsettop = $("#card").offset().top;
+					var cardoffsetleft = $("#card").offset().left;
+					//console.log(">>>>>>>>>>>click imagecard" + scrollheight + "---" + cardoffsettop + "--" + cardoffsetleft);
+					$("#popcard").css("top", cardoffsettop - scrollheight + "px");
+					$("#popcard").css("left", cardoffsetleft + "px");
+					$("#popcardbox").fadeIn(100, function() {
+						$("#popcard").css("display", "block");
+						$("#popcard").animate({
+							left: offsetleft,
+							height: '4.17rem',
+							width: '5.73rem',
+							top: '2.08rem'
+						}, 300);
+					});
+				});
+				document.getElementById("popcardbox").addEventListener('tap', function() {
+					var screenwidth = $(window).width();
+					var offsetleft = (screenwidth - 275) / 2 + "px";
+					var scrollheight = $(window).scrollTop();
+					var cardoffsettop = $("#card").offset().top;
+					var cardoffsetleft = $("#card").offset().left;
+					//console.log(">>>>>>>>>>>click imagecard" + scrollheight + "---" + cardoffsettop + "--" + cardoffsetleft);
+					$("#popcard").animate({
+						left: cardoffsetleft + "px",
+						height: '0.83rem',
+						width: '1.15rem',
+						top: cardoffsettop - scrollheight + 'px'
+					}, 300, function() {
+						$("#popcardbox").fadeOut(100);
+					});
+
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<p style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;text-align: center;">线索详情</p>
+		</header>
+
+		<div class="mui-content">
+			<div id="providediv" style="display: block; padding: 0;">
+				<div style="position: relative; background: #ffffff; background: #f7ecda; height: 2.08rem;">
+					<div id="provide_state" style="position: absolute; left:0.42rem; top: 0.31rem; font-size: 0.31rem; color: #B67535;"></div>
+					<div id="provide_reason" style="position: absolute; left: 0.42rem; top:0.75rem; font-size: 0.25rem; color: #B67535;  word-wrap: break-word; word-break: break-all; width: 4.17rem;">—</div>
+					<div id="provide_time" style="position: absolute; left: 0.42rem; top:1.54rem; font-size: 0.25rem; color: #B67535;">—</div>
+					<div id="provide_icon" class="" style="position: absolute; right: 0.52rem; top: 0.42rem; height: 1.25rem; width: 1.25rem; font-size: 1.25rem; color: #B67535;"> </div>
+				</div>
+				<div class="my-label-style">公司信息</div>
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						公司名称
+						<input readonly="true" id="provide_companyname" type="text" class="my-input" placeholder="" />
+					</div>
+					<div class="mui-input-row">
+						所属地区
+						<input id="provide_area" type="text" readonly="true" class="my-input" placeholder="">
+					</div>
+
+					<div class="mui-input-row">
+						所属行业
+						<input id="provide_industrytype" type="text" readonly="true" class="my-input" placeholder="">
+					</div>
+					<div class="mui-input-row">
+						员工数量
+						<input id="provide_peoplecount" readonly="true" type="number" class="my-input" placeholder="">
+					</div>
+				</form>
+				<div class="my-label-style">联系人信息</div>
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						联系人姓名
+						<input id="provide_contactname" type="text" readonly="true" class="my-input" placeholder="">
+					</div>
+					<div class="mui-input-row">
+						联系人职位
+						<input id="provide_position" type="text" readonly="true" class="my-input" placeholder="">
+					</div>
+					<div class="mui-input-row">
+						联系电话
+						<input id="provide_phone" type="number" readonly="true" class="my-input" placeholder="">
+					</div>
+					<div class="mui-input-row" style="position: relative;">
+						名片
+						<img id="card" style="display: none; height: 0.83rem; width: 1.15rem; float: right; margin: 0.1rem 0.21rem;border-radius:0.04rem; border: 0;">
+						<p style="position: absolute; right: 0.42rem; line-height: 1rem; top:0;color: #000000; ">-</p>
+					</div>
+
+				</form>
+				<div class="my-label-style" style="color: #999999; font-size: 0.29rem; height: 0.63rem;">备注</div>
+				<div class="mui-input-row" style="height: 1.67rem !important; padding-left: 0;">
+					<textarea id="provide_detail" placeholder="" readonly="true" style="border-radius: 0; border: none; padding:0.21rem; width:100%; height: 1.67rem; margin: 0; left: 0;"></textarea>
+				</div>
+				<br />
+			</div>
+			<div id="registerdiv" style="display: block;">
+				<div style="position: relative; background: #ffffff; background: #f7ecda; height: 2.08rem;">
+					<div id="register_cluestate" style="position: absolute; left:0.42rem; top: 0.31rem; font-size: 0.31rem; color: #B67535;"></div>
+					<div id="register_reason" style="position: absolute; left: 0.42rem; top:0.75rem; font-size: 0.25rem; color: #B67535;  word-wrap: break-word; word-break: break-all; width: 4.17rem;">—</div>
+					<div id="register_time" style="position: absolute; left: 0.42rem; top:1.54rem; font-size: 0.25rem; color: #B67535;">2017-2-11 12:32</div>
+					<div id="register_icon" style="position: absolute; right: 0.52rem; top: 0.42rem; height: 1.25rem; width: 1.25rem; font-size: 1.25rem; color: #B67535; " class=""> </div>
+				</div>
+				<div class="my-label-style">公司信息</div>
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						公司名称
+						<input id="register_companyname" type="text" class="my-input" readonly="true" placeholder="">
+					</div>
+
+					<div class="mui-input-row">
+						注册人手机号
+						<input id="register_phone" type="text" readonly="true" class="my-input" placeholder="">
+					</div>
+					<div class="mui-input-row" style="display: none;">
+						公司状态
+						<input id="register_companystate" type="text" readonly="true" value="已通过审核" class="my-input" placeholder="">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="popcardbox" style="display: none;position: fixed;top: 0;z-index: 99;height: 100%;width: 100%;background-color: rgba(0,0,0,0.4);">
+			<img id="popcard" src="" style="position: fixed;height: 0.83rem;width: 1.15rem;display: none;border-radius: 0.08rem;" />
+		</div>
+	</body>
+
+</html>

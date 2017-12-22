@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			label {
+				color: #333333;
+			}
+			
+			input {
+				color: #333333;
+			}
+			
+			textarea {
+				color: #333333;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-input-group:after {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-bar-nav~.mui-content{
+	            padding-top: 0.88rem;
+	        }
+	        
+	        .mui-checkbox input[type=checkbox]:before, .mui-radio input[type=radio]:before{
+	        		font-size: 0.3rem;
+	        }
+		</style>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				var content = document.getElementById('content');
+				var name = document.getElementById('name');
+				var phonenumber = document.getElementById('phonenumber');
+				var unname = document.getElementById('unname');
+				var namelabel=document.getElementById("namelabel");
+				var phonenumberlabel=document.getElementById("phonenumberlabel");
+				document.getElementById('submitbutton').addEventListener('tap', function(event) {
+					$("#name").blur();
+					$("#phonenumber").blur();
+					$("#content").blur();
+					var contenttext = content.value;
+					var nametext;
+					var phonenumbertext;
+					var ischecked = unname.checked;
+					console.log(contenttext + ischecked);
+					if(ischecked) {
+						nametext = "";
+						phonenumbertext = "";
+					} else {
+						nametext = name.value;
+						if(nametext.length == 0) {
+							nametext = "1";
+						}
+						phonenumbertext = phonenumber.value;
+						if(!phonenumbertext || phonenumbertext.length == 0) {
+							phonenumbertext = "00000000000";
+						} else {
+							var patton = /^\d{11}$/;
+							if(patton.test(phonenumbertext) == false) {
+								mui.toast("请输入合法的手机号或选择匿名");
+								return;
+							}
+						}
+					}
+					if(contenttext.length == 0 || contenttext == null || Trim(contenttext).length == 0) {
+						mui.toast("请输入反馈内容！");
+					} else if(contenttext.length > 140) {
+						mui.toast("请输入少于140字");
+					} else {
+						//异步提交
+						var mydata = {
+							content: contenttext,
+							name: nametext,
+							phoneNumber: phonenumbertext,
+							anonymity: ischecked ? 1 : 0,
+							randon: Math.random()
+						}
+						console.log(JSON.stringify(mydata));
+						submitContentText(mydata);
+						/*mui.alert('谢谢您的意见，我们会更加努力', '', function() {
+							mui.back();
+						});*/
+						$("#confirm_view").css('display', 'block');
+					}
+				});
+				
+				document.getElementById('confirm_button').addEventListener('tap', function(){
+					$("#confirm_view").css('display', 'none');
+					mui.back();
+				});
+
+				function  Trim(str)          {              
+					return  str.replace(/(^\s*)|(\s*$)/g,  "");     
+				}
+
+				function submitContentText(mydata) {
+					var url = getBaseUrl() + 'person/operation/feedback';
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data: mydata,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					})
+				}
+				document.getElementById('unname').addEventListener('change', function() {
+					if(this.checked) {
+						namelabel.style.color="#999999";
+						name.value = "";
+						phonenumberlabel.style.color="#999999";
+						phonenumber.value = "";
+						name.readOnly=true; 
+						phonenumber.readOnly=true;
+					} else {
+
+						namelabel.style.color="#333333";
+						phonenumberlabel.style.color="#333333";
+						name.readOnly=false;
+						phonenumber.readOnly=false;
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">意见反馈</h1>
+		</header>
+
+		<div class="mui-content" style="background-color: #F8F8F8;">
+			<div class="mui-input-row" style="">
+				<textarea id="content" rows="8" placeholder="反馈意见内容140以内" style="border-radius: 0; border: none;font-size: 0.26rem;line-height: 0.39rem;"></textarea>
+			</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row" style="height: 1rem;padding: 0.3rem;">
+					<label id="namelabel" style="font-size: 0.28rem;line-height: 0.4rem;padding: 0;">姓名</label>
+					<input id="name" type="text" placeholder="未填写" style="height: 0.4rem;font-size: 0.28rem;line-height: 0.4rem;">
+				</div>
+				<div class="mui-input-row" style="height: 1rem;padding: 0.3rem;">
+					<label id="phonenumberlabel" style="font-size: 0.28rem;line-height: 0.4rem;padding: 0;">手机号</label>
+					<input id="phonenumber" type="text" class="mui-input-clear" placeholder="未填写" style="height: 0.4rem;font-size: 0.28rem;line-height: 0.4rem;">
+				</div>
+			</form>
+			<div class="mui-input-row mui-checkbox mui-left">
+				<label style="font-size: 0.28rem;line-height: 0.39rem;">匿名</label>
+				<input id="unname" name="checkbox" value="unname" type="checkbox" style="float: right;height: 0.6rem;line-height: 0.56rem;">
+			</div>
+			<div align="center" style="padding: 0.2rem;">
+				<button id='submitbutton' class="mui-btn mui-btn-grey mui-btn-block" style="background-color:#FB5237;padding: 0.2rem;text-decoration: none;color:#FFFFFF;border: none;font-size: 0.28rem;">提交</button>
+			</div>
+		</div>
+		
+		<div id="confirm_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;display:none; background-color: rgba(0,0,0,0.4);">
+			<div style="position: relative;width: 4.9rem;height: 2.6rem;text-align:center;border-radius: 0.06rem;background: #FFFFFF;margin: 3.6rem auto;">
+				<div style="padding-top:0.9rem;font-size: 0.26rem;color: #333333;">谢谢您的意见，我们会更加努力</div>
+				<button type="button" id="confirm_button" style="margin-top:0.3rem;border:none;width: 1.8rem;height: 0.5rem;border-radius: 0.3rem;background: #FB5237;color: #FFFFFF;font-size: 0.26rem;line-height: 0.26rem;">知道了</button>
+			</div>
+		</div>
+	</body>
+
+</html>

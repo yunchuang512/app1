@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<script src="js/mui.min.js"></script>
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/style1.css" rel="stylesheet">
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/mydefine.css">
+		<script src="js/app.js"></script>
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.class1 {
+				display: block;
+			}
+			
+			a:-webkit-any-link {
+				text-decoration: none;
+			}
+			
+			.mui-bar-tab .mui-tab-item .my-nav-active {
+				color: #FB5237;
+			}
+			
+			.my-tab-icon {
+				margin-left: -5rem;
+			}
+			
+			.my-nav-active {
+				color: #FB5237;
+			}
+			
+			.my-nav-unactive {
+				color: #999999;
+			}
+			
+			.mui-backdrop {
+				position: fixed;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				z-index: 998;
+				background-color: rgba(0, 0, 0, 0.4);
+			}
+			
+			.mui-bar-tab .mui-tab-item .mui-icon {
+				width: 0.45rem;
+				height: 0.45rem;
+				padding: 0;
+			}
+		</style>
+		<script type="text/javascript">
+			localStorage.isPartner = 0; //区分是大C还是小C
+			localStorage.islogin = 0;
+			localStorage.showPartnerResult = 0; //表示是否需要弹窗
+
+			var html = document.getElementsByTagName('html');
+			console.log(html[0].style.fontSize);
+			var htmlFontSize = Number(html[0].style.fontSize.replace("px", ""));
+			if(htmlFontSize > 100) {
+				htmlFontSize = 100;
+			}
+			var topSize = Math.floor(htmlFontSize * 1.08);
+			var topSizePx = topSize + 'px';
+
+			//任务图标
+			var subpages = ['html/homepage.html', 'html/taskpage.html', 'html/fanspage.html', 'html/mypage.html'];
+			var subpage_style = {
+				top: '0',
+				bottom: topSizePx
+			};
+			console.log(subpage_style);
+			aniShow = {};
+			var activeTab;
+
+			function closeMain() {
+				console.log("closemain");
+				mui.back();
+			}
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+
+				if(localStorage.isFirst != 1) {
+					mui.openWindow({
+						url: 'html/guide.html',
+						id: 'guide',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}
+
+				console.log('【设置】设置状态栏颜色');
+				//				plus.navigator.setStatusBarBackground('#fb5237');
+				//				plus.navigator.setStatusBarStyle('UIStatusBarStyleBlackOpaque');
+				//				document.getElementById("mainpagecontent").style.display = "none";
+				document.getElementById("loading").style.display = "block";
+				checkPartner(); //检测合伙人状态，测试阶段，暂定一分钟检测一次;
+
+				var url = getBaseUrl() + 'user/ClientUser/login';
+				console.log("login Url>>>>>>" + url);
+				mui.ajax(url, {
+					data: {
+						cu_phonenumber: localStorage.phonenumber,
+						cu_password: localStorage.password
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						console.log("成功");
+						console.log(JSON.stringify(data));
+						//												alert(JSON.stringify(data));
+						if(data.status == 'success') {
+							//登录成功，跳转到主页，若以后加了安全验证，在此处写jessionId
+							localStorage.userId = data.cu_id;
+							console.log(data.cu_id);
+							localStorage.islogin = "1";
+							//只有已经弹窗且身份是大C，才显示大C页面
+							if(data.marketing_partner == '1' && data.isPop == '1') {
+								localStorage.isPartner = 1;
+							} else {
+								localStorage.isPartner = 0;
+							}
+							mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+							localStorage.blockup = '0';
+							loadPage();
+						} else {
+							localStorage.islogin = "0";
+							switch(parseInt(data.error_code)) {
+								case 1:
+									console.log('该手机号尚未注册哦！');
+									break;
+								case 2:
+									console.log('用户名或密码错误！');
+									break;
+								case 3:
+									console.log('该账号已被停用！');
+									localStorage.blockup = '1';
+									break;
+								default:
+									break;
+							}
+							loadPage();
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(JSON.stringify(xhr));
+						console.log(type);
+						localStorage.islogin = "0";
+						loadPage();
+					}
+				});
+
+				function checkPartner() {
+					var url = getBaseUrl() + 'user/ClientUser/marketingPartner';
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							if(data.status == 'success') {
+								//设置是否需要弹窗，此处应该是唯一能将showPartnerResult赋值成1的地方
+								if(data.type == '1' && data.isPop == '0') {
+									localStorage.showPartnerResult = 1;
+								} else {
+									localStorage.showPartnerResult = 0;
+								}
+								//设置需要展示大C还是小C界面
+								//只有身份是大C且已经弹窗确认时，才展示大C界面
+								if(data.type == '1' && data.isPop == '1') {
+									localStorage.isPartner = 1;
+									//mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+									try {
+										var homepage = plus.webview.getWebviewById('html/homepage.html');
+										mui.fire(homepage, 'initpage', {});
+										var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+										mui.fire(taskpage, 'initpage', {});
+										var mypage = plus.webview.getWebviewById('html/mypage.html');
+										mui.fire(mypage, 'initpage', {});
+									} catch(e) {}
+								} else {
+									localStorage.isPartner = 0;
+									//mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+								}
+							}
+
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+					setTimeout(function() {
+						checkPartner();
+					}, 10000);
+
+				}
+				//存储首页ID
+				localStorage.mainPageId = plus.webview.currentWebview().id;
+				mui.init();
+
+				//创建子页面，首个选项卡页面显示，其它均隐藏；
+				function loadPage() {
+					$("#homeicon").addClass("icon-shouye2");
+					if(localStorage.isPartner == 1) {
+						$("#taskicon").addClass("icon-faxian2");
+					} else {
+						$("#taskicon").addClass("icon-renwu1");
+					}
+					$("#fansicon").addClass("icon-fensi1");
+					$("#myicon").addClass("icon-wode1");
+
+					mui.plusReady(function() {
+						var self = plus.webview.currentWebview();
+						for(var i = 0; i < 4; i++) {
+							var temp = {};
+							var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+							if(i > 0) {
+								sub.hide();
+							} else {
+								temp[subpages[i]] = "true";
+								mui.extend(aniShow, temp);
+							}
+							self.append(sub);
+						}
+						setTimeout(function() {
+							$("#loading").fadeOut("slow", function() {
+								$("#mainpagecontent").fadeIn("normal");
+							});
+						}, 100);
+					});
+
+				}
+
+				var flag = false;
+
+				function callback() {
+					return flag;
+				}
+
+				var mask = mui.createMask(callback); //callback返回false不关闭，返回true关闭
+				//mask.close方法调用调用callback，所以不能在callback里写close,否则会递归调用，导致爆栈
+				window.addEventListener('closeMask', function(event) {
+					flag = true;
+					mask.close();
+					flag = false;
+				});
+
+				window.addEventListener('showMask', function(event) {
+					mask.show();
+				});
+
+				//当前激活选项
+				activeTab = subpages[0];
+				//var title = document.getElementById("title");
+				//选项卡点击事件
+				mui('.mui-bar-tab').on('tap', 'a', function(e) {
+					if(localStorage.showPartnerResult == 1) {
+						var curpage = plus.webview.getWebviewById(activeTab);
+						mui.fire(curpage, 'showPartnerResult', {});
+						setTimeout(function() {
+							mask.show();
+						}, 50); //子页面执行有延时，所以此处延时50ms
+						return;
+					}
+
+					console.log("<<<<<<<<<<<<<<<" + localStorage.isPartner);
+					var hello = plus.webview.all();
+					var targetTab = this.getAttribute('href');
+					if(targetTab == "html/homepage.html") {
+						var homepage = plus.webview.getWebviewById('html/homepage.html');
+						mui.fire(homepage, 'initpage', {});
+
+						$("#homeicon").removeClass("icon-shouye1");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").removeClass("icon-faxian1");
+						} else {
+							$("#taskicon").removeClass("icon-renwu2");
+						}
+						$("#fansicon").removeClass("icon-fensi2");
+						$("#myicon").removeClass("icon-wode2");
+
+						$("#homeicon").addClass("icon-shouye2");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").addClass("icon-faxian2");
+						} else {
+							$("#taskicon").addClass("icon-renwu1");
+						}
+						$("#fansicon").addClass("icon-fensi1");
+						$("#myicon").addClass("icon-wode1");
+
+						$("#homeicon").removeClass("my-nav-unactive");
+						$("#taskicon").removeClass("my-nav-active");
+						$("#fansicon").removeClass("my-nav-active");
+						$("#myicon").removeClass("my-nav-active");
+
+						$("#homeicon").addClass("my-nav-active");
+						$("#taskicon").addClass("my-nav-unactive");
+						$("#fansicon").addClass("my-nav-unactive");
+						$("#myicon").addClass("my-nav-unactive");
+
+						$("#hometext").removeClass("my-nav-unactive");
+						$("#tasktext").removeClass("my-nav-active");
+						$("#fanstext").removeClass("my-nav-active");
+						$("#mytext").removeClass("my-nav-active");
+
+						$("#hometext").addClass("my-nav-active");
+						$("#tasktext").addClass("my-nav-unactive");
+						$("#fanstext").addClass("my-nav-unactive");
+						$("#mytext").addClass("my-nav-unactive");
+					} else if(targetTab == "html/taskpage.html") {
+						var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+						mui.fire(taskpage, 'initpage', {});
+						$("#homeicon").removeClass("icon-shouye2");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").removeClass("icon-faxian2");
+						} else {
+							$("#taskicon").removeClass("icon-renwu1");
+						}
+						$("#fansicon").removeClass("icon-fensi2");
+						$("#myicon").removeClass("icon-wode2");
+
+						$("#homeicon").addClass("icon-shouye1");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").addClass("icon-faxian1");
+						} else {
+							$("#taskicon").addClass("icon-renwu2");
+						}
+						$("#fansicon").addClass("icon-fensi1");
+						$("#myicon").addClass("icon-wode1");
+
+						$("#homeicon").removeClass("my-nav-active");
+						$("#taskicon").removeClass("my-nav-unactive");
+						$("#fansicon").removeClass("my-nav-active");
+						$("#myicon").removeClass("my-nav-active");
+
+						$("#homeicon").addClass("my-nav-unactive");
+						$("#taskicon").addClass("my-nav-active");
+						$("#fansicon").addClass("my-nav-unactive");
+						$("#myicon").addClass("my-nav-unactive");
+
+						$("#hometext").removeClass("my-nav-active");
+						$("#tasktext").removeClass("my-nav-unactive");
+						$("#fanstext").removeClass("my-nav-active");
+						$("#mytext").removeClass("my-nav-active");
+
+						$("#hometext").addClass("my-nav-unactive");
+						$("#tasktext").addClass("my-nav-active");
+						$("#fanstext").addClass("my-nav-unactive");
+						$("#mytext").addClass("my-nav-unactive");
+					} else if(targetTab == "html/fanspage.html") {
+						var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+						mui.fire(fanspage, 'initpage', {});
+
+						$("#homeicon").removeClass("icon-shouye2");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").removeClass("icon-faxian1");
+						} else {
+							$("#taskicon").removeClass("icon-renwu2");
+						}
+						$("#fansicon").removeClass("icon-fensi1");
+						$("#myicon").removeClass("icon-wode2");
+
+						$("#homeicon").addClass("icon-shouye1");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").addClass("icon-faxian2");
+						} else {
+							$("#taskicon").addClass("icon-renwu1");
+						}
+						$("#fansicon").addClass("icon-fensi2");
+						$("#myicon").addClass("icon-wode1");
+
+						$("#homeicon").removeClass("my-nav-active");
+						$("#taskicon").removeClass("my-nav-active");
+						$("#fansicon").removeClass("my-nav-unactive");
+						$("#myicon").removeClass("my-nav-active");
+
+						$("#homeicon").addClass("my-nav-unactive");
+						$("#taskicon").addClass("my-nav-unactive");
+						$("#fansicon").addClass("my-nav-active");
+						$("#myicon").addClass("my-nav-unactive");
+
+						$("#hometext").removeClass("my-nav-active");
+						$("#tasktext").removeClass("my-nav-active");
+						$("#fanstext").removeClass("my-nav-unactive");
+						$("#mytext").removeClass("my-nav-active");
+
+						$("#hometext").addClass("my-nav-unactive");
+						$("#tasktext").addClass("my-nav-unactive");
+						$("#fanstext").addClass("my-nav-active");
+						$("#mytext").addClass("my-nav-unactive");
+					} else if(targetTab == "html/mypage.html") {
+						var mypage = plus.webview.getWebviewById('html/mypage.html');
+						mui.fire(mypage, 'initpage', {});
+
+						$("#homeicon").removeClass("icon-shouye2");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").removeClass("icon-faxian1");
+						} else {
+							$("#taskicon").removeClass("icon-renwu2");
+						}
+						$("#fansicon").removeClass("icon-fensi2");
+						$("#myicon").removeClass("icon-wode1");
+
+						$("#homeicon").addClass("icon-shouye1");
+						if(localStorage.isPartner == 1) {
+							$("#taskicon").addClass("icon-faxian2");
+						} else {
+							$("#taskicon").addClass("icon-renwu1");
+						}
+						$("#fansicon").addClass("icon-fensi1");
+						$("#myicon").addClass("icon-wode2");
+
+						$("#homeicon").removeClass("my-nav-active");
+						$("#taskicon").removeClass("my-nav-active");
+						$("#fansicon").removeClass("my-nav-active");
+						$("#myicon").removeClass("my-nav-unactive");
+
+						$("#homeicon").addClass("my-nav-unactive");
+						$("#taskicon").addClass("my-nav-unactive");
+						$("#fansicon").addClass("my-nav-unactive");
+						$("#myicon").addClass("my-nav-active");
+
+						$("#hometext").removeClass("my-nav-active");
+						$("#tasktext").removeClass("my-nav-active");
+						$("#fanstext").removeClass("my-nav-active");
+						$("#mytext").removeClass("my-nav-unactive");
+
+						$("#hometext").addClass("my-nav-unactive");
+						$("#tasktext").addClass("my-nav-unactive");
+						$("#fanstext").addClass("my-nav-unactive");
+						$("#mytext").addClass("my-nav-active");
+					}
+					$(".my-nav-unactive").css("color", "#999999");
+					if(localStorage.isPartner == 1) {
+						$(".my-nav-active").css("color", "#b67535");
+					} else {
+						$(".my-nav-active").css("color", "#fb5237");
+					}
+					//					console.log('位置1');
+					if(targetTab == activeTab) {
+						//						console.log('位置2');
+						return;
+					}
+					//					console.log('位置3');
+					//alert(this.querySelector('.mui-tab-label').innerHTML);
+					//更换标题
+					//title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+					//显示目标选项卡
+					//若为iOS平台或非首次显示，则直接显示
+					if(mui.os.ios || aniShow[targetTab]) {
+						//						console.log('位置4,tar='+targetTab);
+						plus.webview.show(targetTab);
+					} else {
+						//否则，使用fade-in动画，且保存变量
+						//						console.log('位置5');
+						var temp = {};
+						temp[targetTab] = "true";
+						mui.extend(aniShow, temp);
+						//						console.log('位置6, tar='+targetTab);
+						plus.webview.show(targetTab, "fade-in", 300);
+						//						console.log('位置7');
+					}
+					//隐藏当前;
+					plus.webview.hide(activeTab);
+					//更改当前活跃的选项卡
+					if(targetTab == "html/taskpage.html") {
+						//plus.webview.getWebviewById(targetTab).evalJS("getallTask()");
+					}
+					activeTab = targetTab;
+					//					mui.fire(plus.webview.getWebviewById(targetTab),'initpage', {});
+				});
+				//自定义事件，模拟点击“首页选项卡”
+				/*document.addEventListener('gohome', function() {
+				 var defaultTab = document.getElementById("defaultTab");
+				 //模拟首页点击
+				 mui.trigger(defaultTab, 'tap');
+				 //切换选项卡高亮
+				 var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+				 if(defaultTab !== current) {
+				 current.classList.remove('mui-active');
+				 defaultTab.classList.add('mui-active');
+				 }
+				 });*/
+
+				function moveToHomepage() {
+					if(activeTab == 'html/homepage.html') return;
+					var targetTab = 'html/homepage.html';
+					$("#homeicon").removeClass("icon-shouye1");
+					if(localStorage.isPartner == 1) {
+						$("#taskicon").removeClass("icon-faxian1");
+					} else {
+						$("#taskicon").removeClass("icon-renwu2");
+					}
+					$("#fansicon").removeClass("icon-fensi2");
+					$("#myicon").removeClass("icon-wode2");
+
+					$("#homeicon").addClass("icon-shouye2");
+					if(localStorage.isPartner == 1) {
+						$("#taskicon").addClass("icon-faxian2");
+					} else {
+						$("#taskicon").addClass("icon-renwu1");
+					}
+					$("#fansicon").addClass("icon-fensi1");
+					$("#myicon").addClass("icon-wode1");
+
+					$("#homeicon").removeClass("my-nav-unactive");
+					$("#taskicon").removeClass("my-nav-active");
+					$("#fansicon").removeClass("my-nav-active");
+					$("#myicon").removeClass("my-nav-active");
+
+					$("#homeicon").addClass("my-nav-active");
+					$("#taskicon").addClass("my-nav-unactive");
+					$("#fansicon").addClass("my-nav-unactive");
+					$("#myicon").addClass("my-nav-unactive");
+
+					$("#hometext").removeClass("my-nav-unactive");
+					$("#tasktext").removeClass("my-nav-active");
+					$("#fanstext").removeClass("my-nav-active");
+					$("#mytext").removeClass("my-nav-active");
+
+					$("#hometext").addClass("my-nav-active");
+					$("#tasktext").addClass("my-nav-unactive");
+					$("#fanstext").addClass("my-nav-unactive");
+					$("#mytext").addClass("my-nav-unactive");
+					if(mui.os.ios || aniShow[targetTab]) {
+						plus.webview.show(targetTab);
+					} else {
+						//否则，使用fade-in动画，且保存变量
+						var temp = {};
+						temp[targetTab] = "true";
+						mui.extend(aniShow, temp);
+						plus.webview.show(targetTab, "fade-in", 300);
+					}
+					//隐藏当前;
+					plus.webview.hide(activeTab);
+					//更改当前活跃的选项卡
+					activeTab = targetTab;
+					//mui.fire(plus.webview.getWebviewById(targetTab), 'initpage', {});
+					$(".my-nav-unactive").css("color", "#999999");
+					if(localStorage.isPartner == 1) {
+						$(".my-nav-active").css("color", "#b67535");
+					} else {
+						$(".my-nav-active").css("color", "#fb5237");
+					}
+				}
+
+				function moveToTaskpage() {
+					var targetTab = "html/taskpage.html";
+					$("#homeicon").removeClass("icon-shouye2");
+					if(localStorage.isPartner == 1) {
+						$("#taskicon").removeClass("icon-faxian2");
+					} else {
+						$("#taskicon").removeClass("icon-renwu1");
+					}
+					$("#fansicon").removeClass("icon-fensi2");
+					$("#myicon").removeClass("icon-wode2");
+
+					$("#homeicon").addClass("icon-shouye1");
+					if(localStorage.isPartner == 1) {
+						$("#taskicon").addClass("icon-faxian1");
+					} else {
+						$("#taskicon").addClass("icon-renwu2");
+					}
+					$("#fansicon").addClass("icon-fensi1");
+					$("#myicon").addClass("icon-wode1");
+
+					$("#homeicon").removeClass("my-nav-active");
+					$("#taskicon").removeClass("my-nav-unactive");
+					$("#fansicon").removeClass("my-nav-active");
+					$("#myicon").removeClass("my-nav-active");
+
+					$("#homeicon").addClass("my-nav-unactive");
+					$("#taskicon").addClass("my-nav-active");
+					$("#fansicon").addClass("my-nav-unactive");
+					$("#myicon").addClass("my-nav-unactive");
+
+					$("#hometext").removeClass("my-nav-active");
+					$("#tasktext").removeClass("my-nav-unactive");
+					$("#fanstext").removeClass("my-nav-active");
+					$("#mytext").removeClass("my-nav-active");
+
+					$("#hometext").addClass("my-nav-unactive");
+					$("#tasktext").addClass("my-nav-active");
+					$("#fanstext").addClass("my-nav-unactive");
+					$("#mytext").addClass("my-nav-unactive");
+
+					if(mui.os.ios || aniShow[targetTab]) {
+						plus.webview.show(targetTab);
+					} else {
+						//否则，使用fade-in动画，且保存变量
+						var temp = {};
+						temp[targetTab] = "true";
+						mui.extend(aniShow, temp);
+						plus.webview.show(targetTab, "fade-in", 300);
+					}
+					//隐藏当前;
+					plus.webview.hide(activeTab);
+					//更改当前活跃的选项卡
+					activeTab = targetTab;
+					mui.fire(plus.webview.getWebviewById(targetTab), 'initpage', {});
+					$(".my-nav-unactive").css("color", "#999999");
+					if(localStorage.isPartner == 1) {
+						$(".my-nav-active").css("color", "#b67535");
+					} else {
+						$(".my-nav-active").css("color", "#fb5237");
+					}
+				}
+
+				function moveToFanspage() {
+					var targetTab = "html/fanspage.html";
+					$("#homeicon").removeClass("icon-shouye2");
+					if(localStorage.isPartner == 1) {
+						$("#taskicon").removeClass("icon-faxian1");
+					} else {
+						$("#taskicon").removeClass("icon-renwu2");
+					}
+					$("#fansicon").removeClass("icon-fensi1");
+					$("#myicon").removeClass("icon-wode2");
+
+					$("#homeicon").addClass("icon-shouye1");
+					if(localStorage.isPartner == 1) {
+						$("#taskicon").addClass("icon-faxian2");
+					} else {
+						$("#taskicon").addClass("icon-renwu1");
+					}
+					$("#fansicon").addClass("icon-fensi2");
+					$("#myicon").addClass("icon-wode1");
+
+					$("#homeicon").removeClass("my-nav-active");
+					$("#taskicon").removeClass("my-nav-active");
+					$("#fansicon").removeClass("my-nav-unactive");
+					$("#myicon").removeClass("my-nav-active");
+
+					$("#homeicon").addClass("my-nav-unactive");
+					$("#taskicon").addClass("my-nav-unactive");
+					$("#fansicon").addClass("my-nav-active");
+					$("#myicon").addClass("my-nav-unactive");
+
+					$("#hometext").removeClass("my-nav-active");
+					$("#tasktext").removeClass("my-nav-active");
+					$("#fanstext").removeClass("my-nav-unactive");
+					$("#mytext").removeClass("my-nav-active");
+
+					$("#hometext").addClass("my-nav-unactive");
+					$("#tasktext").addClass("my-nav-unactive");
+					$("#fanstext").addClass("my-nav-active");
+					$("#mytext").addClass("my-nav-unactive");
+
+					if(mui.os.ios || aniShow[targetTab]) {
+						plus.webview.show(targetTab);
+					} else {
+						//否则，使用fade-in动画，且保存变量
+						var temp = {};
+						temp[targetTab] = "true";
+						mui.extend(aniShow, temp);
+						plus.webview.show(targetTab, "fade-in", 300);
+					}
+					//隐藏当前;
+					plus.webview.hide(activeTab);
+					//更改当前活跃的选项卡
+					activeTab = targetTab;
+					mui.fire(plus.webview.getWebviewById(targetTab), 'initpage', {});
+					$(".my-nav-unactive").css("color", "#999999");
+					if(localStorage.isPartner == 1) {
+						$(".my-nav-active").css("color", "#b67535");
+					} else {
+						$(".my-nav-active").css("color", "#fb5237");
+					}
+				}
+				window.addEventListener('moveToTask', function(event) {
+					moveToTaskpage();
+				});
+				window.addEventListener('moveToHome', function(event) {
+					moveToHomepage();
+				});
+				window.addEventListener('moveToFans', function(event) {
+					moveToFanspage();
+				});
+				tasktextbox = document.getElementById("tasktext");
+				window.addEventListener('changetabtext', function(event) {
+					if(localStorage.isPartner == 1) {
+						tasktextbox.innerHTML = "发现"
+						$("#taskicon").removeClass("icon-renwu1");
+						$("#taskicon").addClass("icon-faxian2");
+						$(".my-nav-active").css("color", "#b67535");
+						$(".my-nav-unactive").css("color", "#999999");
+					} else if(localStorage.isPartner == 0) {
+						$("#taskicon").removeClass("icon-faxian2");
+						$("#taskicon").addClass("icon-renwu1");
+						tasktextbox.innerHTML = "任务"
+						$(".my-nav-active").css("color", "#fb5237");
+						$(".my-nav-unactive").css("color", "#999999");
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="mainpagecontent" style="display: block;margin-top: 0.02rem solid #d5d5d5;">
+			<nav class="mui-bar mui-bar-tab" style="background-color:#ffffff">
+				<a class="mui-tab-item" href="html/homepage.html">
+					<span id="homeicon" class="mui-icon my-nav-active" style="font-size: 0.38rem;line-height: 0.62rem;"></span>
+					<span id="hometext" class="mui-tab-label my-nav-active" style="font-size: 0.24rem;line-height: 0.48rem;">首页</span>
+				</a>
+				<a class="mui-tab-item" href="html/taskpage.html">
+					<span id="taskicon" class="mui-icon my-nav-unactive" style="font-size: 0.38rem;line-height: 0.62rem;"></span>
+					<span id="tasktext" class="mui-tab-label my-nav-unactive" style="font-size: 0.24rem;line-height: 0.48rem;">任务</span>
+				</a>
+				<a class="mui-tab-item" href="html/fanspage.html">
+					<span id="fansicon" class="mui-icon my-nav-unactive" style="font-size: 0.38rem;line-height: 0.62rem;"></span>
+					<span id="fanstext" class="mui-tab-label my-nav-unactive" style="font-size: 0.24rem;line-height: 0.48rem;">粉丝</span>
+				</a>
+				<a class="mui-tab-item" href="html/mypage.html">
+					<span id="myicon" class="mui-icon my-nav-unactive" style="font-size: 0.38rem;line-height: 0.62rem;"></span>
+					<span id="mytext" class="mui-tab-label my-nav-unactive" style="font-size: 0.24rem;line-height: 0.48rem;">我的</span>
+				</a>
+			</nav>
+		</div>
+		<div class="spinner" id="loading" style="display: block;">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</body>
+
+</html>

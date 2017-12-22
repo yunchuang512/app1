@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<link rel="stylesheet" href="../css/mydefine.css">
+	<script src="../js/mui.picker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+	<link href="../css/mui.picker.css" rel="stylesheet" />
+	<link href="../css/mui.poppicker.css" rel="stylesheet" />
+	<link rel="stylesheet" href="../css/style1.css">
+	<script src="../js/mui.picker.js"></script>
+	<script src="../js/mui.poppicker.js"></script>
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+	<style>
+		html,
+		body {
+			background-color: #FFFFFF;
+		}
+
+		input {
+			font-size: 0.31rem;
+			color: #333333;
+		}
+
+		.my-label-style {
+			font-size: 0.29rem;
+			color: #333333;
+			padding: 0.1rem;
+			background: #F8F8F8;
+			margin-left: 0;
+			padding-left: 0.42rem;
+		}
+		/*.mui-segmented-control.mui-segmented-control-inverted .mui-control-item {
+        margin:0.63rem;
+        border: 0.04rem solid #032323;
+        background: 0 0;
+    }*/
+
+		.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+			color: #B67535;
+			border-bottom: 0.04rem solid #B67535;
+			background: 0 0;
+		}
+	</style>
+	<style>
+		.mui-input-clear {
+			line-height: 0.6rem!important;
+			position: absolute;
+			text-align: right;
+			right: 0.42rem;
+			margin: 0;
+			padding: 0;
+		}
+
+		.mui-input-row {
+			padding: 0;
+			padding-left: 0.42rem;
+			height: 1rem !important;
+			line-height: 1rem !important;
+			position: relative !important;
+			text-align: left !important;
+			color: #333333;
+			font-size: 0.31rem;
+		}
+
+		.mui-input-group .mui-input-row:after {
+			height: 0.02rem;
+			right: 0;
+			left: 0;
+		}
+
+		.mui-input-group:after {
+			height: 0;
+		}
+
+		.mui-input-group:before {
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			height: 0;
+			content: '';
+			-webkit-transform: scaleY(.5);
+			transform: scaleY(.5);
+			background-color: #c8c7cc;
+		}
+
+		input {
+			height: 1.04rem !important;
+		}
+
+		.mui-icon-clear {
+			padding: 0;
+			height: 0.9rem !important;
+			line-height: 0.9rem !important;
+		}
+
+		.mui-popup-title {
+			font-size: 0.35rem;
+			font-weight: bold;
+			color: #FB5237;
+		}
+
+		.mui-popup-text {
+			font-size: 0.27rem;
+			color: #333333;
+		}
+
+		.mui-popup-button {
+			font-size: 0.27rem;
+			color: #FB5237;
+			/*width: 5.1rem;
+        height:2.71rem;*/
+		}
+
+		#shaungjiantou {
+			transform: rotate(-90deg);
+			-ms-transform: rotate(-90deg);
+			/* IE 9 */
+			-moz-transform: rotate(-90deg);
+			/* Firefox */
+			-webkit-transform: rotate(-90deg);
+			-o-transform: rotate(-90deg);
+			/* Safari 和 Chrome */
+			/* Opera */
+		}
+		}
+	</style>
+	<style>
+		.mui-segmented-control.mui-segmented-control-inverted .mui-control-item {
+			display: inline;
+			background: 0 0;
+			width: 30%;
+			display: block;
+		}
+
+		.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+			color: #b67535;
+			border-bottom: 0.04rem solid #b67535;
+			background: 0 0;
+			width: 50%;
+			display: block;
+		}
+
+		.mui-toast-container {
+			top: 3.33rem !important;
+		}
+
+		.mui-bar-nav~.mui-content {
+			padding-top: 0.88rem;
+		}
+	</style>
+	<script src="../js/app.js"></script>
+	<script type="text/javascript">
+        //注册薪人薪事变量
+        var linkToXinrenxinshi = '';
+        var imagePath = '';
+        var shares = {};
+        document.addEventListener('plusready', function() {
+            plus.screen.lockOrientation("portrait-primary");
+            mui.init({
+                swipeBack: true //启用右滑关闭功能
+            });
+            //----------------------------------------------
+            //邀请注册薪人薪事相关
+            var self = plus.webview.currentWebview();
+            var taskType = self.taskType;
+            var taskId = self.taskId;
+            plus.navigator.closeSplashscreen();
+            plus.share.getServices(function(s) {
+                if(s && s.length > 0) {
+                    for(var i = 0; i < s.length; i++) {
+                        var t = s[i];
+                        shares[t.id] = t;
+                    }
+                }
+            }, function() {
+                console.log("获取分享服务列表失败");
+            });
+            //点击分享注册按钮
+            document.getElementById("share_button").addEventListener('tap', function() {
+                //					alert(JSON.stringify(shares));
+                openShare();
+            });
+            var url = getBaseUrl() + 'task/Share/shareRegister';
+            console.log("任务-邀请注册url:" + url);
+            mui.ajax(url, {
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                timeout: 10000, //超时时间设置为10秒
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function(data) {
+                    console.log(JSON.stringify(data));
+                    if(data.status == "success") {
+                        var data = data.data;
+                        linkToXinrenxinshi = data.inviteLink;
+                        imagePath = getBaseUrl() + data.qrcode;
+                        document.getElementById("link_to_xinrenxinshi").innerHTML = linkToXinrenxinshi;
+                    }
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理；
+                    console.log("error!");
+                    console.log(JSON.stringify(xhr) + errorThrown);
+                    console.log(type);
+                }
+            });
+            document.getElementById("link_to_xinrenxinshi").addEventListener('tap', function() {
+                copyToClip(document.getElementById("link_to_xinrenxinshi").innerHTML);
+                mui.toast('已复制', {
+                    type: 'div'
+                });
+            });
+            //点击“复制"
+            //				document.getElementById("copy_button").addEventListener('tap', function() {
+            //					//					copytoClip函数在app.js中定义
+            //					if(localStorage.islogin == "1") {
+            //						copyToClip(linkToXinrenxinshi);
+            //						mui.toast("复制成功");
+            //					} else {
+            //						openLoginpage2();
+            //					}
+            //				});
+            //				//点击注册名单
+            //				document.getElementById('registerlistid').addEventListener('tap', function() {
+            //					if(localStorage.islogin == "1") {
+            //						mui.openWindow({
+            //							url: "taskregisterlist.html",
+            //							id: "taskregisterlist",
+            //							show: {
+            //								duration: 300
+            //							},
+            //							waiting: {
+            //								autoShow: false
+            //							},
+            //							extras:{
+            //								linkToXinrenxinshi:linkToXinrenxinshi,
+            //								imagePath:imagePath
+            //							}
+            //						});
+            //					} else {
+            //						openLoginpage2();
+            //					}
+            //				});
+            window.addEventListener('share', function(event) {
+                //执行分享
+                var id = event.detail.id;
+                select(id);
+            });
+            window.addEventListener('closeMask', function(event) {
+                //执行分享
+                closeMask();
+            });
+
+            function openShare() {
+                shareWebview();
+            }
+            var sharew;
+            var ws = null;
+            /**
+             *分享窗口
+             */
+            function shareWebview() {
+                ws = plus.webview.currentWebview();
+                if(sharew) { // 避免快速多次点击创建多个窗口
+                    return;
+                }
+                var top = plus.display.resolutionHeight - 145;
+                var href = "tasks/share.html";
+                sharew = plus.webview.create(href, "share.html", {
+                    width: '100%',
+                    height: '245',
+                    top: top,
+                    scrollIndicator: 'none',
+                    scalable: false,
+                    popGesture: 'none'
+                }, {
+                    shareInfo: {
+                        "url": "share",
+                        "title": "测试",
+                        "content": "测试",
+                        "pageSourceId": ws.id
+                    }
+                });
+                sharew.addEventListener("loaded", function() {
+                    sharew.show('slide-in-bottom', 245);
+                }, false);
+                // 显示遮罩层
+                ws.setStyle({
+                    mask: "rgba(0,0,0,0.5)"
+                });
+                // 点击关闭遮罩层
+                ws.addEventListener("maskClick", closeMask, false);
+            }
+
+            function closeMask() {
+                ws.setStyle({
+                    mask: "none"
+                });
+                //避免出现特殊情况，确保分享页面在初始化时关闭
+                if(!sharew) {
+                    sharew = plus.webview.getWebviewById("share.html");
+                }
+                if(sharew) {
+                    sharew.close();
+                    sharew = null;
+                }
+            }
+
+            function select(id) {
+                var msg;
+                var type, s_id, s_ex;
+                switch(id) {
+                    case 'weixin': //微信好友
+                        type = 1;
+                        s_id = 'weixin';
+                        s_ex = 'WXSceneSession';
+                        break;
+                    case 'weixinfriend': //朋友圈
+                        type = 1;
+                        s_id = 'weixin';
+                        s_ex = 'WXSceneTimeline';
+                        break;
+                    case 'qq': //qq
+                        type = 1;
+                        s_id = 'qq';
+                        s_ex = '';
+                        break;
+                    case 'sinaweibo':
+                        type = 1;
+                        s_id = 'sinaweibo';
+                        break;
+                    case 'copy':
+                        type = 0;
+                        break;
+                    case 'save':
+                        type = 2;
+                        break;
+                    default:
+                        break;
+                }
+                if(type == 1) { //分享
+                    var share = shares[s_id];
+                    console.log(JSON.stringify(share));
+                    if(share.authenticated) {
+                        shareMessage(share, s_ex);
+                    } else {
+                        share.authorize(function() {
+                            shareMessage(share, s_ex);
+                        }, function(e) {
+                            if(e.code == -8) mui.alert("客户端未安装");
+                            console.log("认证授权失败：" + e.code + " - " + e.message);
+                        });
+                    }
+                } else if(type == 0) { //保存
+                    copyToClip(linkToXinrenxinshi);
+                    mui.toast("复制链接成功");
+                } else if(type == 2) {
+                    saveNetPicture(imagePath);
+                    console.log(imagePath);
+                    mui.toast("二维码已保存至系统相册");
+                }
+            }
+
+            function shareMessage(share, ex) {
+                var msg = {
+                    extra: {
+                        scene: ex
+                    }
+                };
+                msg.href = linkToXinrenxinshi;
+                console.log(linkToXinrenxinshi);
+                msg.title = localStorage.nickname + "邀请您注册薪人薪事！";
+                msg.content = "薪人薪事，极致好用的人力资源云系统！";
+                msg.thumbs = ["../images/xinrenxinshilogo.png"];
+                share.send(msg, function() {
+                    console.log("分享到\"" + share.description + "\"成功");
+                }, function(e) {
+                    console.log("分享到\"" + share.description + "\"失败: " + e.code + "-" + e.message);
+                });
+            }
+            //-----------------------------------------------
+            var photodata = "";
+            //初始化控件
+            var namebox = document.getElementById('name');
+            var areabox = document.getElementById('area');
+            var typebox = document.getElementById('type');
+            var numberbox = document.getElementById('number');
+            var contactnamebox = document.getElementById('contactname');
+            var positionbox = document.getElementById('position');
+            var phonenumberbox = document.getElementById('phonenumber');
+            var remarkBox = document.getElementById("remark");
+            //地区选择器
+            var cityPicker = new mui.PopPicker({
+                layer: 2
+            });
+            cityPicker.setData(cityData);
+            document.getElementById('area').addEventListener('tap', function(event) {
+                cityPicker.show(function(items) {
+                    var address = (items[0] || {}).text + " " + (items[1] || {}).text;
+                    document.getElementById("area").value = address;
+                    //返回 false 可以阻止选择框的关闭
+                    //return false;
+                });
+            });
+            //行业选择器
+            var eduPicker = new mui.PopPicker();
+            eduPicker.setData([{
+                value: '互联网·游戏·软件',
+                text: '互联网·游戏·软件'
+            }, {
+                value: '电子·通信·硬件',
+                text: '电子·通信·硬件'
+            }, {
+                value: '房地产·建筑·物业',
+                text: '房地产·建筑·物业'
+            }, {
+                value: '金融',
+                text: '金融'
+            }, {
+                value: '消费品',
+                text: '消费品'
+            }, {
+                value: '汽车·机械·制造',
+                text: '汽车·机械·制造'
+            }, {
+                value: '服务·外包·中介',
+                text: '服务·外包·中介'
+            }, {
+                value: '广告·传媒·教育·文化',
+                text: '广告·传媒·教育·文化'
+            }, {
+                value: '交通·贸易·物流',
+                text: '交通·贸易·物流'
+            }, {
+                value: '制药·医疗',
+                text: '制药·医疗'
+            }, {
+                value: '能源·化工·环保',
+                text: '能源·化工·环保'
+            }, {
+                value: '政府·农林牧渔',
+                text: '政府·农林牧渔'
+            }, {
+                value: '其他',
+                text: '其他'
+            }]);
+            document.getElementById('type').addEventListener('tap', function(event) {
+                eduPicker.show(function(items) {
+                    document.getElementById("type").value = items[0].value;
+                });
+            });
+            //提交数据
+            var isSubmitting = false;
+            document.getElementById('submit').addEventListener('tap', function() {
+                //失去焦点收起键盘
+                namebox.blur();
+                areabox.blur();
+                typebox.blur();
+                numberbox.blur();
+                contactnamebox.blur();
+                positionbox.blur();
+                phonenumberbox.blur();
+                remarkBox.blur();
+
+                namebox.readOnly = true;
+                areabox.readOnly = true;
+                typebox.readOnly = true;
+                numberbox.readOnly = true;
+                contactnamebox.readOnly = true;
+                positionbox.readOnly = true;
+                phonenumberbox.readOnly = true;
+                remarkBox.readOnly = true;
+
+                if(checkbox()) {
+                    if(isSubmitting == true) {
+                        return;
+                    }
+                    isSubmitting = true;
+                    //提交数据
+                    var baseUrl = getBaseUrl();
+                    //						var url = baseUrl + 'task/clue/submitclue';
+                    var url = baseUrl + 'salesleadsmanage/SellClue/addClue';
+                    console.log("提交提供线索url:" + url);
+                    mui.ajax(url, {
+                        data: {
+                            phonenumber: localStorage.phonenumber,
+                            companyname: namebox.value,
+                            area: areabox.value,
+                            industrytype: typebox.value,
+                            peoplecount: numberbox.value,
+                            contactname: contactnamebox.value,
+                            position: positionbox.value,
+                            phone: phonenumberbox.value,
+                            detail: remarkBox.value,
+                            contactimg: photodata
+                        },
+                        dataType: 'json', //服务器返回json格式数据
+                        type: 'post', //HTTP请求类型
+                        timeout: 10000, //超时时间设置为10秒；
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        success: function(data) {
+                            console.log(JSON.stringify(data));
+                            if(data.status == 'success') {
+                                var homepage = plus.webview.getWebviewById('html/homepage.html');
+                                mui.fire(homepage, 'initpage', {});
+								/*var btnArray = ['还有线索', '返回'];
+								 mui.confirm('\n我们会尽快审核，审核通过后可以获得' + data.beans + '薪豆\n', '提交成功', btnArray, function(e) {
+								 if(e.index == 0) {
+								 isSubmitting = false;
+								 namebox.value = "";
+								 areabox.value = "";
+								 typebox.value = "";
+								 numberbox.value = "";
+								 contactnamebox.value = "";
+								 positionbox.value = "";
+								 phonenumberbox.value = "";
+								 remarkBox.value = "";
+								 document.getElementById("idcamer").style.display = "block";
+								 document.getElementById("idimage").style.display = "none";
+								 } else {
+								 mui.back();
+								 }
+								 }, 'div');*/
+                                document.getElementById('beans').innerText = data.beans;
+                                $("#confirm_view").css('display', 'block');
+                            }
+                        },
+                        error: function(xhr, type, errorThrown) {
+                            isSubmitting = false;
+                            //异常处理；
+                            console.log("error!");
+                            console.log(JSON.stringify(xhr));
+                            console.log(type);
+                        }
+                    });
+                }
+
+                setTimeout(function() {
+                    namebox.readOnly = false;
+                    areabox.readOnly = false;
+                    typebox.readOnly = false;
+                    numberbox.readOnly = false;
+                    contactnamebox.readOnly = false;
+                    positionbox.readOnly = false;
+                    phonenumberbox.readOnly = false;
+                    remarkBox.readOnly = false;
+                }, 400);
+
+            });
+            document.getElementById('again_button').addEventListener('tap', function() {
+                $("#confirm_view").css('display', 'none');
+
+                namebox.blur();
+                areabox.blur();
+                typebox.blur();
+                numberbox.blur();
+                contactnamebox.blur();
+                positionbox.blur();
+                phonenumberbox.blur();
+                remarkBox.blur();
+
+                namebox.readOnly = true;
+                areabox.readOnly = true;
+                typebox.readOnly = true;
+                numberbox.readOnly = true;
+                contactnamebox.readOnly = true;
+                positionbox.readOnly = true;
+                phonenumberbox.readOnly = true;
+                remarkBox.readOnly = true;
+
+                isSubmitting = false;
+                namebox.value = "";
+                areabox.value = "";
+                typebox.value = "";
+                numberbox.value = "";
+                contactnamebox.value = "";
+                positionbox.value = "";
+                phonenumberbox.value = "";
+                remarkBox.value = "";
+                document.getElementById("idcamer").style.display = "block";
+                document.getElementById("idimage").style.display = "none";
+
+                setTimeout(function() {
+                    namebox.readOnly = false;
+                    areabox.readOnly = false;
+                    typebox.readOnly = false;
+                    numberbox.readOnly = false;
+                    contactnamebox.readOnly = false;
+                    positionbox.readOnly = false;
+                    phonenumberbox.readOnly = false;
+                    remarkBox.readOnly = false;
+                }, 400);
+            });
+            document.getElementById('cancel_button').addEventListener('tap', function() {
+                $("#confirm_view").css('display', 'none');
+                mui.back();
+            });
+            document.getElementById("popcardid").addEventListener('tap', function() {
+                $("input").blur();
+            });
+            //清除焦点
+            areabox.addEventListener('tap', function() {
+                namebox.blur();
+                numberbox.blur();
+                contactnamebox.blur();
+                positionbox.blur();
+                phonenumberbox.blur();
+                remarkBox.blur();
+            });
+            typebox.addEventListener('tap', function() {
+                namebox.blur();
+                numberbox.blur();
+                contactnamebox.blur();
+                positionbox.blur();
+                phonenumberbox.blur();
+                remarkBox.blur();
+            });
+            //检查数据完整性
+            function checkbox() {
+                if(!checkabox(namebox)) {
+                    mui.toast("请填写公司名称");
+                    return false;
+                } else {
+                    var text = namebox.value;
+                    if(text.length < 2 || text.length > 20) {
+                        mui.toast("公司名称应为2-20个字符");
+                        return false;
+                    }
+                }
+                if(!checkabox(areabox)) {
+                    mui.toast("请选择所属地区");
+                    return false;
+                }
+                console.log('num=' + numberbox.innerText);
+                if(checkabox(numberbox)) {
+                    var text = numberbox.value;
+                    console.log(text);
+                    //						var reg = /^\d+$/;
+                    //						if(!reg.test(text) || parseInt(text) <= 0 || parseInt(text) >= 1000000) {
+                    //							mui.toast("请填写正确的员工数量");
+                    //							return false;
+                    //						}
+                }
+                if(!checkabox(contactnamebox)) {
+                    mui.toast("请填写联系人姓名");
+                    return false;
+                } else {
+                    var text = contactnamebox.value;
+                    if(text.length < 2 || text.length > 20) {
+                        mui.toast("姓名应为2-20个字符");
+                        return false;
+                    }
+                }
+                if(!checkabox(phonenumberbox)) {
+                    mui.toast("请填写联系电话");
+                    return false;
+                } else {
+                    var reg = /^\d{11}$/;
+                    if(reg.test(phonenumberbox.value) == false) {
+                        mui.toast("请填写正确的电话");
+                        return false;
+                    }
+                }
+                if(checkabox(remarkBox)) { //备注不为空
+                    var text = remarkBox.value;
+                    if(text.length > 140) {
+                        mui.toast("备注最多140个字符");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            //检查每个控件
+            function checkabox(boxname) {
+                var text = boxname.value;
+                if(text == null || text.length == 0 || Trim(text).length == 0) {
+                    return false;
+                }
+                return true;
+            }
+            //去除空格
+            function Trim(str) {
+                return str.replace(/(^\s*)|(\s*$)/g, "");
+            }
+            //第一次进入规则自动展示
+            var url = getBaseUrl() + "/user/ClientUser/getBigCSingleData?type=1";
+            mui.ajax(url, {
+                dataType: 'json', //服务器返回json格式数据
+                type: 'get', //HTTP请求类型
+                timeout: 10000, //超时时间设置为10秒；
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function(data) {
+                    //						console.log('第一次进入规则么？：' + JSON.stringify(data));
+                    if(data.status == 'success') {
+                        if(data.result == 0) {
+                            $("#pop_rule_view").css('display', 'block');
+                            $("#poprulecontent").css('display', 'block');
+                            var url2 = getBaseUrl() + "/user/ClientUser/setBigCSingleData?type=1";
+                            mui.ajax(url2, {
+                                dataType: 'json', //服务器返回json格式数据
+                                type: 'get', //HTTP请求类型
+                                timeout: 10000, //超时时间设置为10秒；
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function(data) {
+									/*console.log('确认已弹窗：' + JSON.stringify(data));*/
+                                },
+                                error: function(xhr, type, errorThrown) {
+                                    //异常处理；
+                                    console.log(type);
+                                    console.log(JSON.stringify(xhr));
+                                }
+                            });
+                        }
+                    } else {
+                        console.log(data.error_code);
+                    }
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理；
+                    console.log(type);
+                    console.log(JSON.stringify(xhr));
+                }
+            });
+            document.getElementById("rulebutton").addEventListener('tap', function() {
+                $("#introduction").slideDown(500);
+            });
+            document.getElementById("img1").addEventListener('tap', function(event) {
+                mui('#picture').popover('toggle');
+                getImage();
+            });
+            document.getElementById("img2").addEventListener('tap', function(event) {
+                mui('#picture').popover('toggle');
+                galleryImg();
+            });
+
+            function getImage() {
+                var cmr = plus.camera.getCamera();
+                cmr.captureImage(function(path) {
+                    plus.io.resolveLocalFileSystemURL(path, function(entry) {
+                        var localurl = entry.toLocalURL(); //
+                        mui.openWindow({
+                            url: 'cutinfoimage.html',
+                            extras: {
+                                name: localurl
+                            }
+                        })
+                    });
+                });
+            }
+
+            function galleryImg() {
+                // 从相册中选择图片
+                //outSet("从相册中选择图片:");
+                plus.gallery.pick(function(path) {
+                    mui.openWindow({
+                        url: 'cutinfoimage.html',
+                        extras: {
+                            name: path
+                        }
+                    })
+                }, function(e) {
+                    outSet("取消选择图片");
+                }, {
+                    filter: "image"
+                });
+            }
+            window.addEventListener("idimagedata", function(event) {
+                console.log("new image set" + event.detail.resImg);
+                document.getElementById("idimage").src = event.detail.resImg;
+                document.getElementById("idcamer").style.display = "none";
+                document.getElementById("idimage").style.display = "block";
+                photodata = event.detail.resImg;
+            });
+            document.getElementById("rulebutton").addEventListener('tap', function(event) {
+                //让元素失去焦点，以关闭软键盘
+                namebox.blur();
+                areabox.blur();
+                typebox.blur();
+                numberbox.blur();
+                contactnamebox.blur();
+                positionbox.blur();
+                phonenumberbox.blur();
+                remarkBox.blur();
+                $("#pop_rule_view").fadeIn("fast", function() {
+                    $("#poprulecontent").slideDown(300);
+                });
+            });
+            document.getElementById("cancel_rule_button").addEventListener('tap', function(event) {
+                namebox.readOnly = true;
+                areabox.readOnly = true;
+                typebox.readOnly = true;
+                numberbox.readOnly = true;
+                contactnamebox.readOnly = true;
+                positionbox.readOnly = true;
+                phonenumberbox.readOnly = true;
+                remarkBox.readOnly = true;
+                setTimeout(function() {
+                    namebox.readOnly = false;
+                    areabox.readOnly = false;
+                    typebox.readOnly = false;
+                    numberbox.readOnly = false;
+                    contactnamebox.readOnly = false;
+                    positionbox.readOnly = false;
+                    phonenumberbox.readOnly = false;
+                    remarkBox.readOnly = false;
+                }, 500);
+                $("#poprulecontent").slideUp(300, function() {
+                    $("#pop_rule_view").fadeOut("fast");
+                });
+            });
+            document.getElementById("xinrenxinshi_text").addEventListener('tap', function() {
+                plus.runtime.openURL("http://www.xinrenxinshi.com");
+                //					mui.openWindow({
+                //						url: "http://www.xinrenxinshi.com",
+                //						id: "xinrenxinshi.com",
+                //						show: {
+                //							duration: 200
+                //						},
+                //						waiting: {
+                //							autoShow: false
+                //						}
+                //					});
+            });
+
+            var oldback = mui.back;
+            mui.back = function() {
+                if(plus.webview.getWebviewById('xinrenxinshi.com') != null) {
+                    plus.webview.getWebviewById('xinrenxinshi.com').close();
+                    return;
+                } else {
+                    oldback();
+                }
+            };
+
+            document.getElementById("pop_ziliao_view").addEventListener('tap', function(e) {
+                var target = $(e.target);
+                if($(target).is("#pop_ziliao_view, #cancel_ziliao_button")) {
+                    mui.fire(plus.webview.currentWebview().opener(), 'closeMask');
+                    document.getElementById("pop_ziliao_view").style.display = "none";
+                }
+            });
+
+            document.getElementById("ziliao_button").addEventListener('tap', function() {
+                $("#pop_ziliao_view").fadeIn("fast");
+            });
+        });
+	</script>
+</head>
+
+<body>
+<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+	<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">提供销售线索</h1>
+</header>
+<div class="mui-content">
+	<div style="font-weight:bold;position: relative; text-align: center; font-size: 0.27rem; height: 0.83rem; line-height: 0.83rem; padding: 0; margin: 0; color: #B67535; background: #f7ecda;">
+		请选择以下任意方式提供线索
+		<div id="rulebutton" style="position: absolute; width: 0.63rem; height: 0.83rem; background: #efd9b6; top: 0;
+		right: 0.42rem;">
+			<div style="font-size: 0.25rem; padding: 0; line-height: 0.6rem;">规则 </div>
+			<div class="icon-xiajiantou" style="line-height: 0.25rem; padding: 0; font-size: 0.25rem;"></div>
+		</div>
+	</div>
+	<div style="background-color: white; margin: 0; height: 0.83rem;border-bottom: 0.03rem solid #d5d5d5;">
+		<div class="mui-segmented-control mui-segmented-control-inverted">
+			<div style="position: relative; width: 86%; margin:0 auto; height: 0.83rem;">
+				<a id="alltype" style="position: absolute; top: 0; left: 0.42rem; width: 2.08rem;line-height: 0.83rem;font-size: 0.28rem;" class="mui-control-item mui-active" href="#item1">
+					提交线索
+				</a>
+				<a id="allstate" style="position: absolute; right: 0.42rem;
+				width: 2.08rem;line-height: 0.83rem;font-size: 0.28rem;" class="mui-control-item otheritem" href="#item2">
+					邀请注册
+				</a>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div id="item1" class="mui-control-content  mui-active">
+			<div class="my-label-style" style="color: #999999; font-size: 0.29rem; line-height:0.44rem;height:
+			0.63rem;">公司信息</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<div style="position: absolute; display: inline; color: #ff0000; left:0.04rem; font-size: 0.27rem; line-height: 0.96rem;">
+						＊
+					</div>
+					公司名称
+					<input id="name" type="text" class="mui-input-clear" placeholder="必填">
+				</div>
+				<div class="mui-input-row">
+					<div style="position: absolute; display: inline; color: #ff0000; left:0.04rem; font-size: 0.27rem; line-height: 0.96rem;">
+						＊
+					</div>
+					所属地区
+					<input id="area" type="text"  class="mui-input-clear" placeholder="必填">
+				</div>
+				<div class="mui-input-row">
+					所属行业
+					<input id="type" type="text" class="mui-input-clear" placeholder="未填写">
+				</div>
+				<div class="mui-input-row">
+					员工数量
+					<input id="number" type="number" class="mui-input-clear" placeholder="未填写">
+				</div>
+			</form>
+			<div class="my-label-style" style="color: #999999; font-size: 0.29rem; line-height:0.44rem;height: 0.63rem;">联系人信息</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<div style="position: absolute; display: inline; color: #ff0000; left:0.04rem; font-size: 0.27rem; line-height: 0.96rem;">
+						＊
+					</div>
+					联系人姓名
+					<input id="contactname" type="text" class="mui-input-clear" placeholder="必填">
+				</div>
+				<div class="mui-input-row">
+					联系人职位
+					<input id="position" type="text" class="mui-input-clear" placeholder="未填写">
+				</div>
+				<div class="mui-input-row">
+					<div style="position: absolute; display: inline; color: #ff0000; left:0.04rem; font-size: 0.27rem; line-height: 0.96rem;">
+						＊
+					</div>
+					联系电话
+					<input id="phonenumber" type="number" class="mui-input-clear" placeholder="必填">
+				</div>
+				<div class="mui-input-row">
+					联系人名片
+					<a id="popcardid" href="#picture" style="position: absolute; height: 0.83rem;width: 1.15rem; top: 0.1rem; right: 0.63rem;">
+						<img id="idimage" style="position: absolute; height: 0.83rem;width: 1.15rem;border-radius: 0.08rem;" />
+						<div id="idcamer" class="icon-xiangji" style="position: absolute; height: 0.83rem;width: 1.15rem; text-align:center; line-height: 0.83rem; display: block;color: white;background-color: rgba(0,0,0,0.3); font-size: 0.42rem;">
+						</div>
+					</a>
+				</div>
+			</form>
+			<div class="my-label-style" style="color: #999999; font-size: 0.29rem; line-height:0.44rem;height: 0.63rem;">备注</div>
+			<div class="mui-input-row" style="height: 1.67rem !important; padding-left: 0; border-bottom: 0.02rem #D5D5D5 solid;margin-bottom: 0.92rem;">
+				<textarea id="remark" placeholder="范例：这个客户近期正在找合适的人力资源系统，联系时可以告知是我推荐。" style="border-radius: 0; border: none; font-size: 0.29rem; line-height: 0.52rem; padding:0.21rem 0.42rem; width:100%; height: 1.67rem; margin: 0; left: 0;"></textarea>
+			</div>
+			<div style="background-color: #FFFFFF; height: 0.92rem; border-bottom: 0.02rem #D5D5D5 solid;position: fixed;bottom: 0rem;width: 100%;">
+				<div id="submit" style="float: right; height: 0.92rem; line-height: 0.92rem;  width: 2.4rem; margin-bottom: 0;font-size:0.29rem;text-align: center;left:0;background: #39404d; color: #e5ba7d;">
+					提交
+				</div>
+				<div style="padding: 0.08rem 0.42rem; line-height: 0.4rem;">
+					<div style="font-size: 0.29rem; color: #B67535;">
+						通过即获50元，成单还有20%提成
+					</div>
+					<div style="font-size: 0.25rem; color: #999999;">
+						信息越详细越容易通过
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="item2" class="mui-control-content" align="center" style="text-align: center; background: #ffffff; margin-top: 0.21rem;">
+			<div style="text-align: left; margin: 0; padding: 1.15rem 0.42rem 0.63rem 0.42rem; font-size: 0.27rem;line-height:0.44rem;color: #333333;">
+				将注册邀请分享给好友，邀请他们使用
+				<span id="xinrenxinshi_text" style="color: #B67535;" href="http://www.xinrenxinshi.com" target="_blank">
+							薪人薪事hr系统
+						</span>
+				<span id='ziliao_button' style="display: inline-block; background-color: #B67535; width: 0.25rem; height: 0.25rem; vertical-align:middle; border-radius: 0.42rem; text-align: center; line-height: 0.27rem; font-size: 0.23rem; color: #FFFFFF; margin-bottom: 0.06rem;">?</span> 凡是通过您的邀请链接注册的用户，通过审核之后，都将为您带来50元现金。
+			</div>
+			<p style="text-align: left;padding: 0 0.42rem 0.83rem 0.42rem;font-size: 0.31rem;color: #333333;">方式一</p>
+			<button type="button" id="share_button" style="background-color: #39404d; color: #e5ba7d;border-radius: 0.04rem;width: 5.21rem;height: 0.92rem;line-height: 0.92rem;border: none;font-size: 0.29rem;padding: 0;">邀请注册薪人薪事</button>
+			<div style="height: 0.02rem; border-bottom: 0.02rem #D5D5D5 dashed; margin: 1.04rem 0.42rem 0.63rem 0.42rem;"></div>
+			<p style="text-align: left;padding: 0 0.42rem 0.83rem 0.42rem;font-size: 0.31rem;color: #333333;">方式二</p>
+			<div id='link_to_xinrenxinshi' style="margin: 0 0.52rem; padding: 0.21rem; border: 0.02rem #e5ba7d dashed; position: relative; top: 0;word-break:break-all;font-size: 0.29rem;line-height:0.44rem;color: #333333;">http://sso.xinrenxinshi.com/site/register.html?channel=6%code=1OBQ1S</div>
+			<p style="text-align: center; margin-top: 0.21rem;font-size: 0.25rem;color: #999999;">点击复制邀请链接</p>
+		</div>
+	</div>
+</div>
+<div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell">
+			<a id="img1">拍摄图片</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a id="img2">选取现有图片</a>
+		</li>
+	</ul>
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell">
+			<a href="#picture"><b>取消</b></a>
+		</li>
+	</ul>
+</div>
+<div id="pop_rule_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;text-align: center;display:none ;background-color: rgba(0,0,0,0.4);">
+	<div id="poprulecontent" style="display: none;">
+		<img src="../images/guize.png" style="height: 1rem; width: 0.17rem;margin-top: 0;margin-left: 0;" />
+		<div style="position: relative; height: 1rem; width: 6.19rem;  background: #39404d; text-align: center; margin: -0.21rem auto 0 auto; border-radius: 0.21rem 0.21rem 0 0; color: #e5ba7d; font-size: 0.29rem; line-height: 1rem;">
+			<b>亲爱的合伙人，欢迎您挑战营销任务！</b>
+		</div>
+		<div style="height: 0.04rem; width: 6.19rem; background: #e5ba7d; text-align: center; margin: 0 auto; border-radius: 0 0 0 0; color: #e5ba7d; font-size: 0.29rem;">
+		</div>
+		<div style="position: relative;  width: 6.19rem; background: #FFFFFF; text-align: center; margin: 0 auto; border-radius: 0 0 0.21rem 0.21rem; color: #e5ba7d; font-size: 0.25rem; padding: 0.4rem 0.21rem; ">
+			<p style="line-height: 0.3rem;font-size: 0.25rem; color: #333333; margin-bottom: 0;">
+				提供线索有两种方式：直接提交和邀请客户注册。</p>
+			<p style="line-height: 0.3rem; margin-top: 0.13rem;padding-top: 0; font-size: 0.25rem; color:
+					#333333; text-align: left;">&nbsp;&nbsp;<span style="color: #ff0000;font-size: 0.28rem;">&sdot;</span>&nbsp;&nbsp;
+				直接提交线索，是指您直接提供客户信息，我们核实并审核通过后，成为您的有效线索。适用于您提交已有资源或熟人信息。</p>
+			<p style="line-height: 0.34rem;margin-top: 0.13rem;padding-top: 0; font-size: 0.25rem; color:
+					#333333; text-align: left;">&nbsp;&nbsp;<span style="color: #ff0000;font-size: 0.28rem;">&sdot;</span>&nbsp;&nbsp;邀请用户注册，是指您邀请用户注册薪人薪事，所有通过您的邀请链接注册成功并通过审核的客户，都成为您的有效线索。适用于通过运营推广吸引有效客户注册，得到有效的线索客户。</p>
+			<p style="line-height: 0.34rem;margin-top: 0.13rem;padding-top: 0; font-size: 0.25rem; color:
+					#B67535; text-align: center;">无论哪种方式，您都可以获得50元线索奖励！</p>
+			<p style="line-height: 0.34rem;margin-top: 0.13rem;padding-top: 0; font-size: 0.25rem; color:
+					#333333; text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;后续您不必再投入任何精力，所提交或邀请的客户，一旦采购了薪人薪事系统，您都可以获得额外合同金额20%的分红奖励，客户付款后我们会在10个工作日内发放奖励！比如，签单金额为5万元，分红比例为20%，则您可以获得1万元的分红奖励。（ps：如果客户分期付款，奖励也会分批发放）</p>
+			<p style="line-height: 0.34rem;margin-top: 0.13rem;padding-top: 0; font-size: 0.25rem; color:
+					#333333; text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;我们确保销售流程的专业，不会对您所提供的线索造成不必要打扰。</p>
+			<div id='cancel_rule_button' style="position: relative; height: 0.63rem; line-height: 0.63rem; width: 2.29rem;  background: #39404d; text-align: center; margin: 0 auto; border-radius: 0.63rem; color: #e5ba7d; font-size: 0.27rem;">
+				<span id="shaungjiantou" class="mui-icon icon-shuagnjiantou" style="font-size:0.27rem;"></span>&nbsp;&nbsp;收起规则
+			</div>
+		</div>
+
+	</div>
+</div>
+<div id="confirm_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;display:none; background-color: rgba(0,0,0,0.4);">
+	<div style="position: relative;width: 5.1rem;height: 2.71rem;text-align:center;border-radius: 0.06rem;background: #FFFFFF;margin: 3.33rem auto;">
+		<div style="padding-top: 0.42rem;font-size: 0.27rem;color: #333333;font-weight: bold;">提交成功</div>
+		<div style="font-size: 0.27rem;color: #333333;padding: 0.1rem 0.42rem;">我们会尽快审核，审核通过后可以获得<span id="beans">200</span>薪豆</div>
+		<button type="button" id="again_button" style="margin-top:0.1rem;border:none;width: 1.88rem;height: 0.52rem;border-radius: 0.31rem;background: #39404d;color: #e5ba7d;font-size: 0.27rem;line-height: 0.27rem;">还有线索</button>
+		<button type="button" id="cancel_button" style="margin-top:0.1rem;border:none;width: 1.88rem;height: 0.52rem;border-radius: 0.31rem;background: #D5D5D5;color: #FFFFFF;font-size: 0.27rem;line-height: 0.27rem;">返回</button>
+	</div>
+</div>
+<div id="pop_ziliao_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;text-align: center;display:none; background-color: rgba(0,0,0,0.4);">
+	<div style="position: relative; height: 1.04rem; width: 5rem;  background: #39404d; text-align: center; margin: 2.92rem auto 0 auto; border-radius: 0.1rem 0.1rem 0rem 0rem; color: #FFFFFF; font-size: 0.29rem; padding-top: 0.38rem;">
+		薪人薪事资料领取
+	</div>
+	<div style="position: relative; height: 3.68rem; width: 5rem; background: #FFFFFF;  margin: 0 auto; border-radius: 0rem 0rem 0.1rem 0.1rem; color: #e5ba7d; font-size: 0.25rem; padding: 0.1rem ">
+		<p style="line-height: 0.33rem; margin: 0.27rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem;">1.打开微信</p>
+		<p style="line-height: 0.33rem; margin: 0.19rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem;">2.搜索“企赚宝”并关注</p>
+		<p style="line-height: 0.33rem; margin: 0.19rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem;">3.在如何赚钱-领取资料中领取资料</p>
+		<p style="line-height: 0.33rem; margin: 0.19rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem; line-height: 0.38rem;">4.通过资料，您可以更好的了解薪人薪 <br /> &nbsp;&nbsp;&nbsp;事，并推荐和介绍给朋友。</p>
+		<div id='cancel_ziliao_button' style="position: relative; height: 0.52rem; line-height: 0.52rem; width: 2.5rem;  background: #39404d; text-align: center; margin: 0.3rem auto 0 auto; border-radius: 0.63rem; color: #e5ba7d; font-size: 0.27rem;">
+			我知道了
+		</div>
+	</div>
+</div>
+</body>
+
+</html>

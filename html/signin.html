@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<!--<meta name="viewport" content="width=320,maximum-scale=2.5,user-scalable=no">-->
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">-->
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/jquery.rotate.min.js"></script>
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<link rel="stylesheet" href="../css/mydefine.css">
+	<link rel="stylesheet" href="../css/style1.css">
+
+	<style>
+		html {
+			background: #FB5237;
+		}
+
+		p {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+	<style>
+		.liu-card {
+			background-color: #fff9e1;
+			height: 2.6rem;
+			margin: 0.3rem;
+		}
+
+		.liu-container {
+			position: relative;
+			background-color: #FFFFFF;
+			margin: 0.2rem;
+			height: 1.2rem;
+			border-radius: 0.04rem;
+		}
+
+		.liu-image {
+			float: left;
+			width: 1rem;
+			height: 0.8rem;
+			margin-left: 0.2rem;
+			margin-top: 0.2rem;
+		}
+
+		/*.mui-popup-title {
+            font-size: 0.35rem;
+            font-weight: bold;
+            color: #FB5237;
+        }
+        .mui-popup-text {
+            font-size: 0.27rem;
+            color: #333333;
+        }
+        .mui-popup-button {
+            font-size: 0.27rem;
+            color: #FB5237;
+        }*/
+		.mui-popup-button {
+			color: #FB5237;
+			font-size: 0.31rem;
+			height: 0.83rem;
+		}
+		.mui-popup-text {
+			padding: 0.21rem;
+			color: #333333;
+			font-size: 0.31rem;
+		}
+		.mui-bar-nav~.mui-content{
+			padding-top: 0.88rem;
+		}
+	</style>
+	<script src="../js/app.js"></script>
+	<script type="text/javascript">
+        //			console.log(document.documentElement);
+        //			var sw = window.innerWidth;
+        //			var sh = window.innerHeight;
+        //			var sca = parseFloat(sw) / 325.0;
+        //			var x = sca;
+        //			//alert('x='+x);
+        //			alert(document.documentElement.clientWidth+ ' '+ sw);
+        //
+        //			document.write('<meta name="viewport" content="width=325,maximum-scale=' + sca + 'user-scalable=no">');
+        var award = '';
+        var angle = 1800;
+        var buttonClickable = true;
+        var task_id = -1;
+        var task_link = '';
+        var myBeans = 0;
+        var isfirsttime = true;
+        var issecondtime = false;
+        var firstTask = '';
+        var tasktype='阅读';
+        var articleId = -1;
+		var articleLink = '';
+        document.addEventListener('plusready', function() {
+            plus.screen.lockOrientation("portrait-primary");
+            firstTask = plus.webview.currentWebview().firstTask;
+            console.log(JSON.stringify(firstTask));
+            mui.init({
+                swipeBack: true //启用右滑关闭功能
+            });
+            function signinInit() {
+                getTotalBens();
+                getSpecifiedTask('阅读');
+            }
+            signinInit();
+            document.getElementById('signinbutton').addEventListener('tap', function(event) {
+                if(buttonClickable == false) {
+                    //防止重复点击
+                    return;
+                }
+
+                if (issecondtime) {
+                    mui.confirm('抽奖需要消耗10薪豆', ' ', ['不抽了','继续抽奖'], function(e) {
+                        if(e.index == 1) {
+                            //继续抽奖
+                            if(myBeans < 10) {
+								/*mui.alert("抱歉，薪豆不足", " ", "去做任务", function() {
+								 plus.webview.getWebviewById(localStorage.mainPageId).evalJS("moveToTaskpage()");
+								 mui.back();
+								 }, 'div');*/
+                                $("#notenough_view").css('display', 'block');
+                                return;
+                            }
+                            if(!isfirsttime) //不是第一次签到，就消耗10薪豆
+                            {
+                                myBeans -= 10;
+                                document.getElementById("beans").innerText = '薪豆：' + myBeans; //实时扣除10薪豆
+                                myBeans += 10;
+								/*mui.toast('-10', {duration:'long',type:'div'});*/
+                                $("#toast").css("display", "block");
+                                setTimeout(function() {
+                                    $("#toast").css("display", "none");
+                                }, 2000);
+                            }
+
+                            buttonClickable = false;
+                            award = '';
+                            angle = 0;
+                            getRaffle();
+                            if(award != '' && angle != 0) {
+                                document.getElementById("signinbutton").innerHTML = '抽奖中……';
+                                document.getElementById("signinbutton").style.backgroundImage = "url(../images/signin_button_pushed.png)";
+                                $("#signimage").rotate({
+                                    angle: 0,
+                                    animateTo: angle,
+                                    callback: function() {
+                                        document.getElementById('award').innerText = award;
+                                        $("#zhongjiangla").css('display', 'block');
+										/*mui.alert("恭喜您获得了" + award, "中奖啦", '我知道了', function(){}, 'div');*/
+                                        document.getElementById("signinbutton").innerHTML = '抽奖';
+                                        document.getElementById("signinbutton").style.backgroundImage = "url(../images/signin_button.png)";
+                                        buttonClickable = true;
+                                        getTotalBens();
+                                        var homepage = plus.webview.getWebviewById('html/homepage.html');
+                                        mui.fire(homepage, 'initpage', {});
+                                        var mypage = plus.webview.getWebviewById('html/mypage.html');
+                                        mui.fire(mypage, 'initpage', {});
+                                    },
+                                    duration: 10000
+                                });
+                            } else {
+                                mui.toast("网络连接出错，请稍后再试");
+                            }
+                            var url = getBaseUrl() + '/index/Indexinfo/signPopup';
+                            mui.ajax(url, {
+                                data: {ispop: '1'},
+                                dataType: 'json', //服务器返回json格式数据
+                                type: 'post', //HTTP请求类型
+                                async: false,
+                                timeout: 10000, //超时时间设置为10秒；
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function(data) {
+                                    console.log(JSON.stringify(data));
+                                },
+                                error: function(xhr, type, errorThrown) {
+                                    //异常处理；
+                                    console.log(JSON.stringify(xhr));
+                                    console.log(type);
+                                }
+                            });
+                            return;
+                        }
+                        else {
+                            //不抽了
+                            var url = getBaseUrl() + '/index/Indexinfo/signPopup';
+                            mui.ajax(url, {
+                                data: {ispop: 1},
+                                dataType: 'json', //服务器返回json格式数据
+                                type: 'post', //HTTP请求类型
+                                async: false,
+                                timeout: 10000, //超时时间设置为10秒；
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                success: function(data) {
+                                    console.log(JSON.stringify(data));
+                                },
+                                error: function(xhr, type, errorThrown) {
+                                    //异常处理；
+                                    console.log(JSON.stringify(xhr));
+                                    console.log(type);
+                                }
+                            });
+                            issecondtime = false;
+                            return;
+                        }
+
+                    }, 'div');
+
+                }
+                else {
+                    if(!isfirsttime && myBeans < 10) {
+						/*mui.alert("抱歉，薪豆不足", " ", "去做任务", function() {
+						 plus.webview.getWebviewById(localStorage.mainPageId).evalJS("moveToTaskpage()");
+						 mui.back();
+						 }, 'div');*/
+                        $("#notenough_view").css('display', 'block');
+                        return;
+                    }
+                    if(!isfirsttime) //不是第一次签到，就消耗10薪豆
+                    {
+                        myBeans -= 10;
+                        document.getElementById("beans").innerText = '薪豆：' + myBeans; //实时扣除10薪豆
+                        myBeans += 10;
+						/*mui.toast('-10', {duration:'long',type:'div'});*/
+                        $("#toast").css("display", "block");
+                        setTimeout(function() {
+                            $("#toast").css("display", "none");
+                        }, 2000);
+                    }
+
+                    buttonClickable = false;
+                    award = '';
+                    angle = 0;
+                    getRaffle();
+                    if(award != '' && angle != 0) {
+                        document.getElementById("signinbutton").innerHTML = '抽奖中……';
+                        document.getElementById("signinbutton").style.backgroundImage = "url(../images/signin_button_pushed.png)";
+                        $("#signimage").rotate({
+                            angle: 0,
+                            animateTo: angle,
+                            callback: function() {
+								/*mui.alert("恭喜您获得了" + award, "中奖啦", '我知道了', function(){}, 'div');*/
+                                document.getElementById('award').innerText = award;
+                                $("#zhongjiangla").css('display', 'block');
+                                document.getElementById("signinbutton").innerHTML = '抽奖';
+                                document.getElementById("signinbutton").style.backgroundImage = "url(../images/signin_button.png)";
+                                buttonClickable = true;
+                                getTotalBens();
+                                var homepage = plus.webview.getWebviewById('html/homepage.html');
+                                mui.fire(homepage, 'initpage', {});
+                                var mypage = plus.webview.getWebviewById('html/mypage.html');
+                                mui.fire(mypage, 'initpage', {});
+                            },
+                            duration: 10000
+                        });
+                    } else {
+                        mui.toast("网络连接出错，请稍后再试");
+                    }
+                }
+
+            });
+
+            document.getElementById('go_button').addEventListener('tap', function(){
+                $("#notenough_view").css('display', 'none');
+                mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'moveToTask', {});
+                mui.back();
+            });
+
+            document.getElementById('confirm_button').addEventListener('tap', function(){
+                $("#zhongjiangla").css('display', 'none');
+            });
+
+            document.getElementById("taskview").addEventListener('tap', function() {
+                if(buttonClickable == false) {
+                    return;
+                }
+               if(localStorage.islogin=="1"){
+					mui.openWindow({
+						url: 'tasks/task_reading.html',
+						id: 'readingPage',
+						show: {
+							duration: 300
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							taskId: task_id,
+							articleLink: articleLink
+						}
+					});}else{
+						openLoginpage2();
+					}
+				/*var targetUrl = '';
+				 var targetId = '';
+				 switch(tasktype) {
+				 case "新手":
+				 if(task_id == '1') {
+				 //新手转发
+				 targetUrl = 'tasks/taskshare.html';
+				 targetId = 'sharehomepage';
+				 } else {
+				 //新手问卷
+				 targetUrl = 'tasks/task_questionnaire_homepage.html';
+				 targetId = 'questionnairehomepage';
+				 }
+				 break;
+				 case "阅读":
+				 targetUrl = 'tasks/taskReadingHomepage.html';
+				 targetId = 'readinghomepage';
+				 break;
+				 case "分享":
+				 targetUrl = 'tasks/taskshare.html';
+				 targetId = 'sharehomepage';
+				 break;
+				 case "问卷":
+				 targetUrl = 'tasks/task_questionnaire_homepage.html';
+				 targetId = 'questionnairehomepage';
+				 break;
+				 case "答题":
+				 targetUrl = 'tasks/task_problem_homepage.html';
+				 targetId = 'problemhomepage';
+				 break;
+				 case "邀请粉丝":
+				 targetUrl = 'tasks/task_invitefans.html';
+				 targetId = 'invitefanshomepage';
+				 break;
+				 case "分享注册":
+				 targetUrl = 'tasks/task_invite_to_register_xinrenxinshi.html';
+				 targetId = 'invitefanshomepage';
+				 break;
+				 case "提供线索":
+				 targetUrl = 'tasks/taskprovideclue.html';
+				 targetId = 'providecluehomepage';
+				 break;
+				 case "销售产品":
+				 targetUrl = 'tasks/taskclient.html';
+				 targetId = 'clienthomepage';
+				 break;
+				 case "邀请注册":
+				 targetUrl = 'tasks/task_invite_to_register_xinrenxinshi.html';
+				 targetId = 'task_invite_to_register_xinrenxinshi';
+				 break;
+				 default:
+				 break;
+				 }
+				 mui.openWindow({
+				 url: targetUrl,
+				 id: targetId,
+				 show: {
+				 duration: 200
+				 },
+				 waiting: {
+				 autoShow: false
+				 },
+				 extras: {
+				 taskId: task_id,
+				 taskType: tasktype
+				 }
+				 });*/
+            });
+
+            document.getElementById('gototask').addEventListener('tap', function(event) {
+                mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'moveToTask', {});
+                mui.back();
+            });
+            document.getElementById('gotoread').addEventListener('tap', function(event) {
+            	if(localStorage.islogin=="1"){
+					mui.openWindow({
+						url: 'tasks/task_reading.html',
+						id: 'readingPage',
+						show: {
+							duration: 300
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							taskId: task_id,
+							articleLink: articleLink
+						}
+					});}else{
+						openLoginpage2();
+					}
+            });
+
+            window.addEventListener('initpage', function(event) {
+                //获得事件参数
+                signinInit();
+                console.log("init signin");
+            });
+        });
+
+        function getTotalBens() {
+            var url = getBaseUrl() + '/index/Indexinfo/surplusbean';
+            mui.ajax(url, {
+                data: {
+                    phoneNumber: localStorage.phonenumber
+                },
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                async: false,
+                timeout: 10000, //超时时间设置为10秒；
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function(data) {
+                    console.log(JSON.stringify(data));
+                    document.getElementById("beans").innerText = '薪豆：' + data.number;
+                    myBeans = parseInt(data.number);
+                    if(data.istext == 1) {
+                        document.getElementById("signinbutton").innerHTML = '抽奖';
+                        document.getElementById("hint_text_top").innerHTML = '每日只能免费抽奖一次，继续抽奖每次消耗10薪豆';
+                        isfirsttime = false;
+                    }
+                    if(data.isalert == 1) {
+                        issecondtime = true;
+                    } else {
+                        issecondtime = false;
+                    }
+                    console.log('现在issecondtime=' + issecondtime);
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理；
+                    console.log(JSON.stringify(xhr));
+                    console.log(type);
+                }
+            });
+        }
+
+        function getRaffle() {
+            var url = getBaseUrl() + '/index/Indexinfo/signraffle';
+            mui.ajax(url, {
+                data: {
+                    phoneNumber: localStorage.phonenumber
+                },
+                async: false,
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                timeout: 10000, //超时时间设置为10秒；
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function(data) {
+                    console.log(JSON.stringify(data));
+                    console.log(data.result);
+                    if(data.status == 'success') {
+                        switch(data.result) {
+                            case 1:
+                                award = '1薪豆';
+                                angle = 2100;
+                                break;
+                            case 2:
+                                award = '5薪豆';
+                                angle = 2040;
+                                break;
+                            case 3:
+                                award = '10薪豆';
+                                angle = 1980;
+                                break;
+                            case 4:
+                                award = '100薪豆';
+                                angle = 1920;
+                                break;
+                            case 5:
+                                award = '888薪豆';
+                                angle = 1860;
+                                break;
+                            case 6:
+                                award = 'iPhone7';
+                                angle = 1800;
+                                break;
+                            default:
+                                award = '';
+                                angle = 0;
+                                break;
+                        }
+                    } else {
+                        mui.toast("遇到问题:" + data.error_code);
+                    }
+
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理；
+                    console.log(JSON.stringify(xhr));
+                    console.log(type);
+                }
+            });
+        }
+
+        function getSpecifiedTask(type) {
+            var url = getBaseUrl() + 'taskmanage/TotalTaskApp/getSpecifiedTask?cu_id=' + localStorage.userId + "&task_type=" + encodeURI(type);
+            mui.ajax(url, {
+                dataType: 'json',
+                type: 'get', //HTTP请求类型
+                timeout: 10000, //超时时间设置为10秒；
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function(data) {
+                    console.log('data=' + JSON.stringify(data));
+                    if(data.status == 'success') {
+                        data = data.total_task[0];
+                        if(data.status != '已完成') {
+                            task_id = data.id;
+                            tasktype = data.type;
+                            document.getElementById("task_icon").src = getBaseUrl() + data.image;
+                            document.getElementById("task_title").innerHTML = data.title;
+                            document.getElementById("task_beans").innerHTML = data.xindou + ' 薪豆';
+							/*document.getElementById("task_big_title").innerHTML = '完成每日任务可以获得更多薪豆';*/
+                            $("#taskview_finish").css("display", "none");
+                            $("#taskview_none").css("display", "none");
+                            $("#taskview").css("display", "block");
+                        }
+                        else {
+                            task_id = data.id;
+                            tasktype = data.type;
+                            $("#taskview_finish").css("display", "block");
+                            $("#taskview").css("display", "none");
+                            $("#taskview_none").css("display", "none");
+							/*data = firstTask;
+							 task_id = data.id;
+							 tasktype = data.type;
+							 if(parseInt(task_id) == 1 || parseInt(task_id) == 2){
+							 tasktype = '新手';
+							 }
+							 document.getElementById("task_icon").src = getBaseUrl() + data.icon;
+							 document.getElementById("task_title").innerHTML = data.name;
+							 document.getElementById("task_beans").innerHTML = data.beans + ' 薪豆';
+							 document.getElementById("task_big_title").innerHTML = '完成以下任务可以获得更多薪豆';*/
+                        }
+                        getReadLink();
+                    } else {
+                        $("#taskview_finish").css("display", "block");
+                        $("#taskview").css("display", "none");
+                        $("#taskview_none").css("display", "none");
+						/*data = firstTask;
+						 task_id = data.id;
+						 tasktype = data.type;
+						 if(parseInt(task_id) == 1 || parseInt(task_id) == 2){
+						 tasktype = '新手';
+						 }
+						 document.getElementById("task_icon").src = getBaseUrl() + data.icon;
+						 document.getElementById("task_title").innerHTML = data.name;
+						 document.getElementById("task_beans").innerHTML = data.beans + ' 薪豆';
+						 document.getElementById("task_big_title").innerHTML = '完成以下任务可以获得更多薪豆';*/
+                    }
+
+                },
+                error: function(xhr, type, errorThrown) {
+                    console.log(type);
+                    console.log(JSON.stringify(xhr));
+                }
+            });
+        }
+        function getReadLink() {
+        	var url = getBaseUrl() + 'taskmanage/DailyTaskApp/viewDailyTask?dt_id=' + task_id + '&cu_id=' + localStorage.userId;
+			console.log(url);
+			mui.ajax(url, {
+				dataType: 'json', //服务器返回json格式数据
+				type: 'get', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				success: function(data) {
+					console.log('getReadLink' + JSON.stringify(data));
+					if(data.status == 'success') {
+						data = data.data;
+						articleId = data.id;
+						articleLink = data.link;
+					} else {
+						alert(data.error_code);
+					}
+
+				},
+				error: function(xhr, type, errorThrown) {
+					//异常处理；
+					console.log("error!");
+					console.log(JSON.stringify(xhr));
+					console.log(type);
+				}
+			});
+        }
+	</script>
+</head>
+
+<body>
+
+<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"
+	   style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+	<h1 style="color: #333333;font-size: 0.38rem;line-height: 0.88rem;font-weight: normal;text-align: center;">每日签到</h1>
+</header>
+
+<div class="mui-content" style="width: 100%; background-color: #FB5237; background-image: url(../images/sign_in_back.png);background-size: contain; background-repeat: repeat-y;">
+	<div align="center">
+		<div style="width: 100%; height: 0.56rem;">
+			<p id="beans" style="background: #FFB400;float: right;width: 2.08rem;height: 0.56rem; line-height: 0.56rem; text-align: center;margin-top:0.31rem; padding-left: 0.21rem; font-size:0.25rem;color: #FFFFFF;">
+				薪豆：123456
+			</p>
+			<div style="height: 0.17rem; width: 0.17rem; background: #FB5237; border-radius: 0.17rem; position: relative; float: right; top: 0.5rem; left: 0.1rem;"></div>
+		</div>
+		<div id="toast" style="display:none;position:absolute; top:1.77rem;right: 0.1rem;font-size:0.25rem;color: #FFFFFF;">-10</div>
+		<div style="width: 100%; margin-top: 0.83rem; padding: 0;">
+			<img id="signimage" src="../images/rotateimg.png" style="height: 70.7vw;width: 70.7vw; ;text-align: center;position: absolute; z-index: 1;" />
+			<img src="../images/smallarrow.png" style="height: 70.7vw;width: 70.7vw;z-index:2; position: relative;" />
+		</div>
+		<p id="hint_text_top" style="margin-top: 0.21rem;text-align: center;font-size: 0.25rem;color: #ffea01;">签到可以免费抽奖，快来试试手气吧！</p>
+		<p id="signinbutton" style="background-image:url(../images/signin_button.png);background-size:100%;;margin-top:0.29rem;margin-left: auto;margin-right: auto;text-align: center;color: #FFFFFF;width: 2.71rem;height: 0.67rem;font-size: 0.35rem;line-height: 0.67rem; margin-bottom: 0.5rem;">
+			签到
+		</p>
+
+	</div>
+
+	<div id="taskview_none" class="mui-card liu-card" style="display: none;"></div>
+
+	<div id='taskview' class="mui-card liu-card" style="display: block;">
+		<p id='task_big_title' style="text-align: center;margin-top: 0.4rem;font-size: 0.3rem;color: #ffb009;font-weight: bold;">每天一分钟，阅读也赚钱</p>
+		<div  class="liu-container">
+
+			<img id="task_icon" class="liu-image" src="../images/60x60.gif" />
+
+			<div style="position: absolute; left:1.4rem; top: 0.2rem; height: 0.8rem;">
+				<p id="task_title" class="mui-ellipsis" style="width: 3rem;font-size: 0.28rem; height: 0.4rem;line-height: 0.4rem; color: #333333;">阅读任务阅读任务阅读任务阅读任务阅读任务阅读任务阅读任务阅读任务阅读任务</p>
+				<p id="task_description" style="font-size: 0.24rem;height: 0.4rem;line-height: 0.4rem;color: #999999; margin-top: 0.1rem;">每日阅读一篇小文章</p>
+			</div>
+
+			<div style="position: absolute; float: right; right: 0; top: 0.2rem;padding: 0 0.3rem; height: 0.8rem; border-left: 0.02rem dashed #999999; ">
+				<p id="task_beans" style="text-align: center;color: #FB5237;font-size: 0.26rem;height: 0.45rem; line-height: 0.45rem;">50薪豆</p>
+				<p id="read_button" style="text-align: center;color: #ffea01;font-size: 0.22rem;height: 0.35rem; line-height: 0.35rem;width:1.2rem;border-radius: 0.35rem;border-radius: 0.35rem;background-color:#fb5237; padding-top: 0.02rem;">去做任务</p>
+			</div>
+		</div>
+
+	</div>
+
+	<div id='taskview_finish' class="mui-card liu-card" style="display: none;">
+		<p style="padding-top: 0.6rem;font-size: 0.3rem;line-height:0.45rem;font-weight: bold;color: #ffb009;text-align: center;">今日文章已阅读</p>
+		<p style="text-align: center;font-size: 0.24rem;line-height:0.36rem;color: #999999;">每日会更新一篇</p>
+
+		<div style="margin-top: 0.25rem;text-align: center;">
+			<button id="gototask" type="button" style="border:none;background: #fb5237;color: #FFFFFF;padding:0rem;width: 1.4rem;height:0.44rem;font-size: 0.24rem;">去做任务</button>
+			<button id="gotoread" type="button" style="border:none;background: #ffb009;color: #FFFFFF;padding:0;width: 1.4rem;height:0.44rem;font-size: 0.24rem;margin-left: 0.4rem;">重新阅读</button>
+		</div>
+	</div>
+
+	<br />
+</div>
+
+<div id="notenough_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;display:none; background-color: rgba(0,0,0,0.4);">
+	<div style="position: relative;width: 5.1rem;height: 2.71rem;text-align:center;border-radius: 0.06rem;background: #FFFFFF;margin: 3.75rem auto;">
+		<div style="padding-top:0.94rem;font-size: 0.27rem;color: #333333;">抱歉，薪豆不足</div>
+		<button type="button" id="go_button" style="margin-top:0.31rem;border:none;width: 1.88rem;height: 0.52rem;border-radius: 0.31rem;background: #FB5237;color: #FFFFFF;font-size: 0.27rem;line-height: 0.27rem;">去赚薪豆</button>
+	</div>
+</div>
+<div id='zhongjiangla' align="center" style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.75); z-index: 10;">
+	<div align="center" style="position: relative;height: 2.60rem; width: 4.90rem; border-radius: 0.06rem; background: #FFFFFF;text-align: center;margin: 3.6rem auto;">
+		<div style="font-size: 0.34rem; color: #FB5237; padding-top: 0.60rem;font-weight: bold;"><b>中奖啦</b></div>
+		<div style="font-size: 0.26rem; color: #333333; margin-top:0.10rem;">恭喜您获得<span id="award" style="color: #FB5237;">10</span></div>
+	</div>
+	<img src="../images/signin_zhongjiang.png" style="width: 5.40rem;height: 2.90rem; position: relative;z-index: 10;top: -6.5rem;left: 1rem;" />
+	<button id="confirm_button" type="button" style="position: relative;z-index: 10;width: 1.80rem;height: 0.50rem;border-radius: 0.40rem;background: #FB5237;color: #FFFFFF;font-size: 0.26rem;line-height:0.26rem;padding: 0;border: none;top: -4.4rem;left: -2.7rem;">我知道了</button>
+</div>
+
+</body>
+
+</html>

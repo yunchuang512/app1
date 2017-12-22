@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+
+			.my-p-style {
+				font-size: 16px;
+				margin-top: 5px;
+				color: #333333;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0px;
+			}
+
+			.my-p-date {
+				color: #999999;
+				font-size: 14px;
+				padding-top: 5px;
+			}
+
+			[class*="col-"] {
+				float: left;
+				padding: 0px;
+			}
+
+			.my-p-style {
+				color: #333333;
+				font-size: 15px;
+			}
+
+			.my-p-fail {
+				color: #999999;
+				text-align: right;
+				padding-top: 14px;
+				font-size: 14px;
+			}
+
+			.my-p-success {
+				color: #80c900;
+				text-align: right;
+				padding-top: 14px;
+				font-size: 14px;
+			}
+
+			.my-p-checking {
+				color: #FB5237;
+				text-align: right;
+				padding-top: 14px;
+				font-size: 14px;
+			}
+		</style>
+		<script src="../../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+
+				});
+
+				var stateclass = ['my-p-fail', 'my-p-success', 'my-p-checking'];
+				var historylistul = document.getElementById('historylistul');
+				var baseUrl = getBaseUrl();
+				var url = baseUrl + 'task/Customer/completeHistoryList';
+				console.log("url>>>>>>>>>>" + url);
+				mui.ajax(url, {
+					data: {
+						phoneNumber: localStorage.phonenumber
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						if(data.status == "success") {
+							console.log("success");
+							console.log(JSON.stringify(data));
+							var mydata = data.data;
+							console.log(mydata.length);
+							if(mydata.length >0) {
+								$("#havecontent").css("display", "initial");
+								$("#nocontent").css("display", "none");
+							} else {
+								$("#havecontent").css("display", "none");
+								$("#nocontent").css("display", "block");
+							}
+							var temp = ""
+							for(var i = 0; i < mydata.length; i++) {
+								var statei = 0;
+								if(mydata[i].state == "未通过") {
+									statei = 0;
+								} else if(mydata[i].state == "通过") {
+									statei = 1;
+								} else if(mydata[i].state == "审核中") {
+									statei = 2;
+								}
+								temp += '<li myid="' + mydata[i].id + '" class="mui-table-view-cell mui-media my-li-historyclue">' +
+									'<div class="mui-media-body row">' +
+									'<div class="col-10">' +
+									'<p class="my-p-style">' + mydata[i].name + '</p>' +
+									'<p class="my-p-date">' + mydata[i].time + '</p>' +
+									'</div>' +
+									'<div class="col-2">' +
+									'<p class="' + stateclass[statei] + '">' + mydata[i].state + '</p>' +
+									'</div>' +
+									'</div>' +
+									'</li>'
+							}
+							historylistul.innerHTML = temp;
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log("error!");
+						console.log(JSON.stringify(xhr));
+						console.log(type);
+
+						$("#havecontent").css("display", "none");
+						$("#nocontent").css("display", "block");
+					}
+				});
+				mui('.mui-table-view').on('tap', '.my-li-historyclue', function() {
+					var myid = this.getAttribute('myid');
+
+					mui.openWindow({
+						url: 'taskhistoryclientdetail.html',
+						id: 'taskhistoryclientdetail',
+						extras: {
+							myid: myid
+						},
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+
+				});
+				document.getElementById('taskclientdetail').addEventListener('tap', function() {
+					mui.openWindow({
+						url: 'taskclientdetail.html',
+						id: 'taskclientdetail',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+					mui.later(closeself, 800);
+				});
+
+				function closeself() {
+					mui.currentWebview.close();
+				}
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">历史成交</h1>
+		</header>
+
+		<div class="mui-content">
+			<div id="havecontent" style="display: none;">
+				<ul id="historylistul" class="mui-table-view">
+				</ul>
+			</div>
+			<div id="nocontent" style="text-align: center;">
+				<img src="../../images/nohistoryclue.png" style="height: 100px;margin-top: 100px;" />
+				<p style="text-align: center;color: #999999;font-size: 16px;margin-bottom:20px; margin-top: 20px;">暂无历史成交</p>
+				<span id="taskclientdetail" style="color: #FFFFFF;margin-top: 50px;font-size: 16px;background-color: #FB5237;width: 300px;padding-bottom: 8px;padding-top: 8px;padding-left: 50px;padding-right: 50px;border-radius: 2px;">我要成交客户</span>
+			</div>
+
+		</div>
+
+	</body>
+
+</html>

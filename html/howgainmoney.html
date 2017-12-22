@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/app.js"></script>
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<link rel="stylesheet" href="../css/mydefine.css">
+
+	<style>
+		html,
+		body {
+			background-color: #F8F8F8;
+		}
+
+		.my-p-style {
+			color: #333333;
+			font-size: 0.27rem;
+		}
+
+		.mui-table-view-cell.mui-active {
+			background-color: #FFFFFF;
+		}
+
+		.my-div-content {
+			color: #333333;
+			font-size: 0.27rem;
+			border-top: 0.02rem solid #D5D5D5;
+			padding-top: 0.31rem;
+			display: none;"
+		}
+
+		.mui-navigate-right:after,
+		.mui-push-left:after,
+		.mui-push-right:after {
+			color: #FB5237;
+		}
+
+		.mui-table-view:before {
+			background-color: #FFFFFF;
+		}
+
+		.my-question {
+			font-size:0.29rem;
+			height: 1.04rem;
+		}
+		
+		.mui-bar-nav~.mui-content{
+			padding-top: 0.88rem;
+		}
+	</style>
+	<script type="text/javascript">
+        document.addEventListener('plusready', function() {
+            plus.screen.lockOrientation("portrait-primary");
+            mui.init({
+                swipeBack: true //启用右滑关闭功能
+            });
+
+            var isquestion1 = 0;
+            var isquestion2 = 0;
+            var isquestion3 = 0;
+            var isquestion4 = 0;
+            document.getElementById("question1").addEventListener("tap", function(event) {
+                if(isquestion1 == 0) {
+                    isquestion1 = 1;
+                    $("#answer1").css("display", "block");
+                }
+                else {
+                    isquestion1 = 0;
+                    $("#answer1").css("display", "none");
+                }
+                isquestion2 = 0;
+                isquestion3 = 0;
+                isquestion4 = 0;
+                $("#answer2").css("display", "none");
+                $("#answer3").css("display", "none");
+                $("#answer4").css("display", "none");
+            });
+            document.getElementById("question2").addEventListener("tap", function(event) {
+                if(isquestion2 == 0) {
+                    isquestion2 = 1;
+                    $("#answer2").css("display", "block");
+                }
+                else {
+                    isquestion2 = 0;
+                    $("#answer2").css("display", "none");
+                }
+
+                isquestion1 = 0;
+                isquestion3 = 0;
+                isquestion4 = 0;
+                $("#answer1").css("display", "none");
+                $("#answer3").css("display", "none");
+                $("#answer4").css("display", "none");
+            });
+            document.getElementById("question3").addEventListener("tap", function(event) {
+                if(isquestion3 == 0) {
+                    isquestion3 = 1;
+                    $("#answer3").css("display", "block");
+                }
+                else {
+                    isquestion3 = 0;
+                    $("#answer3").css("display", "none");
+                }
+                isquestion2 = 0;
+                isquestion1 = 0;
+                isquestion4 = 0;
+                $("#answer2").css("display", "none");
+                $("#answer1").css("display", "none");
+                $("#answer4").css("display", "none");
+            });
+            document.getElementById("question4").addEventListener("tap", function(event) {
+                if(isquestion4 == 0) {
+                    isquestion4 = 1;
+                    $("#answer4").css("display", "block");
+                }
+                else {
+                    isquestion4 = 0;
+                    $("#answer4").css("display", "none");
+                }
+                isquestion2 = 0;
+                isquestion3 = 0;
+                isquestion1 = 0;
+                $("#answer2").css("display", "none");
+                $("#answer3").css("display", "none");
+                $("#answer1").css("display", "none");
+            });
+        });
+	</script>
+</head>
+
+<body>
+
+<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+	<h1 class="mui-title" style="color: #333333;font-size: 0.38rem;line-height: 0.88rem;font-weight: normal;text-align: center;">如何赚钱</h1>
+</header>
+
+<div class="mui-content" style="background-color: #F8F8F8;">
+	<p style="text-align: center;font-size: 0.31rem;color: #333333;background-color: #FFFFFF;padding-top: 0.52rem;padding-bottom: 0.63rem;margin-bottom: 0;">企赚宝新手指引</p>
+	<p class="my-p-style" style="background-color: #FFFFFF;padding:0 0.31rem 0.31rem 0.31rem; margin: 0;line-height: 0.41rem;">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;亲爱的用户，欢迎您加入企赚宝大家庭。企赚宝是企家有道网络技术（北京）有限公司推出的一款主打企业产品的赚钱工具。您可以发挥您的专长和影响力，完成任务，轻松获得薪豆，得到佣金奖励。
+	</p>
+
+	<ul class="mui-table-view" style="margin-top: 0.21rem;">
+		<li class="mui-table-view-cell">
+			<a id="question1" class="my-a-smalltitle mui-navigate-right my-question" style="color: #FB5237;line-height: 0.8rem;">1、薪豆是什么？</a>
+			<div id="answer1" class="my-div-content" style="line-height: 0.41rem;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;薪豆是企赚宝平台中的货币工具，100薪豆=1元人民币。您获得薪豆后，可以直接提现，也可以兑换礼品。
+			</div>
+		</li>
+	</ul>
+
+	<ul class="mui-table-view" style="margin-top: 0.21rem;">
+		<li class="mui-table-view-cell">
+			<a id="question2" class="my-a-smalltitle mui-navigate-right my-question" style="color: #FB5237;line-height: 0.8rem;">2、如何赚取薪豆？</a>
+			<div id="answer2" class="my-div-content"  style="line-height: 0.41rem;">
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;给您介绍几个赚取薪豆的办法吧！
+				</p>
+				<p class="my-p-style" style="font-weight: bold;line-height: 0.48rem;">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1）签到、完成普通任务
+				</p>
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;每天在企赚宝签到，就可以100%获得薪豆奖励哦！如果您觉得不过瘾，还可以消耗10薪豆继续转动大转盘，拼手气获得薪豆。同时企赚宝平台为您准备了转发、问卷、答题等各种任务，总有一款适合您！完成任务就有薪豆奖励，边娱乐边赚钱，日积月累，收益很可观哦！
+				</p>
+				<p class="my-p-style" style="font-weight: bold;line-height: 0.48rem;">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2）邀请粉丝
+				</p>
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;拒绝独来独往，赚钱就要分享！在企赚宝，您可以邀请亲朋好友一起来赚钱！
+				</p>
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;凡是通过您的邀请注册并登录的用户，都将成为您的粉丝。粉丝完成任务，您也可以获得10%的粉丝奖励；粉丝的粉丝（二级粉丝）完成任务，您还是可以获得5%的粉丝奖励（由企赚宝官方补贴）！
+				</p>
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不要小看10%哦，如果您的粉丝完成营销任务，获得上万元的销售奖励，您也将获得上千元的粉丝收益（由企赚宝官方补贴）!粉丝数量越多，粉丝收益也就越多哦！
+				</p>
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;没错，这就是传说中的躺着赚钱~~！所以，快快发展壮大您的粉丝团队吧！具体细则在粉丝页面有详细介绍哦。
+				</p>
+				<p class="my-p-style" style="font-weight: bold;line-height: 0.48rem;">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3）成为营销合伙人，完成营销任务。
+				</p>
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;成为营销合伙人，您将获得合伙人专属任务：提交销售线索！每有一条线索通过审核，您将获得50元线索奖励！
+				</p>
+			</div>
+		</li>
+	</ul>
+
+	<ul class="mui-table-view" style="margin-top: 0.21rem;">
+		<li class="mui-table-view-cell">
+			<a id="question3" class="my-a-smalltitle mui-navigate-right my-question" style="color: #FB5237;line-height: 0.8rem;">3、如何获得上万元的销售奖励呢？</a>
+			<div id="answer3" class="my-div-content" style="line-height: 0.41rem;">
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;营销合伙人提交的销售线索，我们会有专业团队进行后续跟进！一旦线索中的企业采购了薪人薪事人力资源系统，营销合伙人便可获得高达上万元的现金奖励（实际成交价格的20%）！
+				</p>
+			</div>
+		</li>
+	</ul>
+
+	<ul class="mui-table-view" style="margin-top: 0.21rem;">
+		<li class="mui-table-view-cell">
+			<a id="question4" class="my-a-smalltitle mui-navigate-right my-question" style="color: #FB5237;line-height: 0.8rem;">4、得到薪豆后，怎么才能换成现金呢？</a>
+			<div id="answer4" class="my-div-content" style="line-height: 0.41rem;">
+				<p class="my-p-style">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您可以将佣金（100薪豆兑换1元）提现到微信或银行卡。佣金的发放，将遵循国家税收规定。
+				</p>
+			</div>
+		</li>
+	</ul>
+
+	<br/><br/><br/>
+</div>
+
+</body>
+
+</html>

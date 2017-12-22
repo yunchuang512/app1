@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/app.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<link rel="stylesheet" href="../css/style1.css">
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.mui-input-row label {
+				font-size: 0.29rem;
+				color: #333333;
+				line-height: 1.04rem;
+				padding: 0;
+				margin: 0;
+				padding-left: 0.3rem;
+			}
+			
+			.mui-input-row input {
+				height: 1.04rem;
+				padding-right: 0.63rem;
+			}
+			
+			input {
+				color: #333333;
+				font-size: 0.29rem;
+				text-align: right;
+			}
+			
+			#submitok {
+				margin-bottom: 0;
+				font-size: 0.38rem;
+				text-align: center;
+				bottom: 0;
+				left: 0;
+				background-color: #FB5237;
+				width: 100%;
+				color: white;
+				padding: 0.21rem;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-toast-container {
+				bottom: 40% !important;
+			}
+			
+			.mui-toast-message {
+				opacity: 0.6;
+				color: #fff;
+				width: 3.75rem;
+				height: 1.88rem;
+				align: center;
+				line-height: 1.88rem;
+			}
+			
+			#applyreason {
+				margin-bottom: 0;
+			}
+			
+			.my-label-style {
+				font-size: 0.29rem;
+				color: #333333;
+				padding: 0.1rem;
+				margin-left: 0.13rem;
+			}
+			
+			.mui-input-group .mui-input-row {
+				height: 1.04rem;
+			}
+			
+			.mui-input-row .mui-input-clear~.mui-icon-clear,
+			.mui-input-row .mui-input-password~.mui-icon-eye,
+			.mui-input-row .mui-input-speech~.mui-icon-speech {
+				font-size: 0.42rem;
+				position: absolute;
+				z-index: 1;
+				top: 0.31rem;
+			}
+			
+			.mui-input-group:after {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-bar-nav~.mui-content {
+				padding-top: 0.88rem;
+			}
+			
+			.mui-input-group .mui-input-row:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				//初始化变量
+				var photodata3 = "";
+				//初始化控件
+				var namebox = document.getElementById("name");
+				var phonebox = document.getElementById("phone");
+				var applyreasonbox = document.getElementById("applyreason");
+				
+				phonebox.value = localStorage.phonenumber;
+				var isSubmitting = false;
+				
+				document.getElementById('submitok').addEventListener('tap', function() {
+					//失去焦点收起键盘
+					$("#name").blur();
+					$("#phone").blur();
+					$("#applyreason").blur();
+					//提交数据
+					if(checkallbox()) {
+						if(isSubmitting == true) {
+							return;
+						}
+						isSubmitting = true;
+						var baseUrl = getBaseUrl();
+						var url = baseUrl + 'salesleadsmanage/PartTimeJob/partnerApplyFor';
+						console.log(">>>>>>>>>>兼职销售申请URL" + url);
+						mui.ajax(url, {
+							data: {
+								phonenumber: localStorage.phonenumber,
+								name: namebox.value,
+								phone: phonebox.value,
+								applyreason: applyreasonbox.value,
+								businesscard: photodata3
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								var issuccess = data.status;
+								if(issuccess == "success") {
+									$("#confirm_view").css('display', 'block');
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								isSubmitting = false;
+								console.log(JSON.stringify(errorThrown));
+								console.log(type);
+							}
+						});
+					}
+				});
+				document.getElementById('confirm_button').addEventListener('tap', function() {
+					$("#confirm_view").css('display', 'none');
+					var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+					mui.fire(taskpage, 'initpage', {});
+					mui.back();
+				});
+				
+				document.getElementById("img31").addEventListener('tap', function(event) {
+					mui('#picture3').popover('toggle');
+					getImage("3");
+				});
+				document.getElementById("img32").addEventListener('tap', function(event) {
+					mui('#picture3').popover('toggle');
+					galleryImg("3");
+				});
+				//点击去除焦点
+				
+				document.getElementById("cardimagebox").addEventListener('tap', function() {
+					$("#name").blur();
+					$("#phone").blur();
+					$("#applyreason").blur();
+				});
+
+				function getImage(flag) {
+					var cmr = plus.camera.getCamera();
+					cmr.captureImage(function(path) {
+						plus.io.resolveLocalFileSystemURL(path, function(entry) {
+							var localurl = entry.toLocalURL(); //
+							mui.openWindow({
+								url: 'cutidimage.html',
+								extras: {
+									name: localurl,
+									flag: flag
+								}
+							})
+						});
+					});
+				}
+
+				function galleryImg(flag) {
+					// 从相册中选择图片
+					//outSet("从相册中选择图片:");
+					plus.gallery.pick(function(path) {
+						mui.openWindow({
+							url: 'cutidimage.html',
+							extras: {
+								name: path,
+								flag: flag
+							}
+						})
+					}, function(e) {}, {
+						filter: "image"
+					});
+				}
+				
+
+				function checkallbox() {
+					if(!checkabox(namebox)) {
+						mui.toast("姓名不能为空！");
+						return false;
+					}
+					if(!regBox.regMobile.test(phonebox.value)) {
+						mui.toast("手机号输入不正确！");
+						return false;
+					}
+					if(photodata3 == "") {
+						mui.toast("请上传名片！");
+						return false;
+					}
+					return true;
+				}
+				window.addEventListener("idimagedata", function(event) {
+					if(event.detail.flag == "3") {
+						document.getElementById("idimage3").src = event.detail.resImg;
+						document.getElementById("idimage3").style.display = "block";
+						photodata3 = event.detail.resImg;
+					}
+				});
+				
+	
+			});
+		</script>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">申请成为合伙人</h1>
+		</header>
+		<div class="mui-content">
+			<div class="my-label-style">个人信息</div>
+			<form class="mui-input-group" style="position: relative;">
+				<div class="mui-input-row">
+					<div style="position: absolute; display: inline; color: #ff0000; left:0.04rem; font-size: 0.27rem; line-height: 0.96rem;">
+						＊
+					</div>
+					<label>姓名</label>
+					<input id="name" class="mui-input-clear" type="text" placeholder="必填">
+				</div>
+				<div class="mui-input-row">
+					<div style="position: absolute; display: inline; color: #ff0000; left:0.04rem; font-size: 0.27rem; line-height: 0.96rem;">
+						＊
+					</div>
+					<label>手机号</label>
+					<input id='phone' type="tel" placeholder="必填">
+				</div>
+				<div class="mui-input-row" style="height: 2rem;">
+					<div style="position: absolute; display: inline; color: #ff0000; left:0.04rem; font-size: 0.27rem; line-height: 0.96rem;">
+						＊
+					</div>
+					<label>名片</label>
+					<input readonly="readonly" placeholder="如无，也可上传工牌或其它信息">
+					<div style="position: absolute; height: 0.83rem; width: 100%; top: 1rem;">
+						<a id="cardimagebox" href="#picture3" style="margin-left: 0.3rem;">
+							<div id="idcamer3" class="icon-tupian" style="height: 0.6rem;width: 0.6rem; text-align:center; line-height: 0.6rem; display: inline-block ;color: #D5D5D5; background:#FFFFFF; font-size: 0.6rem; "></div>
+							<img id="idimage3" style="position: absolute; display: none; height: 0.83rem;width: 1.15rem;border-radius: 0.08rem; left: 0.2rem; top:-0.12rem" />
+						</a>
+					</div>
+				</div>
+			</form>
+
+			<div class="my-label-style">备注</div>
+			<div class="mui-input-group" style="margin-top: 0;">
+				<textarea id="applyreason" rows="8" placeholder="可详细介绍您的资源或经历" style="border: none; font-size: 0.26rem; color: #999999;"></textarea>
+			</div>
+			<p id="submitok" style="position: fixed; bottom: 0;">
+				提交
+			</p>
+		</div>
+		
+		<div id="picture3" class="mui-popover mui-popover-action mui-popover-bottom">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a id="img31">拍摄图片</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a id="img32">选取现有图片</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#picture3"><b>取消</b></a>
+				</li>
+			</ul>
+		</div>
+
+		<div id="confirm_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;display:none; background-color: rgba(0,0,0,0.4);">
+			<div style="position: relative;width: 5.1rem;height: 2.71rem;text-align:center;border-radius: 0.06rem;background: #FFFFFF;margin: 3.33rem auto;">
+				<div style="padding-top: 0.63rem;font-size: 0.27rem;color: #FB5237;font-weight: bold;">提交成功</div>
+				<div style="margin-top:0.1rem;font-size: 0.27rem;color: #333333;">审核通过后便成为合伙人</div>
+				<button type="button" id="confirm_button" style="margin-top:0.31rem;border:none;width: 1.88rem;height: 0.52rem;border-radius: 0.31rem;background: #FB5237;color: #FFFFFF;font-size: 0.27rem;line-height: 0.27rem;">知道了</button>
+			</div>
+		</div>
+		
+	</body>
+
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			label {
+				color: #333333;
+			}
+			
+			input {
+				color: #333333;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-toast-container {
+				bottom: 40% !important;
+			}
+			
+			.mui-toast-message {
+				opacity: 0.6;
+				color: #fff;
+				width: 3.6rem;
+				height: 1.8rem;
+				align: center;
+				line-height: 1.8rem;
+			}
+			
+			.mui-bar-nav~.mui-content{
+            		padding-top: 0.88rem;
+        		}
+		</style>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			var itemId = -1;
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				var self = plus.webview.currentWebview();
+				itemId = self.itemId;
+				console.log("ds=" + itemId)
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				var cityPicker3 = new mui.PopPicker({
+					layer: 3
+				});
+				cityPicker3.setData(cityData3);
+				document.getElementById('cityaddress').addEventListener('tap', function(event) {
+					$("#name").blur();
+					$("#phoneNumber").blur();
+					$("#textarea").blur();
+					cityPicker3.show(function(items) {
+						var address = (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+						document.getElementById("cityaddress").value = address;
+						//返回 false 可以阻止选择框的关闭
+						//return false;
+					});
+				});
+				document.getElementById('submitok').addEventListener('tap', function(event) {
+					$("#name").blur();
+					$("#phoneNumber").blur();
+					$("#textarea").blur();
+					var name = document.getElementById("name").value;
+					var phoneNumber = document.getElementById("phoneNumber").value;
+					var session = document.getElementById("cityaddress").value;
+					var address = document.getElementById("textarea").value;
+					if(name.length == 0) {
+						//						plus.nativeUI.toast('请填写姓名', {
+						//							'verticalAlign': 'center',
+						//
+						//						});
+						mui.toast('请填写姓名', {
+							duration: 'long',
+							type: 'div'
+						});
+						return;
+					}
+					if(name.length < 2 || name.length > 10) {
+						mui.toast('姓名应为2-10个字符');
+						return;
+					}
+					if(phoneNumber.length == 0) {
+						mui.toast('请填写姓名');
+						return;
+					}
+					var reg = /^\d{11}$/;
+					if(reg.test(phoneNumber) == false) {
+						mui.toast('请输入合法手机号');
+						return;
+					}
+					if(session.length == 0) {
+						mui.toast('请选择地区');
+						return;
+					}
+					if(address.length == 0) {
+						mui.toast('请填写收货地址');
+						return;
+					}
+					if(address.length > 140) {
+						mui.toast('收货地址不能超过140个字符');
+						return;
+					}
+
+					var url = getBaseUrl() + 'person/goods/cashgoods';
+					var tm = {
+						id: itemId,
+						userId: localStorage.userId,
+						name: name,
+						photoNumber: phoneNumber,
+						session: session,
+						address: address
+					}
+					console.log(JSON.stringify(tm));
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						data: {
+							id: itemId,
+							userId: localStorage.userId,
+							name: name,
+							phoneNumber: phoneNumber,
+							session: session,
+							address: address
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+					/*mui.alert('请等待收货', '提交成功', function() {
+						//关闭商品页面
+						var commoditydetail = plus.webview.getWebviewById('commoditydetail');
+						mui.fire(commoditydetail, 'close', {});
+						//刷新兑换页面
+						var pointexchange = plus.webview.getWebviewById('pointexchange');
+						mui.fire(pointexchange, 'loaddata', {});
+						mui.back();
+					});*/
+					$("#confirm_view").css('display', 'block');
+				});
+				
+				document.getElementById('confirm_button').addEventListener('tap', function(event) {
+					$("#confirm_view").css('display', 'none');
+					//关闭商品页面
+					var commoditydetail = plus.webview.getWebviewById('commoditydetail');
+					mui.fire(commoditydetail, 'close', {});
+					//刷新兑换页面
+					var pointexchange = plus.webview.getWebviewById('pointexchange');
+					mui.fire(pointexchange, 'loaddata', {});
+					mui.back();
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">收货地址</h1>
+		</header>
+
+		<div class="mui-content">
+			<form class="mui-input-group">
+				<div class="mui-input-row" style="height: 0.8rem;">
+					<label style="font-size: 0.28rem;line-height: 0.6rem;">姓名</label>
+					<input id="name" type="text" style="text-align: right;height:0.8rem ;font-size: 0.24rem;" placeholder="必填">
+				</div>
+				<div class="mui-input-row" style="height: 0.8rem;">
+					<label style="font-size: 0.28rem;line-height: 0.6rem;">手机号</label>
+					<input id='phoneNumber' type="tel" class="mui-input-clear" style="text-align: right;height:0.8rem;font-size: 0.24rem; " placeholder="必填">
+				</div>
+				<div class="mui-input-row" style="height: 0.8rem;">
+					<label style="font-size: 0.28rem;line-height: 0.6rem;">地区</label>
+					<input id="cityaddress" type="text" class="mui-input-clear" style="text-align: right;height:0.8rem ;font-size: 0.24rem;" placeholder="--请选择--">
+				</div>
+
+			</form>
+			<div class="mui-input-row" style="margin-top: 0;">
+				<textarea id="textarea" rows="8" placeholder="详细收货地址（必填）140字以内" style="border-radius: 0;border: none;font-size: 0.24rem;line-height: 0.36rem;"></textarea>
+			</div>
+			<p id="submitok" style="margin-bottom: 0;font-size:0.36rem;text-align: center;position: fixed;bottom: 0;left:0;background-color: #FB5237;width: 100%;color: white;padding: 0.2rem;">
+				提交
+			</p>
+		</div>
+		
+		<div id="confirm_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;display:none; background-color: rgba(0,0,0,0.4);">
+			<div style="position: relative;width: 4.9rem;height: 2.6rem;text-align:center;border-radius: 0.06rem;background: #FFFFFF;margin: 3.2rem auto;">
+				<div style="padding-top: 0.6rem;font-size: 0.26rem;line-height:0.39rem;color: #FB5237;font-weight: bold;">提交成功</div>
+				<div style="font-size: 0.26rem;line-height:0.39rem;color: #333333;"> 请等待收货</div>
+				<button type="button" id="confirm_button" style="margin-top:0.3rem;border:none;width: 1.8rem;height: 0.5rem;border-radius: 0.3rem;background: #FB5237;color: #FFFFFF;font-size: 0.26rem;line-height: 0.3rem;">知道了</button>
+			</div>
+		</div>
+	</body>
+
+</html>

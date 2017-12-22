@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/app.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.mui-control-content {
+				background-color: white;
+				width: 100%;
+			}
+			
+			.my-p-style {
+				font-size: 0.28rem;
+				line-height: 0.42rem;
+				margin-top: 0;
+				color: #333333;
+			}
+			
+			.mui-table-view-chevron .mui-table-view-cell {
+				padding-right: 0.4rem;
+			}
+			
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+			
+			.mui-table-view-cell:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 0.02rem;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.mui-bar-nav~.mui-content{
+	            padding-top: 0.88rem;
+	        }
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+
+				});
+				mui('.mui-scroll-wrapper').scroll({
+					indicators: false,
+					bounce: true
+				});
+
+				document.getElementById('scroll1').addEventListener('scrollbottom', function() {
+
+				});
+				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+					wgtVer = inf.version;
+					document.getElementById("version").innerHTML = wgtVer;	
+				});
+				
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title"style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">关于我们</h1>
+		</header>
+
+		<div id="maincontain" class="mui-content">
+			<div id="scroll1" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div style="text-align: center; padding: 1rem;">
+
+						<img src="../images/logo1.png" style="height: 1.0rem; margin-top: 1.2rem; " />
+					</div>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell mui-media" style="height: 1rem;padding: 0.3rem;">
+							<div class="mui-media-body">
+								<div class="my-p-style">
+									<span>版本</span>
+									<span id="version" style="color: #999999;" class="mui-pull-right">1.0.1</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media" style="height: 1rem;padding: 0.3rem;">
+							<div class="mui-media-body">
+								<div class="my-p-style">
+									<span>服务热线</span>
+									<span style="color: #999999;" class="mui-pull-right">4006-717-656</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media" style="height: 1rem;padding: 0.3rem;">
+							<div class="mui-media-body">
+								<div class="my-p-style">
+									<span>微信公众号</span>
+									<span style="color: #999999;" class="mui-pull-right">企赚宝</span>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media" style="height: 1rem;padding: 0.3rem;">
+							<div class="mui-media-body">
+								<div class="my-p-style">
+									<span>QQ群</span>
+									<span style="color: #999999;" class="mui-pull-right">392678294</span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

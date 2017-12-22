@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#333333">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/app.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.my-p-style {
+				color: #333333;
+				font-size: 0.27rem;
+				line-height: 0.41rem;
+			}
+			
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+			
+			.my-div-content {
+				color: #333333;
+				font-size: 0.27rem;
+				border-top: 0.02rem solid #D5D5D5;
+				padding-top: 0.31rem;
+				display: none;
+				"
+
+			}
+			
+			.mui-navigate-right:after,
+			.mui-push-left:after,
+			.mui-push-right:after {
+				color: #FB5237;
+			}
+			
+			.mui-table-view:before {
+				background-color: #FFFFFF;
+			}
+			
+			.my-question {
+				font-size: 0.29rem;
+				height: 1.04rem;
+			}
+			
+			.mui-bar-nav~.mui-content {
+				padding-top: 0.88rem;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				document.getElementById("xinrenxinshi_text").addEventListener('tap', function() {
+					plus.runtime.openURL("http://www.xinrenxinshi.com");
+//					mui.openWindow({
+//						url: "http://www.xinrenxinshi.com",
+//						id: "xinrenxinshi.com",
+//						show: {
+//							duration: 200
+//						},
+//						waiting: {
+//							autoShow: false
+//						}
+//					});
+
+				});
+
+				var oldback = mui.back;
+				mui.back = function() {
+					if(plus.webview.getWebviewById('xinrenxinshi.com') != null) {
+						plus.webview.getWebviewById('xinrenxinshi.com').close();
+						return;
+					} else {
+						oldback();
+					}
+				};
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;font-size: 0.32rem;padding: 0;margin: 0;line-height: 0.88rem;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;font-weight: normal;line-height: 0.88rem;">营销合伙人</h1>
+		</header>
+
+		<div class="mui-content" style="background-color: #F8F8F8;">
+			<p style="text-align: center;font-size: 0.31rem;color: #333333;background-color: #FFFFFF;padding-top: 0.52rem;padding-bottom: 0.42rem;margin-bottom: 0;">什么是薪人薪事？</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='xinrenxinshi_text' style="color: #b67535;">薪人薪事</span>，是企家有道网络技术（北京）有限公司旗下的一款SaaS人力资源管理系统，是国内领先的人力资源云系统。2015年12月获得红杉资本5300万元A轮投资，并于2017年1月再次获得红杉数千万B轮投资。
+			</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目前已经有超过15000家企业用户在我们的平台上进行人事管理。薪人薪事已经为百度、58到家、天津电视台等数万家企业，提供了覆盖员工管理、招聘管理、考勤打卡、请假管理、薪酬管理、社保福利、审批流程、组织权限的一体化SaaS软件及服务。致力于将HR从低效的人力工作中解放出来，重塑企业的人力资源管理流程。
+			</p>
+			<p style="text-align: center;font-size: 0.31rem;color: #333333;background-color: #FFFFFF;padding-top: 0.52rem;padding-bottom: 0.42rem;margin-bottom: 0;">如何获取更多资料？</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如需更多关于薪人薪事的详细资料，可在微信中搜索“企赚宝”，关注企赚宝官方微信公众号，在“如何赚钱-领取资料”中下载。
+			</p>
+			<p style="text-align: center;font-size: 0.31rem;color: #333333;background-color: #FFFFFF;padding-top: 0.52rem;padding-bottom: 0.42rem;margin-bottom: 0;">什么是薪人薪事的营销合伙人？</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;“营销合伙人”是薪人薪事旗下企赚宝推出的一种创新合伙人制度。成为营销合伙人后，你唯一需要做的就是提供靠谱的成单线索，我们有专业的销售团队替您跟进并完成后续成单，你则可以赚取高额“合伙人”报酬，这才是赚大钱的正确方式。
+			</p>
+			<p style="text-align: center;font-size: 0.31rem;color: #333333;background-color: #FFFFFF;padding-top: 0.52rem;padding-bottom: 0.42rem;margin-bottom: 0;">什么样的人可以成为营销合伙人？</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果您有丰富的人脉资源，或者优秀的品牌推广能力，或者从事过企业产品的相关工作，或者有hr方面的经历或资源——那么，就是您啦！
+			</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;薪人薪事以最大诚意，与您共建营销新通路。
+			</p>
+			<p style="text-align: center;font-size: 0.31rem;color: #333333;background-color: #FFFFFF;padding-top: 0.52rem;padding-bottom: 0.42rem;margin-bottom: 0;">成为营销合伙人后，如何获得奖励？</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;每提供一条有效线索，您可获得50元奖励！
+			</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;线索客户一旦采购了薪人薪事系统，您可再次获得成交额20%的高额分成！例如：通过薪人薪事专业销售的跟进，您的线索客户最终以5万元的价格购买了薪人薪事系统，则您可以获得1万元的分成奖励。
+			</p>
+			<p class="my-p-style" style="background-color: #FFFFFF;padding-top: 0;padding-bottom: 0.31rem;padding-right: 0.31rem;padding-left: 0.31rem;margin: 0;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果您的粉丝作为营销合伙人获得奖励，您还可以获得额外分成哦！
+			</p>
+		</div>
+
+	</body>
+
+</html>

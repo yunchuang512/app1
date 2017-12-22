@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+
+			.mui-input-row {
+				color: #333333;
+			}
+
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			input{
+				text-align: right;
+			}
+			.my-label-style {
+				font-size: 14px;
+				color: #333333;
+				padding: 5px;
+				margin-left: 10px;
+			}
+
+			label {
+				font-size: 14px;
+			}
+
+			input {
+				font-size: 14px;
+			}
+		</style>
+		<script src="../../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true, //启用右滑关闭功能
+					beforeback:function(){
+						console.log("back");
+					}
+				});
+				var self = plus.webview.currentWebview();
+				console.log(self.myid);
+				//初始化控件
+				var statebox = document.getElementById('state');
+				var failreasonbox = document.getElementById('failreason');
+				var faildiv = document.getElementById('faildiv');
+				var submittimebox = document.getElementById('submittime');
+				var namebox = document.getElementById('name');
+				var areabox = document.getElementById('area');
+				var typebox = document.getElementById('type');
+				var numberbox = document.getElementById('number');
+				var contactnamebox = document.getElementById('contactname');
+				var positionbox = document.getElementById('position');
+				var phonenumberbox = document.getElementById('phonenumber');
+				var backupbox = document.getElementById('backup');
+				//请求数据
+				var baseUrl = getBaseUrl();
+				var url = baseUrl + 'task/clue/cluehistorydetails';
+				console.log("url:" + url);
+				mui.ajax(url, {
+					data: {
+						phoneNumber: '18866668888',
+						id: self.myid
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						if(data.status == "success") {
+							console.log("success");
+							console.log(JSON.stringify(data));
+							var mydata = data.data;
+							if(mydata.state == "2") {
+								statebox.value = "审核中";
+								faildiv.style.display="none";
+							}else if(mydata.state == "1") {
+								statebox.value = "通过";
+								faildiv.style.display="none";
+							}else if(mydata.state == "0") {
+								statebox.value = "未通过";
+								failreasonbox.value=mydata.reason;
+							}
+							submittimebox.value=mydata.time;
+							namebox.value=mydata.name;
+							areabox.value=mydata.session;
+							typebox.value=mydata.field;
+							numberbox.value=mydata.staff;
+							contactnamebox.value=mydata.linkman;
+							positionbox.value=mydata.position;
+							phonenumberbox.value=mydata.phone;
+							backupbox.value=mydata.remark;
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log("error!");
+						console.log(JSON.stringify(xhr));
+						console.log(type);
+					}
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">历史线索详情</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="my-label-style">线索信息</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>线索状态</label>
+					<input id="state" readonly=true type="text" value="" style="color: #FB5237; ">
+				</div>
+				<div class="mui-input-row" id="faildiv">
+					<label>未通过理由</label>
+					<input id="failreason" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+				<div class="mui-input-row">
+					<label>提交时间</label>
+					<input id="submittime" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+
+			</form>
+			<div class="my-label-style">公司信息</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>公司名称</label>
+					<input id="name" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+				<div class="mui-input-row">
+					<label>所属地区</label>
+					<input id="area" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+				<div class="mui-input-row">
+					<label>所属行业</label>
+					<input id="type" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+				<div class="mui-input-row">
+					<label>员工数量</label>
+					<input id="number" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+
+			</form>
+			<div class="my-label-style">联系人信息</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>联系人姓名</label>
+					<input id="contactname" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+				<div class="mui-input-row">
+					<label>联系人职位</label>
+					<input id="position" readonly=true type="text" value="" /*style="text-align: right;"*/>
+				</div>
+				<div class="mui-input-row">
+					<label>联系电话</label>
+					<input id="phonenumber" readonly=true type="text" value=""/*style="text-align: right;"*/>
+				</div>
+			</form>
+			<div class="my-label-style">备注</div>
+			<textarea id="backup" readonly=true rows="8" placeholder="" style="border-radius: 0px;    border: none;"></textarea>
+
+		</div>
+
+	</body>
+
+</html>

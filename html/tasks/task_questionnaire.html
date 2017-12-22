@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+		<script src="../../js/mui.picker.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.picker.css" rel="stylesheet" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../../js/mui.picker.js"></script>
+		<script src="../../js/mui.poppicker.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+		<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-input-row {
+				color: #333333;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			
+			ul {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.mui-input-group .mui-input-row:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0.31rem;
+				height: 0;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.mui-card {
+				font-size: 0.29rem;
+				position: relative;
+				overflow: hidden;
+				margin: 0;
+				margin-bottom: 0.21rem;
+				border-radius: 0.04rem;
+				background-color: #fff;
+				background-clip: padding-box;
+				box-shadow: 0 0 0 rgba(0, 0, 0, .3);
+				padding-bottom: 0.3rem;
+			}
+			
+			.mui-content-padded {
+				color: #333333;
+				font-size: 0.31rem;
+				line-height: 0.47rem;
+				margin-left: 0.31rem;
+				margin-bottom: 0;
+			}
+			
+			.mui-checkbox input[type=checkbox]:before,
+			.mui-radio input[type=radio]:before {
+				font-family: Muiicons;
+				font-size: 0.31rem;
+				line-height: 0.47rem;
+				font-weight: 400;
+				line-height: 1;
+				text-decoration: none;
+				color: #aaa;
+				border-radius: 0;
+				background: 0 0;
+				-webkit-font-smoothing: antialiased;
+			}
+			
+			.my-radio-style {
+				line-height: 0.47rem;
+			}
+			
+			.my-option {
+				margin-left: 0.31rem;
+				line-height: 0.47rem;
+			}
+			
+			.mui-checkbox.mui-left label,
+			.mui-radio.mui-left label {
+				padding-right: 0.31rem;
+				padding-left: 1rem;
+				padding-bottom: 0.1rem;
+			}
+			
+			#header {
+				height: 0.88rem;
+			}
+			
+			#header * {
+				font-size: 0.32rem;
+				font-weight: normal;
+				line-height: 0.88rem;
+				color: #333333;
+				padding: 0;
+				margin: 0;
+			}
+			
+			.mui-bar-nav~.mui-content {
+				padding-top: 0.88rem;
+			}
+		</style>
+		<script src="../../js/app.js"></script>
+		<script type="text/javascript">
+			var problemNum; //题目总数
+			var pIndex; //下一道需加载题目的编号
+			var ans;
+			var problems;
+			var isclickable;
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				problemNum = 0;
+				pIndex = 0;
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				taskId = plus.webview.currentWebview().taskId;
+				taskType = plus.webview.currentWebview().taskType;
+				var url = '';
+				if(taskType == '新手') {
+					url = getBaseUrl() + 'taskmanage/RegularTaskApp/viewSurvey?cu_id=' + localStorage.userId + '&rt_id=' + taskId;
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+						},
+						error: function(xhr, type, errorThrown) {
+						}
+					});
+					problemNum = 6;
+					pIndex = 6;
+					ans = new Array(6);
+					for(var i = 0; i < 6; i++) {
+						ans[i] = -1;
+					}
+					isclickable = true;
+					mui(".mui-input-group").off('tap', '.my-option');
+					//监听用户的答题事件
+					mui(".mui-input-group").on('tap', '.my-option', function() {
+						var problemId = parseInt(this.getAttribute('problemId'));
+						var potionId = parseInt(this.getAttribute('ansId'));
+						ans[problemId-1] = potionId;
+						console.log('选择了题目：' + this.getAttribute('problemId') + ' 答案：' + this.getAttribute('ansId'));
+					});
+
+				} else {
+					url = getBaseUrl() + 'taskmanage/RegularTaskApp/viewSurvey?cu_id=' + localStorage.userId + '&rt_id=' + taskId;
+
+					console.log("任务-问卷-获取题目列表url:" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								problems = data.data;
+								problemNum = problems.length;
+								pIndex = 0;
+								problems = sortByKey(problems, 'q_question_number');
+								//ans用于保存用户选择的答案
+								ans = new Array(problemNum);
+								for(var i = 0; i < problemNum; i++) {
+									ans[i] = -1;
+								}
+								loadProblemOfOnePage();
+								isclickable = true;
+							} else {
+								alert(data.error_code);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error!");
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+
+				function sortByKey(array, key) {
+					return array.sort(function(a, b) {
+						var x = a[key];
+						var y = b[key];
+						return((x < y) ? -1 : ((x > y) ? 1 : 0));
+					});
+				}
+
+				function loadProblemOfOnePage() {
+					var problemString = '';
+					for(var i = pIndex; i < problemNum; i++) {
+						pIndex++;
+						problemString += convertProblemToContent(problems[i]);
+						//每次加载5道题
+						if(i % 5 == 4) {
+							break;
+						}
+					}
+					document.getElementById("problemList").innerHTML = problemString;
+					//每次加载完数据都重新绑定监听事件，否则新加载的数据监听不到
+					mui(".mui-input-group").off('tap', '.my-option');
+					//监听用户的答题事件
+					mui(".mui-input-group").on('tap', '.my-option', function() {
+						var problemId = parseInt(this.getAttribute('problemId'));
+						var potionId = parseInt(this.getAttribute('ansId'));
+
+						ans[problemId] = potionId;
+						console.log('选择了题目：' + this.getAttribute('problemId') + ' 答案：' + this.getAttribute('ansId'));
+					});
+					if(pIndex == problemNum) {
+						document.getElementById("submitButton").innerText = "提交";
+					} else {
+						document.getElementById("submitButton").innerText = "下一页";
+					}
+				}
+
+				function convertProblemToContent(problem) {
+					console.log(JSON.stringify(problem));
+					var problemContent = '';
+					var questionnumber = parseInt(problem.q_question_number) + 1;
+					problemContent +=
+						//添加题目描述
+						'<li class="mui-card"><h5 class="mui-content-padded" myid="' + problem.q_question_number + '">' +
+						questionnumber + '、' + problem.q_question_content +
+						'</h5><form class="mui-input-group">';
+					//添加选项
+					var options = problem.option_list;
+					for(var i in options) {
+						problemContent +=
+							'<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: 0.21rem;" problemId="' +
+							+problem.q_question_number + '" ansId="' + options[i].ol_option_id + '"><label>' +
+							options[i].ol_content +
+							'</label>' +
+							'<input class="my-radio-style" name="radio1" type="radio">' +
+							'</div>'
+					}
+					problemContent += '</form></li>';
+					return problemContent;
+				}
+
+				document.getElementById("submitButton").addEventListener('tap', function() {
+					//还有剩余的题
+					var cnt = 0;
+					for(var i = 0; i < problemNum; i++) {
+						console.log('===  ' + ans[i]);
+						if(ans[i] != -1) {
+							cnt++;
+						}
+					}
+					//提示该页有未做的题
+					if(cnt < pIndex) {
+						mui.toast("此页还有未完成的题，请检查哟");
+						return;
+					}
+					if(pIndex < problemNum) {
+						loadProblemOfOnePage();
+					} else {
+						if(isclickable) {
+							submitData();
+							isclickable = false;
+						}
+					}
+				});
+
+				function submitData() {
+					var url = '';
+					if(taskType == '新手') {
+						url = getBaseUrl() + 'taskmanage/NoviceTaskApp/submitQuestionnaire';
+					} else {
+						url = getBaseUrl() + 'taskmanage/RegularTaskApp/submitSurvey';
+					}
+					console.log("任务-问卷-提交答案url:" + url);
+					var answer = {};
+					for(var i = 0; i < problemNum; i++) {
+						answer[i] = ans[i];
+					}
+					console.log('新手任务 ' + JSON.stringify(answer));
+
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data: {
+							cu_id: localStorage.userId,
+							rt_id: taskId,
+							answer: answer
+						},
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								/*mui.alert('您已获得' + data.score + '薪豆', '提交成功', '去做其它任务', function() {
+									var task_questionnaire_homepage = plus.webview.getWebviewById('questionnairehomepage');
+									mui.fire(task_questionnaire_homepage, 'initpage', {}); //刷新问卷详情页
+									var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+									mui.fire(taskpage, 'initpage', {});
+									var homepage = plus.webview.getWebviewById('html/homepage.html');
+									mui.fire(homepage, 'initpage', {});
+									mui.fire(task_questionnaire_homepage,"close",{});
+									plus.webview.currentWebview().close();
+								});*/
+								document.getElementById('beans').innerText = data.score;
+								$("#confirm_view").css("display", "block");
+							} else {
+								//alert(data.error_code);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error!");
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+				mui.back = function() {
+					var homepage = plus.webview.getWebviewById('html/homepage.html');
+					mui.fire(homepage, 'initpage', {});
+					var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+					mui.fire(taskpage, 'initpage', {});
+					plus.webview.currentWebview().close();
+				}
+
+				document.getElementById('confirm_button').addEventListener('tap', function() {
+					$("#confirm_view").css('display', 'none');
+					var task_questionnaire_homepage = plus.webview.getWebviewById('questionnairehomepage');
+					mui.fire(task_questionnaire_homepage, 'initpage', {}); //刷新问卷详情页
+					var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+					mui.fire(taskpage, 'initpage', {});
+					var homepage = plus.webview.getWebviewById('html/homepage.html');
+					mui.fire(homepage, 'initpage', {});
+					mui.fire(task_questionnaire_homepage, "close", {});
+					plus.webview.currentWebview().close();
+				});
+
+				//****新手问卷****
+				var hangyePicker = new mui.PopPicker();
+				hangyePicker.setData([{
+					value: '0',
+					text: '互联网·游戏·软件'
+				}, {
+					value: '1',
+					text: '电子·通信·硬件'
+				}, {
+					value: '2',
+					text: '房地产·建筑·物业'
+				}, {
+					value: '3',
+					text: '金融'
+				}, {
+					value: '4',
+					text: '汽车·机械·制造'
+				}, {
+					value: '5',
+					text: '服务·外包·中介'
+				}, {
+					value: '6',
+					text: '广告·传媒·教育·文化'
+				}, {
+					value: '7',
+					text: '交通·贸易·物流'
+				}, {
+					value: '8',
+					text: '制药·医疗/能源·化工·环保'
+				}, {
+					value: '9',
+					text: '其它'
+				}, ]);
+				document.getElementById('hangye').addEventListener('tap', function(event) {
+					hangyePicker.show(function(items) {
+						document.getElementById("hangye").innerHTML = items[0].text;
+						ans[2] = parseInt(items[0].value);
+					});
+				});
+
+				var didianPicker = new mui.PopPicker();
+
+				didianPicker.setData([{
+					value: '0',
+					text: '北京'
+				}, {
+					value: '1',
+					text: '上海'
+				}, {
+					value: '2',
+					text: '广州'
+				}, {
+					value: '3',
+					text: '深圳'
+				}, {
+					value: '4',
+					text: '杭州'
+				}, {
+					value: '5',
+					text: '天津'
+				}, {
+					value: '6',
+					text: '武汉'
+				}, {
+					value: '7',
+					text: '成都'
+				}, {
+					value: '8',
+					text: '西安'
+				}, {
+					value: '9',
+					text: '其它'
+				}, ]);
+				document.getElementById('didian').addEventListener('tap', function(event) {
+					didianPicker.show(function(items) {
+						document.getElementById("didian").innerHTML = items[0].text;
+						ans[5] = parseInt(items[0].value);
+					});
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">问卷详情</h1>
+		</header>
+		<div class="mui-content" style="margin-bottom: 0.75rem;">
+			<ul id="problemList">
+
+				<li class="mui-card">
+					<h5 class="mui-content-padded">1、您的年龄是</h5>
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: 0.21rem;" problemId="1" ansId="0">
+							<label>18以下</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="1" ansId="1">
+							<label>18-25</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="1" ansId="2">
+							<label>25-30</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="1" ansId="3">
+							<label>30-50</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="1" ansId="4">
+							<label>50以上</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+					</form>
+				</li>
+				<li class="mui-card">
+					<p class="mui-content-padded" style="font-size: 0.31rem; color: #333333;">2、您的性别是</p>
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: 0.21rem;" problemId="2" ansId="0">
+							<label>男</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="2" ansId="1">
+							<label>女</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+					</form>
+				</li>
+				<li class="mui-card" style="position: relative;">
+					<p class="mui-content-padded" style="font-size: 0.31rem; color: #333333;">3、您的行业是</p>
+					<p id="hangye" style="position: absolute; right:0; margin-right: 0.3rem; top: 0.21rem; font-size: 0.31rem;">请选择</p>
+				</li>
+				<li class="mui-card">
+					<p class="mui-content-padded" style="font-size: 0.31rem; color: #333333;">4、您的岗位是</p>
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: 0.21rem;" problemId="4" ansId="0">
+							<label>人力资源相关</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="4" ansId="1">
+							<label>销售、渠道相关</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="4" ansId="2">
+							<label>市场、运营相关</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="4" ansId="3">
+							<label>公司高管 </label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="4" ansId="4">
+							<label>其他 </label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+					</form>
+				</li>
+				<li class="mui-card">
+					<p class="mui-content-padded" style="font-size: 0.31rem; color: #333333;">5、您的收入（平均每月税前）</p>
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: 0.21rem;" problemId="5" ansId="0">
+							<label>3000以下</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="5" ansId="1">
+							<label>3000-7000</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="5" ansId="2">
+							<label>7000-15000</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top:-0.1rem;" problemId="5" ansId="3">
+							<label>15000~30000</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left my-option" style="margin-top: -0.1rem;" problemId="5" ansId="4">
+							<label>30000以上</label>
+							<input class="my-radio-style" name="radio1" type="radio">
+						</div>
+
+					</form>
+
+				</li>
+				<li class="mui-card">
+					<p class="mui-content-padded" style="font-size: 0.31rem; color: #333333;">6、您的工作地点</p>
+					<p id="didian" style="position: absolute; right:0; margin-right: 0.3rem; top: 0.21rem; font-size: 0.31rem;">请选择</p>
+				</li>
+			</ul>
+			<p id="submitButton" style="margin-bottom: 0;font-size:0.33rem;text-align: center;position: fixed;bottom: 0;left:0;background:#FF5033;width: 100%;color: white;padding: 0.21rem; ">
+				提交
+			</p>
+
+		</div>
+
+		<div id="confirm_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;display:none; background-color: rgba(0,0,0,0.4);">
+			<div style="position: relative;width: 5.1rem;height: 2.71rem;text-align:center;border-radius: 0.06rem;background: #FFFFFF;margin: 3.33rem auto;">
+				<div style="padding-top: 0.63rem;font-size: 0.27rem;color: #FB5237;font-weight: bold;">提交成功</div>
+				<div style="margin-top:0.1rem;font-size: 0.27rem;color: #333333;">您已获得<span id="beans" style="color: #FB5237;">--</span>薪豆</div>
+				<button type="button" id="confirm_button" style="margin-top:0.31rem;border:none;width: 1.88rem;height: 0.52rem;border-radius: 0.31rem;background: #FB5237;color: #FFFFFF;font-size: 0.27rem;line-height: 0.27rem;padding: 0;">去做其他任务</button>
+			</div>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/app.js"></script>
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<script src="../js/mui.picker.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+		<link href="../css/mui.picker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<!--改变头像-->
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script type="text/javascript" src="../js/immersed.js"></script>
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			div,
+			input,
+			span {
+				font-size: 0.28rem;
+			}
+			
+			input {
+				text-align: right;
+				right: 0.2rem;
+			}
+			
+			.mui-input-row {
+				color: #333333;
+			}
+			
+			.mui-input-group .mui-input-row {
+				height: 1rem;
+				padding-right: 0.4rem;
+				padding-top: 0.1rem;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-input-group:after {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-input-group .mui-input-row:after {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				height: 0.02rem;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			.mui-bar-nav~.mui-content{
+         	   padding-top: 0.88rem;
+        		}
+        		
+        		.mui-input-row label{
+        			line-height: 0.6rem;
+        		}
+        		
+        		.mui-input-row input{
+        			height: 0.8rem;        		
+    			}
+		</style>
+		<script type="text/javascript">
+			var photodata = '';
+			var photoChanged = false;
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				
+				/*document.getElementById('age').addEventListener('tap', function(event) {
+					//alert("a");
+					var optionsJson = '{"type": "date"}' || '{}';
+					var options = JSON.parse(optionsJson);
+
+					var picker = new mui.DtPicker(options);
+					picker.show(function(rs) {
+						document.getElementById("birthday").value = rs.text;
+						picker.dispose();
+					});
+				});*/
+				//获取用户信息
+				getUserInfo();
+				var cityPicker3 = new mui.PopPicker({
+					layer: 3
+				});
+				cityPicker3.setData(cityData3);
+				document.getElementById('cityaddress').addEventListener('tap', function(event) {
+					blurOther();
+					cityPicker3.show(function(items) {
+						var address = (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+						document.getElementById("cityaddress").value = address;
+						//返回 false 可以阻止选择框的关闭
+						//return false;
+					});
+				});
+				var sexPicker = new mui.PopPicker();
+				sexPicker.setData([{
+					value: '女',
+					text: '女'
+				}, {
+					value: '男',
+					text: '男'
+				}]);
+				document.getElementById('sex').addEventListener('tap', function(event) {
+					blurOther();
+					sexPicker.show(function(items) {
+						document.getElementById("sex").value = items[0].value;
+					});
+				});
+				var eduPicker = new mui.PopPicker();
+				eduPicker.setData([{
+					value: '博士',
+					text: '博士'
+				}, {
+					value: '硕士',
+					text: '硕士'
+				}, {
+					value: '本科',
+					text: '本科'
+				}, {
+					value: '专科',
+					text: '专科'
+				}, {
+					value: '其他',
+					text: '其他'
+				}]);
+				document.getElementById('education').addEventListener('tap', function(event) {
+					blurOther();
+					eduPicker.show(function(items) {
+						document.getElementById("education").value = items[0].value;
+					});
+				});
+				
+				var agePicker = new mui.DtPicker({
+					type:'date',
+					beginDate: new Date(1900, 0, 01),//设置开始日期 
+				});
+				document.getElementById("age").addEventListener('tap', function(event) {
+					blurOther();
+					agePicker.show(function (selectItems) { 
+				        console.log(selectItems.y.value);//{text: "2016",value: 2016} 
+				        console.log(selectItems.m.value);
+				        console.log(selectItems.d.value);
+				        document.getElementById("age").value = selectItems.y.value + '-' + selectItems.m.value + '-' + selectItems.d.value;
+				 	});
+				});
+				document.getElementById("save").addEventListener('tap', function(event) {
+					var url = getBaseUrl() + '/user/ClientUser/updateUserData';
+					var nickname = document.getElementById("nickname").value;
+					var phonenumber = document.getElementById("phonenumber").value;
+					var name = document.getElementById("name").value;
+					var sex = document.getElementById("sex").value;
+					var cityaddress = document.getElementById("cityaddress").value;
+					var education = document.getElementById("education").value;
+					var occupation = document.getElementById("occupation").value;
+					var age = document.getElementById("age").value;
+					if(photoChanged == false) {
+						photodata = '';
+					}
+					var t = {
+						cu_avatar: photodata,
+						cu_name: nickname,
+						cu_gender: sex,
+						cu_city: cityaddress,
+						cu_education: education,
+						cu_age: age,
+						cu_job: occupation,
+						cu_phonenumber: localStorage.phonenumber,
+						cu_real_name: name
+					};
+					console.log(JSON.stringify(t));
+					console.log(url);
+					mui.ajax(url, {
+						data: {
+							cu_avatar: photodata,
+							cu_name: nickname,
+							cu_gender: sex,
+							cu_city: cityaddress,
+							cu_education: education,
+							cu_age: age,
+							cu_job: occupation,
+							cu_phonenumber: localStorage.phonenumber,
+							cu_realname: name
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log("成功");
+							console.log(JSON.stringify(data));
+							if (data.status == 'success') {
+								console.log('修改信息成功');
+								mui.toast('修改信息成功');
+								photoChanged = false;
+								mui.fire(plus.webview.currentWebview().opener(), 'initpage', {});
+							} else {
+								console.log('修改信息失败');
+								mui.toast('修改信息失败');
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				});
+
+				document.getElementById("img1").addEventListener('tap',function(event){
+					mui('#picture').popover('toggle');
+					getImage();
+					
+				});
+				document.getElementById("img2").addEventListener('tap',function(event){
+					mui('#picture').popover('toggle');
+					galleryImg();
+				});
+				
+				function blurOther(){
+					$("#nickname").blur();
+					$("#phonenumber").blur();
+					$("#name").blur();
+					$("#occupation").blur();
+				}
+				
+				function getImage() {
+					var cmr = plus.camera.getCamera();
+					cmr.captureImage(function(path) {
+						plus.io.resolveLocalFileSystemURL(path, function(entry) {
+							var localurl = entry.toLocalURL(); //
+							mui.openWindow({
+								url: 'cutheadimage.html',
+								extras: {
+									name: localurl
+								}
+							})
+						});
+					});
+				}
+
+				function galleryImg() {
+					// 从相册中选择图片
+					//outSet("从相册中选择图片:");
+					plus.gallery.pick(function(path) {
+						//outLine(path);
+						mui.openWindow({
+								url: 'cutheadimage.html',
+								extras: {
+									name: path
+								}
+							})
+							//showImg( path );
+							//createItem(path);
+					}, function(e) {
+						outSet("取消选择图片");
+					}, {
+						filter: "image"
+					});
+				}
+				window.addEventListener("cropperImg", function(event) {
+					console.log("new image set"+event.detail.resImg);
+					document.getElementById("photo").src = event.detail.resImg;
+					//localStorage.userPhoto = event.detail.resImg;
+					photoChanged = true;
+					photodata = event.detail.resImg;
+					mui.trigger(document.getElementById("save"), 'tap');
+				});
+			});
+
+			function getUserInfo() {
+				document.getElementById("phonenumber").value = localStorage.phonenumber;
+				console.log(localStorage.phonenumber);
+				var url = getBaseUrl() + '/user/ClientUser/viewUserData?cu_phonenumber=' + localStorage.phonenumber + '&randomnum='+Math.random();
+				console.log('url='+url);
+				mui.ajax(url, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						console.log("成功");
+						console.log(JSON.stringify(data));
+						if (data.status == 'success') {
+							data = data.data;
+							console.log('data = ' + JSON.stringify(data));
+							console.log(data.cu_phonenumber);
+							var time = new Date().getTime();
+							//登录成功，跳转到主页，若以后加了安全验证，在此处写jessionId
+							document.getElementById("photo").src=getBaseUrl()+data.cu_avatar + '?x=' + time;
+							document.getElementById("nickname").value = data.cu_name;
+							document.getElementById("phonenumber").value = data.cu_phonenumber;
+							document.getElementById("name").value = data.cu_realname;
+							document.getElementById("cityaddress").value = data.cu_city;
+							document.getElementById("sex").value = data.cu_gender;
+							document.getElementById("occupation").value = data.cu_job;
+							document.getElementById("education").value = data.cu_education;
+							document.getElementById("age").value = data.cu_age;
+						} else {
+							switch (parseInt(data.error_code)) {
+								case 1:
+									mui.toast('该手机号尚未注册哦');
+									break;
+								case 2:
+									mui.toast('用户名或密码错误');
+									break;
+								case 3:
+									mui.toast('该账号已被停用');
+									break;
+								default:
+									break;
+							}
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(JSON.stringify(xhr));
+						console.log(type);
+					}
+				});
+				
+			}
+		</script>
+	</head>
+
+	<body onload="getUserInfo()">
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">个人资料</h1>
+			
+		</header>
+
+		<div class="mui-content">
+			<form class="mui-input-group">
+				<div class="mui-input-row" style="height: auto;">
+					<a class="mui-navigate-right">
+						<div class="mui-media-body">
+							<span class='mui-ellipsis' style="font-size: 0.28rem; float: left;color: #333333; padding-left: 0.3rem; height: 2rem; line-height: 2rem;">头像</span>
+							<a href="#picture">
+								<img id="photo" class="mui-media-object mui-pull-right" src="../images/userhead.png" style="width: 1.4rem;height: 1.4rem;margin:0.3rem 0.6rem; padding:0;border-radius: 0.7rem;"></a>
+						</div>
+					</a>
+				</div>
+				<div class="mui-input-row">
+					<label>昵称</label>
+					<input id="nickname" type="text" class="mui-input-clear" value="段睿泽">
+				</div>
+				<div class="mui-input-row">
+					<label>手机号</label>
+					<input id="phonenumber" readonly=true type="text" value="13245684521">
+				</div>
+
+				<div class="mui-input-row" style="display: none;">
+					<label>姓名</label>
+					<input id="name" type="text" placeholder="未填写">
+				</div>
+				<div class="mui-input-row">
+					<label>性别</label>
+					<input id="sex" type="text" readonly="true" placeholder="--请选择--">
+				</div>
+				<div class="mui-input-row">
+					<label>城市</label>
+					<input id="cityaddress" type="text" readonly="true" placeholder="--请选择--">
+				</div>
+				<div class="mui-input-row">
+					<label>学历</label>
+					<input id="education" type="text" readonly="true" class="mui-input-clear" placeholder="--请选择--">
+				</div>
+				<div class="mui-input-row">
+					<label>职业</label>
+					<input id="occupation" type="text" class="mui-input-clear" placeholder="请填写">
+				</div>
+				<div class="mui-input-row">
+					<label>出生日期</label>
+					<input id="age" type="text" readonly="true" class="mui-input-clear" placeholder="--请选择--">
+				</div>
+
+			</form>
+
+			<p id="save" style="margin-bottom: 0;font-size:0.34rem;text-align: center;position: fixed;bottom: 0;left:0;background: #FB5237;width: 100%;color: white;padding: 0.2rem;">
+				保存修改
+			</p>
+		</div>
+		<div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a id="img1">拍摄图片</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a id="img2">选取现有图片</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#picture"><b>取消</b></a>
+				</li>
+			</ul>
+		</div>
+		<div style="height: 2rem;"></div>
+	</body>
+
+</html>

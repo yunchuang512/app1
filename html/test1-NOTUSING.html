@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/jquery.pin.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.box {
+				position: fixed;
+				top: 44px;
+			}
+		</style>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {  
+				window.onscroll  =   function ()  {  
+console.log(">>>>>>>>>sdfsdas");
+				};
+				var testbox = document.getElementById("testid");
+				var offsettop = $("#testid").offset().top - 44;
+				console.log(">>>>>>>>>" + offsettop);
+				document.getElementById("content").addEventListener('drag', function(event) {
+					var scrolltop = document.body.scrollTop;
+					console.log(">>>>>>>>>" + scrolltop);
+					if(scrolltop > offsettop) {
+						testbox.classList.add("box");
+					} else {
+						testbox.classList.remove("box")
+					}
+
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">测试</h1>
+		</header>
+
+		<div class="mui-content" id="content">
+			<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			<div id="testid">
+				<div class="info">啊啊啊啊v</div>
+			</div>
+			<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+			<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+			<!--hello<br />hello<br />hello<br />hello<br />
+			<div id="title" style="display: block;width: 100%;background-color: #0062CC;">
+				title
+			</div>
+			<ul id="list" class="mui-table-view mui-table-view-chevron" style="margin-top: 0px;">
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" style="padding-right: 15px;">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: left;padding: 0px;">3级</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: center;padding: 0px;">张三</div>
+						<div class="mui-col-sm-4 mui-col-xs-4" style="text-align: right;padding: 0px;">10积分</div>
+					</div>
+				</li>
+			</ul>-->
+		</div>
+
+	</body>
+
+</html>

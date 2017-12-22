@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+
+			.my-p-style {
+				font-size: 16px;
+				margin-top: 5px;
+				color: #333333;
+			}
+
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0px;
+			}
+
+			.my-p-date {
+				color: #999999;
+				font-size: 14px;
+				padding-top: 5px;
+				margin-top: 10px;
+				float: right;
+			}
+
+			[class*="col-"] {
+				float: left;
+				padding: 0px;
+			}
+
+			.my-p-style {
+				color: #333333;
+				font-size: 15px;
+			}
+
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+		</style>
+		<script src="../../js/app.js"></script>
+		<script type="text/javascript">
+			var shares = {};
+			var linkToXinrenxinshi = '';
+			var imagePath = '';
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+
+				});
+				plus.navigator.closeSplashscreen();
+				plus.share.getServices(function(s) {
+					if(s && s.length > 0) {
+						for(var i = 0; i < s.length; i++) {
+							var t = s[i];
+							shares[t.id] = t;
+						}
+					}
+				}, function() {
+					console.log("获取分享服务列表失败");
+				});
+				var stateclass = ['my-p-fail', 'my-p-success', 'my-p-checking'];
+				var registerlistul = document.getElementById('registerlistul');
+				var baseUrl = getBaseUrl();
+				var url = baseUrl + 'task/share/receiveInviteFansList?phoneNumber=18866668888';
+				console.log("url>>>>>>>>>>" + url);
+				mui.ajax(url, {
+					data: {
+						phoneNumber: localStorage.phonenumber
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(data.status == "success") {
+							console.log("success");
+							console.log(JSON.stringify(data));
+							var mydata = data.data;
+							console.log(mydata.length);
+							if(mydata.length > 0) {
+								$("#havecontent").css("display", "initial");
+								$("#nocontent").css("display", "none");
+							} else {
+								$("#havecontent").css("display", "none");
+								$("#nocontent").css("display", "block");
+							}
+							var temp = ""
+							for(var i = 0; i < mydata.length; i++) {
+								temp += '<li myid="' + mydata[i].id + '" class="mui-table-view-cell mui-media my-li-historyclue">' +
+									'<div class="mui-media-body row">' +
+									'<div class="col-10">' +
+									'<p class="my-p-style">' + mydata[i].name + '</p>' +
+									'<p class="my-p-style">' + mydata[i].sharer + '</p>' +
+									'</div>' +
+									'<div class="col-2">' +
+									'<p class="my-p-date">' + mydata[i].time + '</p>' +
+									'</div>' +
+									'</div>' +
+									'</li>'
+							}
+							registerlistul.innerHTML = temp;
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log("error!");
+						console.log(JSON.stringify(xhr) + errorThrown);
+						console.log(type);
+
+						$("#havecontent").css("display", "none");
+						$("#nocontent").css("display", "block");
+					}
+				});
+
+				document.getElementById("shareregisterid").addEventListener('tap', function() {
+					if(localStorage.islogin == "1") {
+						openShare();
+					} else {
+						openLoginpage2();
+					}
+				});
+
+				function closeself() {
+					mui.currentWebview.close();
+				}
+				window.addEventListener('share', function(event) {
+					//执行分享
+					var id = event.detail.id;
+					select(id);
+				});
+				window.addEventListener('closeMask', function(event) {
+					//执行分享
+					closeMask();
+				});
+
+			});
+
+			function openShare() {
+				shareWebview();
+			}
+			var sharew;
+			var ws = null;
+			/**
+			 *分享窗口
+			 */
+			function shareWebview() {
+				ws = plus.webview.currentWebview();
+				if(sharew) { // 避免快速多次点击创建多个窗口
+					return;
+				}
+				var top = plus.display.resolutionHeight - 145;
+				var href = "share.html";
+
+				sharew = plus.webview.create(href, "share.html", {
+					width: '100%',
+					height: '245',
+					top: top,
+					scrollIndicator: 'none',
+					scalable: false,
+					popGesture: 'none'
+				}, {
+					shareInfo: {
+						"url": "share",
+						"title": "测试",
+						"content": "测试",
+						"pageSourceId": ws.id
+					}
+				});
+				sharew.addEventListener("loaded", function() {
+					sharew.show('slide-in-bottom', 245);
+				}, false);
+				// 显示遮罩层
+
+				ws.setStyle({
+					mask: "rgba(0,0,0,0.5)"
+				});
+				// 点击关闭遮罩层
+				ws.addEventListener("maskClick", closeMask, false);
+			}
+
+			function closeMask() {
+				ws.setStyle({
+					mask: "none"
+				});
+				//避免出现特殊情况，确保分享页面在初始化时关闭
+				if(!sharew) {
+					sharew = plus.webview.getWebviewById("share.html");
+				}
+				if(sharew) {
+					sharew.close();
+					sharew = null;
+				}
+			}
+
+			function select(id) {
+				var msg;
+				var type, s_id, s_ex;
+				switch(id) {
+					case 'weixin': //微信好友
+						type = 1;
+						s_id = 'weixin';
+						s_ex = 'WXSceneSession';
+						break;
+					case 'weixinfriend': //朋友圈
+						type = 1;
+						s_id = 'weixin';
+						s_ex = 'WXSceneTimeline';
+						break;
+					case 'qq': //qq
+						type = 1;
+						s_id = 'qq';
+						s_ex = '';
+						break;
+					case 'sinaweibo':
+						type = 1;
+						s_id = 'sinaweibo';
+						break;
+					case 'copy':
+						type = 0;
+						break;
+					case 'save':
+						type = 2;
+						break;
+					default:
+						break;
+				}
+				if(type == 1) { //分享
+					var share = shares[s_id];
+					console.log(JSON.stringify(share));
+					if(share.authenticated) {
+						shareMessage(share, s_ex);
+					} else {
+						share.authorize(function() {
+							shareMessage(share, s_ex);
+						}, function(e) {
+							if(e.code == -8) mui.alert("客户端未安装");
+							console.log("认证授权失败：" + e.code + " - " + e.message);
+						});
+					}
+				} else if(type == 0) { //保存
+					copyToClip(linkUrl);
+					mui.toast("复制链接成功");
+
+				} else if(type == 2) {
+					saveNetPicture(imagePath);
+					console.log(imagePath);
+					mui.toast("二维码已保存至系统相册");
+				}
+			}
+
+			function shareMessage(share, ex) {
+				var msg = {
+					extra: {
+						scene: ex
+					}
+				};
+				msg.href = linkToXinrenxinshi;
+				console.log(linkToXinrenxinshi);
+				msg.title = localStorage.nickname + "邀请您注册薪人薪事！";
+				msg.content = "薪人薪事，极致好用的人力资源云系统！";
+				msg.thumbs = ["../images/how_to_make_money.png"];
+				share.send(msg, function() {
+					console.log("分享到\"" + share.description + "\"成功");
+				}, function(e) {
+					console.log("分享到\"" + share.description + "\"失败: " + e.code + "-" + e.message);
+				});
+			}
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">注册名单</h1>
+		</header>
+
+		<div class="mui-content">
+			<div id="havecontent" style="display: initial;">
+				<ul id="registerlistul" class="mui-table-view">
+					<!--<li class="mui-table-view-cell mui-media my-li-historyclue">
+						<div class="mui-media-body row">
+							<div class="col-8">
+								<p class="my-p-style">怕怕怕怕怕怕怕怕怕怕怕</p>
+								<p class="my-p-style">145415</p>
+							</div>
+							<div class="col-4">
+								<p class="my-p-date">2016-11-08 08:32:53</p>
+							</div>
+						</div>
+					</li>-->
+				</ul>
+			</div>
+			<div id="nocontent" style="display: none;text-align: center;">
+				<p style="text-align: center;color: #999999;margin-top: 150px;font-size: 16px;margin-bottom:20px;">暂无注册名单</p>
+				<span id="shareregisterid" style="color: #FFFFFF;margin-top: 50px;font-size: 16px;background-color: #FB5237;width: 300px;padding-bottom: 8px;padding-top: 8px;padding-left: 50px;padding-right: 50px;border-radius: 2px;">分享注册</span>
+			</div>
+
+		</div>
+
+	</body>
+
+</html>

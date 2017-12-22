@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+		<style>
+			html {
+				background-color: #F8F8F8;
+			}
+
+			.my-card {
+				margin: 0px;
+				border-radius: 0px;
+				box-shadow: 0 0.4px 0.1px rgba(0, 0, 0, 0);
+				;
+			}
+
+			.mui-content>.mui-card:first-child {
+				margin-top: 0px;
+			}
+
+			.my-box-new:active {
+				background-color: #DCDCDC;
+			}
+
+			.my-span-rednumber {
+				color: #FB5237;
+				font-size: 14px;
+				padding-left: 5px;
+				padding-right: 5px;
+			}
+		</style>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: true
+				});
+				var baseUrl = getBaseUrl();
+				var url = baseUrl + 'task/clue/clueillustration';
+				console.log("提供线索任务url>>>>>>>>>>" + url);
+				mui.ajax(url, {
+					data: {
+						phoneNumber: localStorage.phonenumber
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						var mydata = data.data;
+						document.getElementById('taskstep').innerText = mydata.context;
+						document.getElementById('beanid1').innerText = mydata.beans;
+						document.getElementById('beanid2').innerText = mydata.total;
+						$("#taskicon").attr("src", getBaseUrl() + mydata.Icon)
+						var issuccess = true;
+
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log("error!");
+						console.log(JSON.stringify(xhr));
+						console.log(type);
+					}
+				});
+
+				document.getElementById('taskhistoryclue').addEventListener('tap', function(event) {
+					if(localStorage.islogin == "1") {
+						mui.openWindow({
+							url: 'taskhistoryclue.html',
+							id: 'taskhistoryclue',
+							show: {
+								duration: 200
+							},
+							createNew: true,
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage2();
+					}
+				});
+				document.getElementById('provideclue').addEventListener('tap', function(event) {
+					if(localStorage.islogin == "1") {
+						mui.openWindow({
+							url: 'taskcluedetail.html',
+							id: 'taskcluedetail',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage2();
+					}
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<a id="taskhistoryclue" class="mui-pull-right" style="color: white;text-align: center;padding-right:5px;margin-top: 12px;">历史线索</a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">提供线索任务</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper" style="margin-top: 44px; z-index: -1;">
+				<div class="mui-scroll">
+					<div class="mui-card my-card" style="margin-top: 1px;">
+						<div class="mui-card-content">
+							<div class="mui-card-content-inner" style="padding: 0px;">
+								<div class="row">
+									<div class="col-3">
+										<img id="taskicon" src="../../images/60x60.gif" style="padding: 5px;height: 80px;" />
+									</div>
+									<div class="col-9">
+										<h5 id="tasktitle" style="padding-top: 5px;font-size: 18px;color: #333333;">提供线索</h5>
+										<p id="taskexplain" class="mui-ellipsis-2" style="font-size: 12px;color: #999999;">
+											每提供一条线索，奖励<span id="beanid1" class="my-span-rednumber">10</span>薪豆<br />
+											 已累计奖励<span id="beanid2" class="my-span-rednumber">100</span>薪豆
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="mui-card my-card" style="margin-top: 20px;">
+						<div class="mui-card-header" style="">
+							<p style="margin-bottom: 0px;color: #333333;font-size: 16px;">任务步骤</p>
+						</div>
+						<div class="mui-card-content">
+							<div class="mui-card-content-inner" style="padding: 10px;">
+								<p id="taskstep" style="color: #333333;">1.点击“提供线索”填写线索</p>
+							</div>
+						</div>
+					</div>
+					<div class="mui-card my-card" style="margin-top: 20px;">
+						<div class="mui-card-header" style="">
+							<p style="margin-bottom: 0px;color: #333333;font-size: 16px;">薪人薪事介绍</p>
+						</div>
+						<div class="mui-card-content">
+							<img src="../../images/xinrenxinshi.png " style="width: 100%; " />
+						</div>
+						<!--防止图片底部被遮挡-->
+						<div style="height: 100px; "></div>
+					</div>
+				</div>
+			</div>
+			<p id="provideclue" style="margin-bottom: 0px;font-size:18px;text-align: center;position: fixed;bottom: 0px;left:0px;background: #FB5237;width: 100%;color: white;padding: 10px; ">
+				提供线索
+			</p>
+		</div>
+
+	</body>
+
+</html>

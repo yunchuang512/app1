@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/style1.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<style>
+			.my-div-left {
+				font-size: 0.33rem;
+				line-height: 0.5rem;
+				float: left;
+			}
+			
+			.my-p-right {
+				font-size: 0.25rem;
+				line-height: 0.83rem;
+				float: right;
+			}
+			
+			.mui-table-view-chevron .mui-table-view-cell {
+				padding-right: 0.21rem;
+			}
+			
+			.my-img {
+				width: 0.83rem;
+				height: 0.83rem;
+			}
+			
+			.my-p-12 {
+				font-size: 0.25rem;
+				line-height: 0.38rem;
+				color: #999999;
+			}
+			
+			.my-p-14 {
+				font-size: 0.25rem;
+				line-height: 0.38rem;
+				color: #333333;
+			}
+			
+			.my-red-round {
+				display: block;
+				height: 0.25rem;
+				background-color: #FB5237;
+				width: 0.25rem;
+				position: absolute;
+				border-radius: 0.13rem;
+				margin-top: -0.06rem;
+				margin-left: -0.06rem;
+				border: 0.02rem solid #FFFFFF;
+			}
+			
+			.my-icon {
+				font-size: 0.83rem;
+				color: #FB5237;
+				margin-right: 0.1rem;
+			}
+			
+			.mui-table-view:before {
+				position: absolute;
+				right: 0;
+				left: 0;
+				height: 0.02rem;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #FFFFFF;
+				top: -0.02rem;
+			}
+		</style>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script>
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				//初始化控件
+				messagebox = document.getElementById("pullrefresh");
+				nothingbox = document.getElementById("nothingid");
+				loadingbox = document.getElementById("loading");
+				mui.init({
+					pullRefresh: {
+						container: '#pullrefresh',
+						down: {
+							callback: pulldownRefresh
+						}
+						//						,
+						//						up: {
+						//							contentrefresh: '正在加载...',
+						//							callback: pullupRefresh
+						//						}
+					}
+				});
+				pulldownRefresh();
+				/**
+				 * 下拉刷新具体业务实现
+				 */
+				function pulldownRefresh() {
+					var url = getBaseUrl() + 'index/Message/receiveUnreadInfo?phoneNumber=' + localStorage.phonenumber;
+					console.log("消息列表url>>>>>" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == "success") {
+								var data = data.data;
+								if(data.length > 0) {
+									$("#loading").fadeOut("slow", function() {
+										$("#pullrefresh").fadeIn("slow");
+									});
+									/*messagebox.style.display = "block";
+									nothingbox.style.display = "none";
+									loadingbox.style.display="none";*/
+								} else {
+									$("#loading").fadeOut("slow", function() {
+										$("#nothingid").fadeIn("slow");
+									});
+									/*messagebox.style.display = "none";
+									nothingbox.style.display = "block";
+									loadingbox.style.display="none";*/
+								}
+								var table = document.body.querySelector('.mui-table-view');
+								//table.innerHTML = "";
+								var lihtml = "";
+								var cells = document.body.querySelectorAll('.mui-table-view-cell');
+								for(var i = 0; i < data.length; i++) {
+									var temp = data[i];
+									var title = "标题";
+									var abs = "";
+									var state = "";
+									var img = '';
+									if(temp.state == "0") {
+										state = '<div class="my-red-round"></div>';
+									}
+									switch(temp.type) {
+										case "1":
+											img = '<span class="mui-pull-left icon-tongzhi my-icon" style="color: #76bd3d;"></span>';
+											if(temp.result == "1") {
+												title = "线索审核通过";
+												abs = "您提交的销售线索：" + temp.firm + "，经审核已通过。" + temp.beans + "薪豆已经到账，欢迎您提供更多线索哦！"
+											} else if(temp.result == "0") {
+												title = "线索审核未通过";
+												abs = "您提交的销售线索：" + temp.firm + "，经审核未通过。原因是" + temp.reason + "。欢迎您提供其他线索赢取奖励哦！"
+											}
+											console.log("销售线索审核结果通知");
+											break;
+										case "2":
+											img = '<span class="mui-pull-left icon-tongzhi my-icon" style="color: #76bd3d;"></span>';
+											if(temp.result == "1") {
+												title = "销售资格审核通过";
+												abs = "您的营销合伙人申请已审核通过，恭喜您成为企赚宝营销合伙人！";
+											} else if(temp.result == "0") {
+												title = "销售资格审核未通过";
+												if(temp.reason.length > 0) {
+													abs = "非常遗憾，您的营销合伙人申请未能通过审核，原因是" + temp.reason + "。感谢您对企赚宝的关注，欢迎您通过其他任务赢取奖励哦！"
+												} else {
+													abs = "非常遗憾，您的营销合伙人申请未能通过审核。感谢您对企赚宝的关注，欢迎您通过其他任务赢取奖励哦！"
+												}
+											}
+											console.log("营销合伙人申请结果通知");
+											break;
+										case "3":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "客户成交通知";
+											abs = "喜报：您所提交的销售线索：" + temp.firm + "已经成单！恭喜您获得" + temp.beans + "薪豆奖励！继续提交线索，赢取更多奖励吧！";
+											console.log("成交客户审核结果通知");
+											break;
+										case "4":
+											img = '<span class="mui-pull-left icon-shengji my-icon" style="color: #fb5237;"></span>';
+											title = "升级成功";
+											abs = "恭喜您升级成为" + temp.grade + "级用户，并获得" + temp.beans + "薪豆的升级奖励！";
+											console.log("升级成功通知");
+											break;
+										case "5":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "邀请线索提交成功";
+											abs = "恭喜您，您邀请的手机号为" + temp.phoneNumber + "的用户已经成功注册薪人薪事！销售线索提供成功，" + temp.beans + "薪豆已经到账！您还可以继续邀请，赢得更多奖励哦！"
+											console.log("邀请注册薪人薪事奖励到账");
+											break;
+										case "6":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "邀请粉丝成功";
+											abs = "恭喜您，已成功邀请" + temp.phoneNumber + "为您的粉丝，" + temp.beans + "薪豆已经到账！粉丝如果做任务，您还将持续获得奖励哦！";
+											console.log("邀请粉丝奖励到账");
+											break;
+										case "7":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "粉丝奖励到账";
+											abs = "恭喜您，通过昨天粉丝做任务，获得" + temp.beans + "薪豆！快去邀请更多粉丝，躺着也能赚钱哦！"
+											console.log("粉丝奖励到账");
+											break;
+										case "8":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											if(temp.operate == "1") {
+												title = "平台增加薪豆";
+												abs = "平台为您增加了" + temp.beans + "薪豆，原因是" + temp.reason + "。恭喜您！"
+											} else if(temp.operate == "2") {
+												title = "平台扣除薪豆";
+												abs = "平台扣除了您" + temp.beans + "薪豆，原因是" + temp.reason + "。如有疑问请联系客服。"
+											}
+											console.log("通过后台操作了积分增减");
+											break;
+										case "9":
+											title = "提现申请被驳回";
+											img = '<span class="mui-pull-left icon-tixian my-icon" style="color: #fb9237;"></span>';
+											if(temp.reason.length > 0) {
+												abs = "由于" + temp.reason + "，您" + temp.withdrawTime.substring(0, 16) + "所提交的提现申请已被驳回，薪豆已返还。如有疑问请联系客服。";
+											} else {
+												abs = "您" + temp.withdrawTime + "所提交的提现申请已被驳回，薪豆已返还。如有疑问请联系客服。";
+											}
+											break;
+										case "10":
+											title = "提现成功";
+											img = '<span class="mui-pull-left icon-tixian my-icon" style="color: #fb9237;"></span>';
+											abs = "恭喜您，您" + temp.withdrawTime.substring(0, 16) + "所提现的" + temp.beans + "元已到账。快去赢取更多奖励吧！"
+											break;
+										case "11":
+											title = "提现失败";
+											img = '<span class="mui-pull-left icon-tixian my-icon" style="color: #fb9237;"></span>';
+											if(temp.reason.length > 0) {
+												abs = "由于" + temp.reason + "，您" + temp.withdrawTime.substring(0, 16) + "申请的提现失败，薪豆已返还。如有疑问请联系客服。"
+											} else {
+												abs = "您" + temp.withdrawTime + "申请的提现失败，薪豆已返还。如有疑问请联系客服。"
+											}
+											break;
+										default:
+											break;
+									}
+									lihtml = lihtml + '<li myid="' + temp.msgId + '" class="mui-table-view-cell mui-media">' + state +
+										img +
+										'<div class="mui-media-body"><div class="mui-row"><div class="mui-col-xs-7">' +
+										'<p class="my-p-14">' + title + '</p>' +
+										'<p class="mui-ellipsis my-p-12">' + abs + '</p>' +
+										'</div><div class="mui-col-xs-5"><p class="my-p-right">' + temp.time.substring(0, 10) + '</p></div></div></div></li>'
+										//下拉刷新，新纪录插到最前面；
+								}
+								table.innerHTML = lihtml;
+							}
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error!");
+							console.log(JSON.stringify(xhr) + errorThrown);
+							console.log(type);
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
+					});
+					//refresh completed
+				}
+				/**
+				 * 上拉加载具体业务实现
+				 */
+				function pullupRefresh() {
+					/*var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+					for(var i = cells.length, len = i + 20; i < len; i++) {
+						var li = document.createElement('li');
+						li.className = 'mui-table-view-cell mui-media';
+						li.innerHTML = '<div class="my-red-round"></div><img class="my-img mui-media-object mui-pull-left" src="../images/60x60.gif"><div class="mui-media-body"><div class="mui-row"><div class="mui-col-sm-8"><p class="my-p-14">销售线索审核结果通知</p><p class="mui-ellipsis my-p-12">您提交的销售线索：商信通经贸有限公司，经售线索：商信通经贸有限公司，经</p></div><div class="mui-col-sm-4"><p class="my-p-right">2016-4-12 18:09</p></div></div></div>'
+						table.appendChild(li);
+					}*/
+					var url = getBaseUrl() + 'index/Message/receiveUnreadInfo?phoneNumber=' + localStorage.phonenumber;
+					console.log("消息列表url>>>>>" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == "success") {
+								var data = data.data;
+								if(data.length > 0) {
+									messagebox.style.display = "block";
+									nothingbox.style.display = "none";
+								} else {
+									messagebox.style.display = "none";
+									nothingbox.style.display = "block";
+								}
+								var table = document.body.querySelector('.mui-table-view');
+								//table.innerHTML = "";
+								var lihtml = "";
+								var cells = document.body.querySelectorAll('.mui-table-view-cell');
+								for(var i = 0; i < data.length; i++) {
+									var temp = data[i];
+									var title = "标题";
+									var abs = "";
+									var state = "";
+									var img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #;"></span>';
+									if(temp.state == "0") {
+										state = '<div class="my-red-round"></div>';
+									}
+									switch(temp.type) {
+										case "1":
+											img = '<span class="mui-pull-left icon-tongzhi my-icon" style="color: #76bd3d;"></span>';
+											if(temp.result == "1") {
+												title = "线索审核通过";
+												abs = "您提交的销售线索：" + temp.firm + "，经审核已通过。" + temp.beans + "薪豆已经到账，欢迎您提供更多线索哦！"
+											} else if(temp.result == "0") {
+												title = "线索审核未通过";
+												abs = "您提交的销售线索：" + temp.firm + "，经审核未通过。原因是" + temp.reason + "。欢迎您提供其他线索赢取奖励哦！"
+											}
+											console.log("销售线索审核结果通知");
+											break;
+										case "2":
+											img = '<span class="mui-pull-left icon-tongzhi my-icon" style="color: #76bd3d;"></span>';
+											if(temp.result == "1") {
+												title = "销售资格审核通过";
+												abs = "您的营销合伙人申请已审核通过，恭喜您成为企赚宝营销合伙人！";
+											} else if(temp.result == "0") {
+												title = "销售资格审核未通过";
+												if(temp.reason.length > 0) {
+													abs = "非常遗憾，您的营销合伙人申请未能通过审核，原因是" + temp.reason + "。感谢您对企赚宝的关注，欢迎您通过其他任务赢取奖励哦！"
+												} else {
+													abs = "非常遗憾，您的营销合伙人申请未能通过审核。感谢您对企赚宝的关注，欢迎您通过其他任务赢取奖励哦！"
+												}
+											}
+											console.log("营销合伙人申请结果通知");
+											break;
+										case "3":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "客户成交通知";
+											abs = "喜报：您所提交的销售线索：" + temp.firm + "已经成单！恭喜您获得" + temp.beans + "薪豆奖励！继续提交线索，赢取更多奖励吧！";
+											console.log("成交客户审核结果通知");
+											break;
+										case "4":
+											img = '<span class="mui-pull-left icon-shengji my-icon" style="color: #fb5237;"></span>';
+											title = "升级成功";
+											abs = "恭喜您升级成为" + temp.grade + "级用户，并获得" + temp.beans + "薪豆的升级奖励！";
+											console.log("升级成功通知");
+											break;
+										case "5":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "邀请线索提交成功";
+											abs = "恭喜您，您邀请的手机号为" + temp.phoneNumber + "的用户已经成功注册薪人薪事！销售线索提供成功，" + temp.beans + "薪豆已经到账！您还可以继续邀请，赢得更多奖励哦！"
+											console.log("邀请注册薪人薪事奖励到账");
+											break;
+										case "6":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "邀请粉丝成功";
+											abs = "恭喜您，已成功邀请" + temp.phoneNumber + "为您的粉丝，" + temp.beans + "薪豆已经到账！粉丝如果做任务，您还将持续获得奖励哦！";
+											console.log("邀请粉丝奖励到账");
+											break;
+										case "7":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											title = "粉丝奖励到账";
+											abs = "恭喜您，通过昨天粉丝做任务，获得" + temp.beans + "薪豆！快去邀请更多粉丝，躺着也能赚钱哦！"
+											console.log("粉丝奖励到账");
+											break;
+										case "8":
+											img = '<span class="mui-pull-left icon-daozhang my-icon" style="color: #ffd821;"></span>';
+											if(temp.operate == "1") {
+												title = "平台增加薪豆";
+												abs = "平台为您增加了" + temp.beans + "薪豆，原因是" + temp.reason + "。恭喜您！"
+											} else if(temp.operate == "2") {
+												title = "平台扣除薪豆";
+												abs = "平台扣除了您" + temp.beans + "薪豆，原因是" + temp.reason + "。如有疑问请联系客服。"
+											}
+											console.log("通过后台操作了积分增减");
+											break;
+										case "9":
+											title = "提现申请被驳回";
+											img = '<span class="mui-pull-left icon-tixian my-icon" style="color: #fb9237;"></span>';
+											if(temp.reason.length > 0) {
+												abs = "由于" + temp.reason + "，您" + temp.withdrawTime.substring(0, 16) + "所提交的提现申请已被驳回，薪豆已返还。如有疑问请联系客服。";
+											} else {
+												abs = "您" + temp.withdrawTime + "所提交的提现申请已被驳回，薪豆已返还。如有疑问请联系客服。";
+											}
+											break;
+										case "10":
+											title = "提现成功";
+											img = '<span class="mui-pull-left icon-tixian my-icon" style="color: #fb9237;"></span>';
+											abs = "恭喜您，您" + temp.withdrawTime.substring(0, 16) + "所提现的" + temp.beans + "元已到账。快去赢取更多奖励吧！"
+											break;
+										case "11":
+											title = "提现失败";
+											img = '<span class="mui-pull-left icon-tixian my-icon" style="color: #fb9237;"></span>';
+											if(temp.reason.length > 0) {
+												abs = "由于" + temp.reason + "，您" + temp.withdrawTime.substring(0, 16) + "申请的提现失败，薪豆已返还。如有疑问请联系客服。"
+											} else {
+												abs = "您" + temp.withdrawTime + "申请的提现失败，薪豆已返还。如有疑问请联系客服。"
+											}
+											break;
+										default:
+											break;
+									}
+									lihtml = html1 + '<li myid="' + temp.msgId + '" class="mui-table-view-cell mui-media">' + state +
+										img +
+										'<div class="mui-media-body"><div class="mui-row"><div class="mui-col-xs-7">' +
+										'<p class="my-p-14">' + title + '</p>' +
+										'<p class="mui-ellipsis my-p-12">' + abs + '</p>' +
+										'</div><div class="mui-col-xs-5"><p class="my-p-right">' + temp.time.substring(0, 10) + '</p></div></div></div></li>'
+										//下拉刷新，新纪录插到最前面；
+								}
+								table.innerHTML = lihtml;
+							}
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(data.length > 0);
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error!");
+							console.log(JSON.stringify(xhr) + errorThrown);
+							console.log(type);
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+						}
+					});
+				}
+				if(mui.os.plus) {
+					mui.plusReady(function() {
+						setTimeout(function() {
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+						}, 1000);
+					});
+				} else {
+					mui.ready(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					});
+				}
+				document.getElementById('dotaskid').addEventListener('tap', function(event) {
+					mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'moveToTask', {});
+					mui.back();
+				});
+				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function(event) {
+					var myid = this.getAttribute("myid");
+					//阅读消息
+					//pulldownRefresh();
+					var redrounds = this.getElementsByClassName('my-red-round');
+					//console.log(redrounds.length);
+					if(redrounds.length > 0) {
+						var url = getBaseUrl() + 'index/Message/readMessage?id=' + myid;
+						console.log("read message url:" + url);
+						mui.ajax(url, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'get', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								if(data.status == "success") {
+									console.log("success");
+									console.log(JSON.stringify(data));
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log("error!");
+								console.log(JSON.stringify(xhr));
+								console.log(type);
+							}
+						});
+						redrounds[0].style.display = "none";
+						mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+					}
+					//更新各个页面显示的消息数目
+					mui.openWindow({
+						url: 'messagedetail.html',
+						id: 'messagedetail',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							msgId: myid
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<!--下拉刷新容器-->
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper" style="display:none ;">
+			<div class="mui-scroll">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li myid="dsd" class="mui-table-view-cell mui-media">
+						<span class="mui-pull-left icon-daozhang my-icon" style="color: #503334;"></span>
+						<div class="mui-media-body">
+							<div class="mui-row">
+								<div class="mui-col-xs-7">
+									<p class="my-p-14">313212323</p>
+									<p class="mui-ellipsis my-p-12">111</p>
+								</div>
+								<div class="mui-col-xs-5">
+									<p class="my-p-right">123213</p>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div id="nothingid" class="mui-content" style="text-align: center;padding-top: 2.08rem;display: none;">
+			<img src="../images/nomessage.png" style="height: 2.08rem;" />
+			<p style="margin-bottom: 0.63rem;color: #333333;font-size: 0.29rem;margin-top: 0.42rem;">这里还没有内容，赶快去做任务赚钱吧~</p>
+			<span id="dotaskid" style="background-color: #FB5237;color: white;padding: 0.21rem;border-radius: 0.08rem;padding-left: 1.04rem;padding-right: 1.04rem;">去做任务</span>
+		</div>
+		<div class="spinner" id="loading">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</body>
+</html>

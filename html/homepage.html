@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#333333">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/app.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<link rel="stylesheet" href="../css/style1.css">
+		<style>
+			/*登录状态banner区域相关css*/
+			
+			body {
+				background: rgba(0, 0, 0, 0);
+			}
+			
+			.liu-banner {
+				margin-top: 0.92rem;
+				height: 3rem;
+				background-color: #FB5237;
+				/*background-image: url(../images/homepage_new_banner.png);*/
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center center;
+			}
+			
+			.liu-xiaoxi {
+				/*消息图标样式*/
+				display: inline-block;
+				float: right;
+				color: white;
+				font-size: 0.58rem;
+				margin: 0.04rem 0.04rem 0 0;
+			}
+			
+			.liu-badge {
+				/*消息数目样式*/
+				position: relative;
+				top: -1.33rem;
+				left: 0.54rem;
+				background-color: white;
+				color: #FB5237;
+				width: 0.67rem;
+				/*height和inline-height相等以竖直居中*/
+				height: 0.67rem;
+				line-height: 0.67rem;
+				border-radius: 0.38rem;
+				font-size: 0.42rem;
+				text-align: center;
+				padding: 0rem;
+				margin: 0rem;
+			}
+			
+			.mui-icon .mui-badge {
+				font-size: 0.18rem;
+				position: absolute;
+				top: 0.08rem;
+				left: 100%;
+				margin-left: -0.21rem;
+				padding: 0.02rem 0.1rem;
+				color: #fff;
+				background: red;
+			}
+			
+			.liu-span-container {
+				margin: 2.5rem;
+				padding: 0rem;
+				position: absolute;
+			}
+			
+			.liu-span-container-left {
+				left: 1rem;
+			}
+			
+			.liu-span-container-right {
+				right: 1rem;
+			}
+			
+			.liu-span-text {
+				color: #ffffff;
+				font-size: 0.24rem;
+				margin: 0;
+				padding: 0.13rem 0rem;
+			}
+			
+			.liu-span-number {
+				/*由于数字更大，稍微下沉一点更好看*/
+				color: #ffea01;
+				font-size: 0.36rem;
+				margin: 0rem;
+				padding: 0rem 0.02rem;
+			}
+			
+			.liu-title-container {
+				background-color: white;
+				height: 1.3rem;
+				margin: 0;
+				padding: 0;
+			}
+			
+			.liu-title-container-image-container {
+				text-align: center;
+				height: 1.88rem;
+				margin: 0;
+				padding: 0.21rem 0;
+			}
+			
+			.liu-subtitle-container {
+				width: 33.3%;
+				float: left;
+			}
+			
+			.liu-title-text {
+				text-align: center;
+				color: #333333;
+				font-size: 0.28rem;
+				line-height: 0.28rem;
+				margin-bottom: 0.04rem;
+				margin: 0;
+				padding: 0;
+			}
+			
+			#nologinhomebanner header {
+				display: inline-block;
+				height: 0.88rem;
+			}
+			
+			.may-login-container {
+				position: absolute;
+				top: 0.19rem;
+				bottom: 0.19rem;
+				left: 0;
+				height: 0.5rem;
+			}
+			
+			.may-login-container * {
+				display: inline-block;
+				vertical-align: middle;
+			}
+			
+			.liu-user-head {
+				height: 0.5rem;
+				width: 0.5rem;
+				margin: 0 0 0 0.25rem;
+			}
+			
+			#loginnow {
+				color: #333333;
+				font-size: 0.24rem;
+			}
+			
+			.liu-toutiao {
+				height: 1.25rem;
+				background: #FFFFFF;
+			}
+			
+			.liu-toutiao span {
+				height: 0.28rem;
+				line-height: 0.28rem;
+				padding: 0;
+				margin: 0;
+			}
+			
+			.liu-task-container {
+				position: relative;
+				top: 0.31rem;
+				height: 0.83rem;
+				left: 1.2rem;
+			}
+			
+			html,
+			body {
+				background-color: #F8F8F8
+			}
+			
+			.my-li-tasklist {
+				padding: 0rem;
+				height: 1.4rem;
+			}
+			
+			.my-image-task {
+				width: 1rem;
+				height: 0.8rem;
+				margin: 0.3rem 0.1rem;
+			}
+			
+			.my-span-state {
+				height: 0.42rem;
+				width: 1.04rem;
+				float: right;
+				font-size: 0.21rem;
+				background-color: #CCCCCC;
+				text-align: center;
+				color: white;
+			}
+			
+			.my-p-point {
+				position: absolute;
+				top: 0.5rem;
+				color: #fb5237;
+				float: right;
+				right: 0.21rem;
+				font-size: 0.29rem;
+			}
+			
+			.my-bc-image {
+				width: 0.84rem;
+				height: 0.84rem;
+				margin: 0;
+				border-radius: 0.84rem;
+				border: 0 !important;
+			}
+			
+			.my-bc-image-zhuce {
+				background: #f7ecda;
+			}
+			
+			.my-bc-image-xiaoshou {
+				background: #9cc9f6;
+			}
+			
+			.my-class {
+				padding-top: 0.21rem;
+			}
+			
+			.my-span-tasktype {
+				border: 0.03rem solid #508cee;
+				border-radius: 0.04rem;
+				position: absolute;
+				border: 0.03rem solid #007AFF;
+				color: #007AFF;
+				font-size: 0.24rem;
+				line-height: 0.3rem;
+				padding: 0 0.1rem;
+				left: 0;
+				bottom: 0rem;
+			}
+			
+			.my-p-taskname {
+				color: #333333;
+				position: absolute;
+				font-size: 0.26rem;
+				line-height: 0.35rem;
+				top: 0rem;
+				width: 4.5rem;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+			}
+			
+			.my-a-clip {
+				margin-left: -0.52rem;
+				text-align: center;
+				color: #ffffff;
+				background-color: #fb5237;
+				font-size: 0.21rem;
+				position: absolute;
+				padding-bottom: 0.04rem;
+				line-height: 0.33rem;
+				height: 0.33rem;
+				width: 1.67rem;
+				margin-top: 0.17rem;
+				/* Safari and Chrome */
+				transform: rotate(-45deg);
+				-ms-transform: rotate(-45deg);
+				/* IE 9 */
+				-webkit-transform: rotate(-45deg);
+				/* Safari and Chrome */
+			}
+			
+			.mui-table-view-cell.mui-active {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-table-view:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-table-view:after {
+				background-color: #FFFFFF;
+			}
+			
+			.my-liu-toutiao-text {
+				float: left;
+				color: #FB5237;
+				font-size: 0.29rem;
+				padding: 0;
+				line-height: 0.33rem;
+			}
+			
+			.my-liu-toutiao-number {
+				position: relative;
+				top: 0rem;
+				float: left;
+				color: #fb5237;
+				font-size: 0.29rem;
+				line-height: 0.29rem;
+				padding-left: 0.1rem;
+				padding-right: 0.1rem;
+				font-weight: bold;
+			}
+			
+			#speedingid {
+				position: relative;
+				color: white;
+				left: 0.21rem;
+				margin: 0.1rem;
+			}
+			
+			.mui-popup-button {
+				color: #FB5237;
+				font-size: 0.31rem;
+				height: 0.83rem;
+			}
+			
+			.mui-popup-text {
+				padding: 0.21rem;
+				color: #333333;
+				font-size: 0.31rem;
+			}
+			
+			.my-img {
+				width: 0.48rem;
+				height: 0.48rem;
+				margin: 0.1rem;
+			}
+			
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item {
+				display: inline;
+				background: 0 0;
+				width: 30%;
+				display: block;
+			}
+			
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				color: #b67535;
+				border-bottom: 0.04rem solid #b67535;
+				background: 0 0;
+				width: 50%;
+				display: block;
+			}
+			
+			.slide-image {
+				height: 3rem;
+			}
+			
+			.mui-slider-indicator .mui-indicator {
+				display: inline-block;
+				width: 0.2rem;
+				height: 0.1rem;
+				margin: 1px 6px;
+				cursor: pointer;
+				border-radius: 0.05rem;
+				background: #fb9a37;
+				-webkit-box-shadow: 0 0 1px 1px rgba(130, 130, 130, .7);
+				box-shadow: 0 0 1px 1px rgba(130, 130, 130, .7);
+			}
+			
+			.mui-slider-indicator {
+				position: absolute;
+				bottom: 0.05rem;
+				width: 100%;
+				text-align: center;
+				background: 0 0;
+			}
+		</style>
+		<script>
+			var tips = new Array();
+			tips[0] = "· 多邀请“粉丝”，让粉丝帮你赚钱！";
+			tips[1] = "· 签签到，多参与，轻轻松松也能赚笔零花钱";
+			tips[2] = "· 公平的平台，让你的能力与钱划等号";
+			tips[3] = "· 不论成单与否，提供销售线索就能赚钱。";
+			tips[4] = "· 签签到，多参与，轻轻松松也能赚笔零花钱";
+			tips[5] = "· 讲方法，多尝试，没有成不了的单子";
+			tips[6] = "· 公平的平台，让你的能力与钱划等号";
+			//			tips[1] = "· 提供靠谱的销售线索并成单，才是赚大钱的正确方式。";
+			//			tips[2] = "· 认识有资源的朋友，引荐好友参与并成单一样能赚大钱。";
+			var pagetype = 0; //0表示小c端，1表示大C端
+			if(localStorage.isPartner) {
+				pagetype = localStorage.isPartner;
+			}
+			//小C端变量定义
+			var initUrl = 'Index/index/receiveuserinfo';
+			var earnInfoUrl = 'Index/index/earninfo';
+			var isAlertShowing = false;
+			var toutiaoInfo = '<p class="mui-ellipsis my-liu-toutiao-text">恭喜138******1邀请粉丝，获得</p>' +
+				'<p class="mui-ellipsis my-liu-toutiao-number">150</p>' +
+				'<p class="mui-ellipsis my-liu-toutiao-text" style="float: left;font-size: 0.29rem;">薪豆</p>';
+			var firstTask = '';
+			var noticeMsgId = -1; //弹框消息的编号，在弹框时赋值，该值用于在“弹窗事件”和用户“点击关闭弹窗事件”之间传值
+			var lastPopedId = -1; //最后一次弹窗的消息编号，在用户点击关闭弹窗时赋值，该值用于阻止反复弹窗
+			var showAlerting = false;
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				//				console.log(document.getElementById("smallCPage"));
+				if(pagetype == 0 || localStorage.islogin != 1) {
+					document.getElementById("smallCPage").style.display = "block";
+					document.getElementById("bigCPage").style.display = "none";
+				} else {
+					document.getElementById("smallCPage").style.display = "none";
+					document.getElementById("bigCPage").style.display = "block";
+				}
+				//隐藏滚动条
+				plus.webview.currentWebview().setStyle({
+					scrollIndicator: 'none'
+				});
+				//弹性滑动控制
+				mui('.mui-scroll-wrapper').scroll({
+					indicators: false,
+					bounce: true
+						//					,momentum: false
+						//					,deceleration:1
+				});
+				/*var slider1 = mui("#slider1");
+				slider1.slider({
+					interval: 5000
+				});*/
+				var slider = mui("#slider");
+				slider.slider({
+					interval: 3000
+				});
+
+				//初始化控件
+				//总收入
+				var totalIncomeBox = document.getElementById('totalIncome');
+				//今日收入
+				var todayIncomeBox = document.getElementById('todayIncome');
+				//消息数量
+				var messagecountbox = document.getElementById('messagecount');
+				//未登录的banner
+				//var nologinbanner = document.getElementById("nologinhomebanner");
+				//登录的banner
+				var loginbanner = document.getElementById("isloginhomebanner");
+				//滚动区域
+				var scrollbox = document.getElementById("scrollid");
+				//获取未读消息数
+				//剩余加速时间
+				var speedlefttime = "";
+				var speedtype = -1;
+				var islogin = false;
+				homepageInit();
+				if(pagetype == 0) {
+					setEarnInfo();
+				} else {
+					document.getElementById("alltype").addEventListener('tap', function() {});
+					getBigCInfo(getBaseUrl() + "salesleadsmanage/SellClue/numberOfClue", 0); //获取总线索数和本月线索数
+					getBigCInfo(getBaseUrl() + "salesleadsmanage/SellClue/clueDynamicList", 1); //线索动态
+					getBigCInfo(getBaseUrl() + "salesleadsmanage/SellClue/clueList", 2); //线索列表
+					getUnreadedNotice(); //销售线索的弹窗
+					//加载赚钱技巧
+					loadTip();
+					//分别是列表题目的top和列表的top
+					var clueTitletop = htmlPosition(document.getElementById('bigC_clue_title'));
+					var clueListtop = htmlPosition(document.getElementById('list_container'));
+					//					alert(clueTitletop + ' ' + clueListtop);
+					var listTitle = document.getElementById('bigC_clue_title');
+
+					function htmlPosition(obj) {
+						var o = obj;
+						var t = o.offsetTop;
+						while(o = o.offsetParent) {
+							t += o.offsetTop;;
+						}
+						return t;
+					}
+				}
+
+				function getBigCInfo(url, type) {
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							//							alert(JSON.stringify(data));
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								if(type == 0) {
+									document.getElementById("totalcluecount").innerHTML = data.totalcluecount;
+									document.getElementById("monthcluecount").innerHTML = data.monthcluecount;
+								} else if(type == 1) {
+									data = data.data;
+									//									alert(JSON.stringify(data));
+									if(data.length == 0) {
+										document.getElementById("dynothingid").style.display = 'block';
+									} else {
+										document.getElementById("dynothingid").style.display = 'none';
+									}
+									var tm = '';
+									for(var i = 0; i < data.length; i++) {
+										tm += '<li class="mui-table-view-cell" style="height: 1.25rem; padding-left: 0.1rem;" clueid="' + data[i].clueid + '" cluetype="' + data[i].cluetype + '">';
+										if(data[i].cluetype == '销售线索') {
+											tm += '<span class="mui-pull-left my-bc-image my-bc-image-xiaoshou" style="position: relative;">' +
+												'<p style="text-align: center;line-height:0.84rem;font-size: 0.25rem;color: #FFFFFF;">线索</p>' +
+												'</span>';
+										} else {
+											tm +=
+												'<span class="mui-pull-left my-bc-image my-bc-image-zhuce" style="position: relative;">' +
+												'<p style="text-align: center;line-height:0.84rem;font-size: 0.25rem;color: #B67535;">提交</p>' +
+												'</span>';
+										}
+										tm += '<div style="position: relative; margin-left: 1.04rem;">' +
+											'<p class="my-p-taskname"  style="">' + data[i].cluestatetitle + '</p>' +
+											'<span class="my-p-taskname" style="position: absolute; top: 0.52rem; left: 0rem;">' + data[i].time + '</span>' +
+											'</div>' +
+											'</li>';
+									}
+									document.getElementById("cluedyList").innerHTML = tm;
+								} else {
+									data = data.data;
+									if(data.length == 0) {
+										document.getElementById("cluenothingid").style.display = 'block';
+									} else {
+										document.getElementById("cluenothingid").style.display = 'none';
+									}
+									var tm = '';
+									for(var i = 0; i < data.length; i++) {
+										tm += '<li class="mui-table-view-cell" style="height: 1.25rem; padding-left: 0.1rem;" clueid="' + data[i].clueid + '" cluetype="' + data[i].cluetype + '">';
+										if(data[i].cluetype == '销售线索') {
+											tm += '<span class="mui-pull-left my-bc-image my-bc-image-xiaoshou" style="position: relative;">' +
+												'<p style="text-align: center;line-height:0.84rem;font-size: 0.25rem;color: #FFFFFF;">线索</p>' +
+												'</span>';
+										} else {
+											tm +=
+												'<span class="mui-pull-left my-bc-image my-bc-image-zhuce" style="position: relative;">' +
+												'<p style="text-align: center;line-height:0.84rem;font-size: 0.25rem;color: #B67535;">提交</p>' +
+												'</span>';
+										}
+										if(data[i].cluestate == '待确认' || data[i].cluestate == '跟进中') {
+											tm += '<span style="float: right; position: absolute; right: 0.21rem; top:0.38rem; font-size: 0.29rem; color:#508cee;">' + data[i].cluestate + '</span>';
+										} else if(data[i].cluestate == '成单') {
+											tm += '<span style="float: right; position: absolute; right: 0.21rem; top:0.38rem; font-size: 0.29rem; color:#76bd3d;">' + data[i].cluestate + '</span>';
+										} else {
+											tm += '<span style="float: right; position: absolute; right: 0.21rem; top:0.38rem; font-size: 0.29rem; color:#999999;">' + data[i].cluestate + '</span>';
+										}
+										tm += '<div style="position: relative; margin-left: 1.04rem;">' +
+											'<p class="my-p-taskname" style="">' + data[i].cluetitle + '</p>' +
+											'<span class="my-p-taskname" style="position: absolute; top: 0.52rem; left: 0rem;">' + data[i].time + '</span>' +
+											'</div>' +
+											'</li>';
+									}
+									document.getElementById("clueList").innerHTML = tm;
+								}
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							console.log(JSON.stringify(xhr));
+						}
+					});
+				}
+
+				function homepageInit() {
+					if(localStorage.islogin == "1") {
+						islogin = true;
+					} else {
+						islogin = false;
+					}
+					console.log("初始化islogin = " + islogin);
+					if(islogin) {
+						islogin = true;
+						document.getElementById("message").style.display = "block";
+						document.getElementById("homeloginbox").style.display = "none";
+						document.getElementById("income1").style.display = "block";
+						document.getElementById("income2").style.display = "block";
+						//未读消息数在fans页统一发消息更新
+						//初始化界面
+						getUnreadedNotice();
+						init();
+					} else {
+						islogin = false;
+						document.getElementById("message").style.display = "none";
+						document.getElementById("homeloginbox").style.display = "block";
+						document.getElementById("income1").style.display = "none";
+						document.getElementById("income2").style.display = "none";
+						//初始化界面
+						init();
+					}
+					if(localStorage.blockup == "1") {
+						console.log('【首页收到退出通知】');
+						if(showAlerting == true) return;
+						showAlerting = true;
+						mui.alert("您的账号已被停用！", ' ', '我知道了', function() {
+							localStorage.blockup = '0';
+							localStorage.islogin = '0';
+							localStorage.phonenumber = '';
+							localStorage.password = '';
+							showAlerting = false;
+						}, 'div');
+					}
+				}
+
+				function setEarnInfo() {
+					//每次动作开始时，就提前请求，以准备好数据，这儿是异步通信
+					getEarnInfo();
+					$("#toutiao").animate({
+						top: '1.25rem'
+					}, 880, function() {
+						//为了防止通信失败导致界面卡顿，通信成功后将结果保存在变量toutiaoInfo里，修改界面时读取这个变量值。这样即使网络状态不好，也影响不大，通信失败时显示上一条信息
+						document.getElementById("toutiao").innerHTML = toutiaoInfo;
+						$("#toutiao").css("top", "-0.52rem");
+						$("#toutiao").animate({
+							top: '0.1rem'
+						}, 620, function() {
+							setTimeout(function() {
+								setEarnInfo();
+							}, 3500);
+						});
+					});
+				}
+
+				function openLoginpage() {
+					mui.openWindow({
+						url: '../login.html',
+						id: 'login',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}
+				document.getElementById("speedingid").addEventListener('tap', function() {
+					if(speedlefttime != "") {
+						mui.toast(speedlefttime);
+					}
+				});
+				//立即登录监听
+				document.getElementById('loginnow').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: '../login.html',
+						id: 'login',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				document.getElementById('loginhead').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: '../login.html',
+						id: 'login',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				//消息点击监听
+				document.getElementById('message').addEventListener('tap', function(event) {
+					console.log("点击了" + islogin);
+					if(islogin) {
+						mui.openWindow({
+							url: 'messagelist.html',
+							id: 'messagelist',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//如何赚钱点击监听
+				document.getElementById('howgainmoney').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'howgainmoney.html',
+						id: 'howgainmoney',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				//签到点击监听
+				document.getElementById('signin').addEventListener('tap', function(event) {
+					if(islogin) {
+						mui.openWindow({
+							url: 'signin.html',
+							id: 'signin',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							},
+							extras: {
+								firstTask: firstTask
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//排行榜点击监听
+				document.getElementById('rankinglist').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'rankinglist.html',
+						id: 'rankinglist',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				//推荐任务列表点击
+				mui(".mui-table-view").on('tap', '.mui-table-view-cell', function() {
+					try {
+						var id = this.getAttribute('myid');
+						var type = this.getAttribute('type');
+						console.log('id=' + id + ' type=' + type);
+						var targetUrl = '';
+						var targetId = '';
+						switch(type) {
+							case "新手":
+								if(id == '1') {
+									//新手转发
+									targetUrl = 'tasks/taskshare.html';
+									targetId = 'sharehomepage';
+								} else {
+									//新手问卷
+									targetUrl = 'tasks/task_questionnaire_homepage.html';
+									targetId = 'questionnairehomepage';
+								}
+								break;
+							case "阅读":
+								targetUrl = 'tasks/taskReadingHomepage.html';
+								targetId = 'readinghomepage';
+								break;
+							case "分享":
+								targetUrl = 'tasks/taskshare.html';
+								targetId = 'sharehomepage';
+								break;
+							case "问卷":
+								targetUrl = 'tasks/task_questionnaire_homepage.html';
+								targetId = 'questionnairehomepage';
+								break;
+							case "答题":
+								targetUrl = 'tasks/task_problem_homepage.html';
+								targetId = 'problemhomepage';
+								break;
+							case "邀请粉丝":
+								targetUrl = 'tasks/task_invitefans.html';
+								targetId = 'invitefanshomepage';
+								break;
+							case "分享注册":
+								targetUrl = 'tasks/task_invite_to_register_xinrenxinshi.html';
+								targetId = 'invitefanshomepage';
+								break;
+							case "提供线索":
+								targetUrl = 'tasks/taskprovideclue.html';
+								targetId = 'providecluehomepage';
+								break;
+							case "销售产品":
+								targetUrl = 'tasks/taskclient.html';
+								targetId = 'clienthomepage';
+								break;
+							case "邀请注册":
+								targetUrl = 'tasks/task_invite_to_register_xinrenxinshi.html';
+								targetId = 'task_invite_to_register_xinrenxinshi';
+								break;
+							default:
+								break;
+						}
+						mui.openWindow({
+							url: targetUrl,
+							id: targetId,
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							},
+							extras: {
+								taskId: id,
+								taskType: type
+							}
+						});
+					} catch(e) {}
+				});
+				document.getElementById("moretask").addEventListener('tap', function() {
+					mui.fire(plus.webview.getWebviewById('html/taskpage.html'), 'totask', {});
+					mui.fire(plus.webview.currentWebview().opener(), 'moveToTask', {});
+				});
+				//数据处理相关代码
+				//获取页面初始化数据，包含总收入，今日收入、推荐任务列表
+				function init() {
+					var phonenumber = getDefaultNumber();
+					if(islogin) {
+						phonenumber = localStorage.phonenumber;
+					} else {
+						phonenumber = getDefaultNumber();
+					}
+					var url = getBaseUrl() + 'index/Indexinfo/receiveUserinfo';
+					console.log("获取首页信息URL： " + url + ' ' + phonenumber);
+					mui.ajax(url, {
+						data: {
+							phoneNumber: phonenumber
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								data = data.data;
+								document.getElementById('totalIncome').innerText = data.totalIncome;
+								document.getElementById('todayIncome').innerText = data.todayInput;
+								document.getElementById('totalIncome1').innerText = data.totalIncome;
+								document.getElementById('todayIncome1').innerText = data.todayInput;
+								var tasklistdata = data.TaskList;
+								var tasklisthtml = "";
+
+								firstTask = tasklistdata[0];
+								for(var i = 0; i < tasklistdata.length; i++) {
+									var tasktypetag = "";
+									var tasktype = "";
+									var taskdata = tasklistdata[i];
+									//console.log(taskdata.name);
+									if(taskdata.id == "1" || taskdata.id == "2") {
+										tasktypetag = '<span class="mui-pull-left my-a-clip">新手</span>';
+										tasktype = '新手';
+										//										taskdata.type='新手';
+									} else if(taskdata.type == "阅读") {
+										tasktype = taskdata.type;
+										tasktypetag = '<span class="mui-pull-left my-a-clip">每日任务</span>';
+									} else if(taskdata.type == "调查问卷") {
+										tasktype = "问卷";
+									} else {
+										tasktype = taskdata.type;
+										tasktypetag = '';
+									}
+									tasklisthtml +=
+										'<li myid="' + taskdata.id + '" type="' + tasktype + '" class="mui-table-view-cell my-li-tasklist">' +
+										tasktypetag +
+										'<span class="my-p-point">' + taskdata.beans + ' 薪豆</span>' +
+										'<img class="mui-pull-left my-image-task" src="' + getBaseUrl() + taskdata.icon + '" style="">' +
+										'<div class="liu-task-container">' +
+										'<p class="my-p-taskname">' + taskdata.name + '</p>' +
+										'<span class="my-span-tasktype">' + taskdata.type + '</span>' +
+										'</div>' +
+										'</li>'
+								}
+								document.getElementById('newtaskulid').innerHTML = tasklisthtml;
+								//获取到任务列表
+								//var tasklist = data.taskList;
+							} else {
+								console.log(data.error_code);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error>>>" + type + JSON.stringify(xhr) + errorThrown);
+						}
+					});
+				}
+				//获取赚钱头条信息
+				function getEarnInfo() {
+					var url = getBaseUrl() + "index/Indexinfo/earnInfo";
+					//					console.log("赚钱头条 url：" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							//							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								data = data.data;
+								//																console.log("data=" + JSON.stringify(data));
+								document.getElementById("totalBeans").innerHTML = data.totalBean;
+								document.getElementById("totalMoney").innerHTML = parseFloat(data.totalBean) / 100.0;
+								var tmInfo = (data.message).split('#');
+								var formatedInfo = '';
+								for(var i in tmInfo) {
+									if(i & 1) { //加载数字class
+										formatedInfo += '<p class="mui-ellipsis my-liu-toutiao-number">' + tmInfo[i] + '</p>'
+									} else { //加载文字class
+										formatedInfo += '<p class="mui-ellipsis my-liu-toutiao-text">' + tmInfo[i] + '</p>'
+									}
+								}
+								toutiaoInfo = formatedInfo;
+								//document.getElementById("toutiao").innerHTML = toutiaoInfo;
+								//console.log(toutiaoInfo);
+							} else {
+								console.log(data.error_code);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							console.log(JSON.stringify(xhr));
+						}
+					});
+				}
+				window.addEventListener('initpage', function(event) {
+					//获得事件参数
+					//					alert('刷新首页');
+					if(localStorage.isPartner == 1) {
+						pagetype = 1;
+					} else {
+						pagetype = 0;
+					}
+					if(pagetype == 0 || localStorage.islogin != '1') {
+						document.getElementById("smallCPage").style.display = "block";
+						document.getElementById("bigCPage").style.display = "none";
+						homepageInit();
+					} else {
+						loadTip();
+						document.getElementById("smallCPage").style.display = "none";
+						document.getElementById("bigCPage").style.display = "block";
+						getBigCInfo(getBaseUrl() + "salesleadsmanage/SellClue/numberOfClue", 0); //获取总线索数和本月线索数
+						getBigCInfo(getBaseUrl() + "salesleadsmanage/SellClue/clueDynamicList", 1); //线索动态
+						getBigCInfo(getBaseUrl() + "salesleadsmanage/SellClue/clueList", 2); //线索列表
+						getUnreadedNotice(); //销售线索的弹窗
+					}
+				});
+				window.addEventListener('updateSpeeding', function(event) {
+					speedlefttime = event.detail.speedlefttime;
+					//if(speedtypet != event.detail.speedtype) {
+					speedtype = event.detail.speedtype;
+					if(speedtype == 0) {
+						document.getElementById("speedingid").style.display = "initial";
+						document.getElementById("speedingid").src = "../images/speeding1.png";
+					} else if(speedtype == 1) {
+						document.getElementById("speedingid").style.display = "initial";
+						document.getElementById("speedingid").src = "../images/speeding7.png";
+					} else {
+						document.getElementById("speedingid").style.display = "none";
+					}
+				});
+				window.addEventListener('updateMessageNumber', function(event) {
+					var number = parseInt(event.detail.number);
+					//console.log('【首页】收到未读消息数：' + number);
+					if(number == 0) {
+						document.getElementById("messagecount").style.display = "none";
+						document.getElementById("bigC_messagecount").style.display = "none";
+					} else {
+						document.getElementById("messagecount").style.display = "block";
+						document.getElementById("bigC_messagecount").style.display = "block";
+						if(number > 99) {
+							document.getElementById('messagecount').innerText = "···";
+							document.getElementById('bigC_messagecount').innerText = "···";
+						} else {
+							document.getElementById('messagecount').innerText = number;
+							document.getElementById('bigC_messagecount').innerText = number;
+						}
+					}
+				});
+
+				function loadTip() {
+					var id = parseInt(new Date().getDay());
+					document.getElementById("tip").innerHTML = tips[id];
+				}
+
+				//防止重复弹窗
+				var isShowingUnreadNotice = false;
+
+				function getUnreadedNotice() {
+					var url = getBaseUrl() + "index/Message/receiveUnreadInfoPopup";
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							//console.log('首页弹窗=' + JSON.stringify(data));
+							//console.log('id = ' + noticeMsgId);
+							if(data.status == "success") {
+								if(data.data.length == 0) {
+									return;
+								}
+								
+								if(data.data == undefined) {
+									return;
+								}
+								var hasData = false;
+								for(var i = 0; i < data.data.length; i++) {
+									console.log(JSON.stringify(data.data[i]));
+									if(data.data[i].result == '1' && (data.data[i].type=='1'||data.data[i].type=='3')){
+										data = data.data[i];
+										hasData = true;
+										break;
+									}
+								}
+								if(hasData == false) {
+									return;
+								}
+								var title = "";
+								var abs = "";
+								if(isShowingUnreadNotice == true) {
+									return;
+								}
+								if(data.msgId == lastPopedId) {
+									//该条消息已经弹窗，不需要再弹出（防止通信延时造成的数据不同步，两次接收到同一消息时可能产生该状况）
+									return
+								}
+								
+								switch(data.type) {
+							
+							
+									case "1":
+										title = "线索审核通过";
+										if(data.result == "1") {
+											abs = "您提交的销售线索：" + data.firm + "，经审核已通过。" + data.beans + "薪豆已经到账，恭喜您！";
+											noticeMsgId = data.msgId;
+											mui.fire(plus.webview.currentWebview().opener(), 'moveToHome');
+											setTimeout(function() {
+												document.getElementById("popClueMessage").innerHTML = abs;
+												document.getElementById("popClueView").style.display = "block";
+												isShowingUnreadNotice = true;
+												mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+											}, 200);
+
+											//											mui.alert(abs, ' ', '知道了', function() {
+											//												readMessage(noticeMsgId);
+											//												isShowingUnreadNotice = false;
+											//												lastPopedId = noticeMsgId;
+											//											}, 'div');
+										}
+										break;
+									case "3":
+										title = "销售线索成交";
+										if(data.result == "1") {
+											noticeMsgId = data.msgId;
+											abs = "您所提交的销售线索：" + data.firm + "已经成单！恭喜您获得" + data.beans + "薪豆！";
+											mui.fire(plus.webview.currentWebview().opener(), 'moveToHome');
+											setTimeout(function() {
+												document.getElementById("popClueMessage").innerHTML = abs;
+												document.getElementById("popClueView").style.display = "block";
+												isShowingUnreadNotice = true;
+												mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+											}, 200);
+
+										}
+										break;
+									default:
+										break;
+								}
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+
+				function readMessage(msgId) {
+					if(msgId == -1) return;
+					var url = getBaseUrl() + 'index/Message/readMessage?id=' + msgId;
+					console.log("read message url:" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == "success") {
+								console.log(JSON.stringify(data));
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+					mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+				}
+				/**
+				 * 大C端函数和监听事件定义
+				 */
+				document.getElementById('startearning').addEventListener('tap', function(event) {
+					mui.fire(plus.webview.currentWebview().opener(), 'moveToTask', {});
+					mui.fire(plus.webview.getWebviewById('html/taskpage.html'), 'tosale', {});
+				});
+				document.getElementById("bigC_signIn").addEventListener('tap', function() {
+					mui.openWindow({
+						url: 'signin.html',
+						id: 'signin',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+						//						,
+						//						extras: {
+						//							firstTask: firstTask
+						//						}
+					});
+				});
+				document.getElementById('bigC_message').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'messagelist.html',
+						id: 'messagelist',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				/*document.getElementById("bigC_ziliao").addEventListener('tap', function() {
+				 mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+				 document.getElementById("pop_ziliao_view").style.display = "block";
+				 });*/
+				document.getElementById("bigC_privilege").addEventListener('tap', function() {
+					var url = getBaseUrl() + 'salesleadsmanage/PartTimeJob/getSalesmanInfo';
+					console.log("获得合伙人折扣:" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							var tq1 = '',
+								tq12 = '',
+								tq2 = '',
+								tq3 = '',
+								tq4 = '';
+							if(data.status == "success") {
+								if(data.partnerRebate > 0 && data.hasicon == 1) {
+									tq1 = '每提供一条有效线索，获得50元线索奖励。';
+									tq12 = '用户成单后，获得合同金额20%的丰厚分红。';
+									tq2 = '您推荐的客户将享受' + data.partnerRebate + '%折扣';
+									tq3 = '您推荐的客户可显示专属标志';
+									tq4 = '您可以关注“企赚宝”公众号，在如何赚钱-领取资料中领取资料，以便更好的了解薪人薪事和向朋友推荐。';
+								} else if(data.partnerRebate == 0 && data.hasicon == 1) {
+									tq1 = '每提供一条有效线索，获得50元线索奖励。';
+									tq12 = '用户成单后，获得合同金额20%的丰厚分红。';
+									tq2 = '您推荐的客户将享受专属折扣（未开通）';
+									tq3 = '您推荐的客户可显示专属标志';
+									tq4 = '您可以关注“企赚宝”公众号，在如何赚钱-领取资料中领取资料，以便更好的了解薪人薪事和向朋友推荐。';
+								} else if(data.partnerRebate > 0 && data.hasicon == 0) {
+									tq1 = '每提供一条有效线索，获得50元线索奖励。';
+									tq12 = '用户成单后，获得合同金额20%的丰厚分红。';
+									tq2 = '您推荐的客户将享受' + data.partnerRebate + '%折扣';
+									tq3 = '您推荐的客户可显示专属标志（未开通）';
+									tq4 = '您可以关注“企赚宝”公众号，在如何赚钱-领取资料中领取资料，以便更好的了解薪人薪事和向朋友推荐。';
+								} else {
+									tq1 = '每提供一条有效线索，获得50元线索奖励。';
+									tq12 = '用户成单后，获得合同金额20%的丰厚分红。';
+									tq2 = '您推荐的客户将享受专属折扣（未开通）';
+									tq3 = '您推荐的客户可显示专属标志（未开通）';
+									tq4 = '您可以关注“企赚宝”公众号，在如何赚钱-领取资料中领取资料，以便更好的了解薪人薪事和向朋友推荐。';
+								}
+							} else {
+								tq1 = '每提供一条有效线索，获得50元线索奖励。';
+								tq12 = '用户成单后，获得合同金额20%的丰厚分红。';
+								tq2 = '您推荐的客户将享受专属折扣（未开通）';
+								tq3 = '您推荐的客户可显示专属标志（未开通）';
+								tq4 = '您可以关注“企赚宝”公众号，在如何赚钱-领取资料中领取资料，以便更好的了解薪人薪事和向朋友推荐。';
+							}
+							document.getElementById("tequan1").innerHTML = '<span">1、</span>' + tq1;
+							document.getElementById("tequan12").innerHTML = '<span">2、</span>' + tq12;
+							document.getElementById("tequan2").innerHTML = '<span">3、</span>' + tq2;
+							document.getElementById("tequan3").innerHTML = '<span">4、</span>' + tq3;
+							document.getElementById("tequan4").innerHTML = '<span">5、</span>' + tq4;
+							mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+							document.getElementById("pop_tequan_view").style.display = "block";
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				});
+				document.getElementById("bigC_provideClue").addEventListener('tap', function() {
+					mui.openWindow({
+						url: 'provideClue.html',
+						id: 'provideClue',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				mui(".clue-list").on('tap', ".mui-table-view-cell", function() {
+					var clueid = this.getAttribute('clueId');
+					var cluetype = this.getAttribute('cluetype');
+					mui.openWindow({
+						url: 'clueDetail.html',
+						id: 'clueDetail',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							clueid: clueid,
+							cluetype: cluetype
+						}
+					});
+				});
+				window.addEventListener('reload', function(event) {
+					try {
+						location.reload();
+					} catch(e) {}
+				});
+				window.addEventListener('showPartnerResult', function() {
+					localStorage.showPartnerResult = 0;
+					$("#show_partner_view").fadeIn(300);
+				});
+				document.getElementById("partner_button").addEventListener('tap', function() {
+					localStorage.showPartnerResult = 0;
+					localStorage.isPartner = 1;
+					changePopResult();
+					mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+					var homepage = plus.webview.getWebviewById('html/homepage.html');
+					mui.fire(homepage, 'reload', {});
+					var mypage = plus.webview.getWebviewById('html/mypage.html');
+					mui.fire(mypage, 'initpage', {});
+					var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+					mui.fire(fanspage, 'initpage', {});
+					var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+					mui.fire(taskpage, 'reload', {});
+					mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+					mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+					document.getElementById("show_partner_view").style.display = "none";
+					mui.fire(plus.webview.currentWebview().opener(), 'closeMask', {});
+				});
+				document.getElementById("pop_tequan_view").addEventListener('tap', function(e) {
+					var target = $(e.target);
+					if($(target).is("#pop_tequan_view, #cancel_tequan_button")) {
+						mui.fire(plus.webview.currentWebview().opener(), 'closeMask');
+						document.getElementById("pop_tequan_view").style.display = "none";
+					}
+				});
+				document.getElementById("popClueView").addEventListener('tap', function(e) {
+					var target = $(e.target);
+					if($(target).is("#popClueView, #popClueButton")) {
+						mui.fire(plus.webview.currentWebview().opener(), 'closeMask');
+						document.getElementById("popClueView").style.display = "none";
+						readMessage(noticeMsgId);
+						isShowingUnreadNotice = false;
+						lastPopedId = noticeMsgId;
+					}
+				});
+
+				/*document.getElementById("pop_ziliao_view").addEventListener('tap', function(e) {
+				 var target = $(e.target);
+				 if($(target).is("#pop_ziliao_view, #cancel_ziliao_button")) {
+				 mui.fire(plus.webview.currentWebview().opener(), 'closeMask');
+				 document.getElementById("pop_ziliao_view").style.display = "none";
+				 }
+				 });*/
+				//				document.getElementById('banner').addEventListener('tap', function() {
+				//					mui.fire(plus.webview.currentWebview().opener(), 'moveToTask', {});
+				//					mui.fire(plus.webview.getWebviewById('html/taskpage.html'), 'tosale', {});
+				//				});
+
+				mui(".mui-slider").on('tap', ".first-banner", function() {
+					mui.fire(plus.webview.currentWebview().opener(), 'moveToTask', {});
+					mui.fire(plus.webview.getWebviewById('html/taskpage.html'), 'tosale', {});
+				});
+				//				document.getElementById('banner2').addEventListener('tap', function() {
+				//					mui.fire(plus.webview.currentWebview().opener(), 'moveToTask', {});
+				//					mui.fire(plus.webview.getWebviewById('html/taskpage.html'), 'tosale', {});
+				//				});
+				document.getElementById('income1').addEventListener('tap', function() {
+					mui.fire(plus.webview.currentWebview().opener(), 'moveToTask', {});
+					mui.fire(plus.webview.getWebviewById('html/taskpage.html'), 'tosale', {});
+				});
+				document.getElementById('income2').addEventListener('tap', function() {
+					mui.fire(plus.webview.currentWebview().opener(), 'moveToTask', {});
+					mui.fire(plus.webview.getWebviewById('html/taskpage.html'), 'tosale', {});
+				});
+				var isPlayingVideo = false;
+
+				document.getElementById("video_button1").addEventListener('tap', function() {
+					try {
+						$("#video_view").fadeIn(300);
+						mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+						document.getElementById("videoMedia").currentTime = 0;
+						if(isPlayingVideo == false) {
+							isPlayingVideo = true;
+							document.getElementById("videoMedia").play();
+						}
+					} catch(e) {
+						//TODO handle the exception
+					}
+				});
+				document.getElementById("video_button2").addEventListener('tap', function() {
+					try {
+						$("#video_view").fadeIn(300);
+						mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+						document.getElementById("videoMedia").currentTime = 0;
+						if(isPlayingVideo == false) {
+							isPlayingVideo = true;
+							document.getElementById("videoMedia").play();
+						}
+					} catch(e) {
+						//TODO handle the exception
+					}
+				});
+
+				document.getElementById("video_view").addEventListener('tap', function(e) {
+					try {
+						var target = $(e.target);
+						if($(target).is("#video_view")) {
+							mui.fire(plus.webview.currentWebview().opener(), 'closeMask');
+							if(isPlayingVideo == true) {
+								document.getElementById("videoMedia").currentTime = document.getElementById("videoMedia").duration;
+								isPlayingVideo = false;
+								document.getElementById("video_view").style.display = "none";
+							}
+						}
+					} catch(e) {
+						//TODO handle the exception
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<!--小c首页-->
+		<section id="smallCPage" style="display: none;">
+			<!--登录后banner-->
+			<div id="isloginhomebanner" class="liu-banner" style="display: block;">
+				<header class="mui-bar mui-bar-transparent" style="background-color: #FFFFFF;height:0.88rem;">
+					<h1 class="mui-title" style="color: #333333;font-size: 0.38rem;line-height: 0.88rem;font-weight: normal">企赚宝</h1>
+					<img id="speedingid" style="position: absolute;display: none;height: 0.63rem;width:0.63rem;" src="../images/speeding1.png"></img>
+					<a id="message" class="mui-pull-right mui-icon icon-xiaoxi" style="display: none;color: #333333;margin:0;padding:0;margin-right: 0.1rem;line-height: 0.88rem;font-size: 0.40rem;">
+						<span id="messagecount" class="mui-badge" style="background-color: #FB5237;color: white;display: none;"></span>
+					</a>
+					<span id="homeloginbox" class="may-login-container" style="display: none;">
+                		<img id="loginhead" src="../images/userhead.png" class="liu-user-head" />
+               			<a id="loginnow">登录</a>
+            		</span>
+				</header>
+				<div id="slider" class="mui-slider" style="height: 3rem;">
+					<div class="mui-slider-group mui-slider-loop">
+						<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<a href="#">
+								<img id="video_button1" class="slide-image viedo" src="../images/banner_03_02_02.png">
+							</a>
+						</div>
+						<!-- 第一张 -->
+						<div class="mui-slider-item">
+							<a href="#">
+								<img id="banner" class="first-banner" src="../images/homepage_new_banner.png" style="width: 100%;" />
+								<div id="income1" style="display: none;position:absolute;top: 2.5rem; width: 100%;">
+									<div style="width: 50%; position: absolute; left: 0; text-align: right;">
+										<span class="liu-span-text" style="">总收入:</span>
+										<span id="totalIncome1" class="liu-span-number">120</span>
+										<span class="liu-span-text" style="margin-right: 0.5rem;">薪豆</span>
+									</div>
+									<div style="width: 50%; position: absolute; right: 0; text-align: left;">
+										<span class="liu-span-text" style="margin-left: 0.5rem; ">今日收入:</span>
+										<span id="todayIncome1" class="liu-span-number">0</span>
+										<span class="liu-span-text" style="">薪豆</span>
+									</div>
+								</div>
+							</a>
+						</div>
+						<!-- 第二张 -->
+						<div class="mui-slider-item">
+							<a href="#">
+								<img id="video_button2" class="slide-image" src="../images/banner_03_02_02.png">
+							</a>
+						</div>
+						<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+						<div class="mui-slider-item mui-slider-item-duplicate">
+							<a href="#">
+								<img id="banner" class="first-banner" src="../images/homepage_new_banner.png" style="width: 100%;" />
+								<div id="income2" style="display: none;position:absolute;top: 2.5rem; width: 100%;">
+									<div style="width: 50%; position: absolute; left: 0; text-align: right;">
+										<span class="liu-span-text" style="">总收入:</span>
+										<span id="totalIncome" class="liu-span-number">120</span>
+										<span class="liu-span-text" style="margin-right: 0.5rem;">薪豆</span>
+									</div>
+									<div style="width: 50%; position: absolute; right: 0; text-align: left;">
+										<span class="liu-span-text" style="margin-left: 0.5rem; ">今日收入:</span>
+										<span id="todayIncome" class="liu-span-number">0</span>
+										<span class="liu-span-text" style="">薪豆</span>
+									</div>
+								</div>
+							</a>
+
+						</div>
+					</div>
+					<div class="mui-slider-indicator">
+						<div class="mui-indicator mui-active"></div>
+						<div class="mui-indicator"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="mui-row" style="background-color: white;">
+				<div id="signin" class="mui-col-sm-4 mui-col-xs-4">
+					<div class="" style="text-align: center;">
+						<img class="my-img" src="../images/homepage_new_signin.png" />
+						<span class="mui-icon icon-hot" style="color: #fb5237;position: absolute;top: 0.04rem;left: 58%;font-size: 0.42rem;"></span>
+					</div>
+					<div class="liu-title-text">签到有奖</div>
+				</div>
+				<div id="rankinglist" class="mui-col-sm-4 mui-col-xs-4">
+					<div style="text-align: center; "><img class="my-img" src="../images/homepage_ranking.png" /></div>
+					<div class="liu-title-text">排行榜</div>
+				</div>
+				<div id="howgainmoney" class="mui-col-sm-4 mui-col-xs-4">
+					<div style="text-align: center; "><img class="my-img" src="../images/homepage_new_howtomakemoney.png" /></div>
+					<div class="liu-title-text">如何赚钱</div>
+				</div>
+			</div>
+			<div style="display: block;width: 100%;height: 0.02rem;background-color: #DDDDDD; "></div>
+			<!--赚钱头条-->
+			<div class="mui-table-view" style="height: 1.1rem;background: #fff5f3;">
+				<img src="../images/headline_of_make_money.png " style="width: 0.7rem; float: left;margin: 0.2rem;">
+				<div style="position: relative; left: 0;top: 0rem;overflow: hidden;">
+					<div style="position: absolute;">
+						<span style="color: #fb5237;font-size: 0.28rem; line-height: 0.68rem;">累计发放</span>
+						<span id="totalBeans" style="color: #fb5237;font-size: 0.28rem;line-height: 0.68rem; font-weight: bold;">78459541</span>
+						<span style="color: #fb5237;font-size: 0.28rem; line-height: 0.68rem;">薪豆(</span>
+						<span id="totalMoney" style="color: #fb5237;font-size: 0.28rem; line-height: 0.68rem;">784595.41</span>
+						<span style="color: #fb5237;font-size: 0.28rem; line-height: 0.68rem;">元)</span>
+					</div>
+					<div style="position: relative; height: 1rem; left: 0;top: 0.54rem;overflow: hidden;">
+						<div id="toutiao" style="position: absolute; left: 0; ">
+							<span class='mui-ellipsis my-liu-toutiao-text'>恭喜138******1邀请粉丝，获得</span>
+							<span class='mui-ellipsis my-liu-toutiao-number'>150</span>
+							<span class='mui-ellipsis my-liu-toutiao-text'>薪豆</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="background-color: #F8F8F8;display: block;height: 0.21rem;"></div>
+			<div id="startearning" class="mui-table-view" style="position: relative; height: 1.4rem;padding: 0.2rem;">
+				<img src="../images/homepage_new_partner.png" style="width: 1rem;height:1rem;float: right;" />
+				<p style="color: #333333;padding: 0;font-size: 0.4rem;margin: 0; line-height: 0.5rem;">成为营销合伙人<span style="color: #fb9a37;">赚取现金</span></p>
+				<!--<br />-->
+				<p style="color: #999999;padding:0.05rem 0 0 0; margin: 0;font-size: 0.26rem;">50元线索奖励+20%销售提成</p>
+			</div>
+			<div style="background-color: #F8F8F8;display: block;height: 0.21rem;"></div>
+			<div style="margin-top: 0; height: 0.83rem; background: #ffffff;">
+				<div style="float: left; color: #333333;font-size: 0.29rem;height: 0.83rem; line-height: 0.83rem; margin-left: 0.21rem;">最新任务</div>
+				<div id="moretask" style="float: left; color: #d5d5d5;font-size: 0.29rem;height: 0.83rem; line-height: 0.83rem; margin-right: 0.2rem; float: right;">
+					<span>更多 </span> <span class="icon-youjiantou"> </span>
+				</div>
+			</div>
+			<div style="display: block;width: 100%;height: 0.02rem;background-color: #DDDDDD;"></div>
+			<ul id="newtaskulid" class="mui-table-view">
+				<li class="mui-table-view-cell my-li-tasklist">
+					<span class="mui-pull-left my-a-clip">新手</span>
+					<span class="my-p-point">50薪豆</span>
+					<img class="mui-pull-left my-image-task" style="">
+					<div class="liu-task-container">
+						<p class="my-p-taskname">薪酬心理问卷</p>
+						<span class="my-span-tasktype">问卷</span>
+					</div>
+				</li>
+				<li class="mui-table-view-cell my-li-tasklist">
+					<span class="mui-pull-left my-a-clip">新手</span>
+					<span class="my-p-point">50薪豆</span>
+					<img class="mui-pull-left my-image-task" style="">
+					<div class="liu-task-container">
+						<p class="my-p-taskname">薪酬心理问卷</p>
+						<span class="my-span-tasktype">问卷</span>
+					</div>
+				</li>
+			</ul>
+		</section>
+		<section id="bigCPage" style="display: none">
+			<div id="bigC_banner" style="display: block; background: #ffffff; z-index: 2; ">
+				<header class="mui-bar mui-bar-transparent" style="background-color: #FFFFFF;height:0.88rem;">
+					<span id="bigC_signIn" style="left: 0.21rem; font-size: 0.27rem;line-height:0.88rem;color: #39404d;">签到</span>
+					<span id="bigC_privilege" class="icon-tequan" style="position: fixed; right: 1.15rem;line-height:0.88rem;font-size: 0.4rem; z-index: 3;"></span>
+					<a id="bigC_message" class="mui-pull-right mui-icon icon-xiaoxi" style="color: #333333;margin:0;padding:0;margin-right: 0.1rem;line-height: 0.88rem;font-size: 0.40rem;">
+						<span id="bigC_messagecount" class="mui-badge" style="background-color: #FB5237;color: white;display: none;top: 0.08rem;left: 0.37rem;font-size: 0.18rem;"></span>
+					</a>
+				</header>
+				<!--<span id="bigC_signIn" style="position: fixed; top:0.21rem; left: 0.21rem; z-index: 3; font-size: 0.27rem;color: #39404d;">签到</span>-->
+				<!--&lt;!&ndash;<span id="bigC_ziliao" class="mui-icon icon-ziliao2" style="position: fixed; right: 1.98rem; top:0.21rem; font-size: 0.5rem; z-index: 3;"></span>&ndash;&gt;-->
+				<!--<span id="bigC_privilege" class="icon-tequan" style="position: fixed; right: 1.15rem; top:0.21rem; font-size: 0.5rem; z-index: 3;"></span>-->
+				<!--&lt;!&ndash;<div style="position: fixed; right: 0.21rem; top:0.21rem; z-index: 3; ">-->
+				<!--<a id="bigC_message" class="icon-xiaoxi" style="float: right;font-size: 0.5rem;margin-right: 0.1rem; color: #000000; ">-->
+				<!--<span id="bigC_messagecount" class="mui-badge" style="display:none;background-color: #FB5237;color: white; position: absolute; right: -0.13rem; top:-0.17rem;font-size: 0.21rem;line-height: 1.4;padding: 0.02rem 0.1rem;">-->
+				<!--</span>-->
+				<!--</a>-->
+				<!--</div>&ndash;&gt;-->
+				<!--<div style="position: fixed; right: 0.21rem; top:0.21rem; z-index: 3; ">-->
+				<!--<a id="bigC_message" class="icon-xiaoxi" style="float: right;font-size: 0.5rem;margin-right: 0.1rem; color: #000000; ">-->
+				<!--<span id="bigC_messagecount" class="mui-badge" style="display:none;background-color: #FB5237;color: white; position: absolute; right: -0.02rem; top:-0.17rem;font-size: 0.21rem;line-height: 1.4;padding: 0.02rem 0.1rem;">-->
+				<!--</span>-->
+				<!--</a>-->
+				<!--</div>-->
+				<div style="text-align: center; padding-top: 0.88rem; position: fixed; top: 0; width: 100%;z-index: 2;overflow: hidden;height: 4.8rem; background: #ffffff;">
+					<p style="font-size: 0.26rem; color: #39404d; margin: 0.3rem 0 0.2rem 0;line-height: 0.26rem;">总线索数</p>
+					<p id="totalcluecount" style="font-size: 1.1rem;line-height:1.1rem;font-weight:bold;color: #b67535; margin:0; padding: 0;">--</p>
+					<span style="font-size: 0.26rem; color: #39404d; margin: 0; padding: 0; line-height: 0.86rem;">本月线索&nbsp;&nbsp;</span>
+					<span id="monthcluecount" style="font-size: 0.26rem; color: #b67535; line-height: 0.86rem;">--</span>
+					<p id='bigC_provideClue' style="box-shadow:0rem 0.04rem 0.06rem rgba(57,64,77,0.5);height: 0.88rem; width: 5rem; line-height:0.88rem; padding: 0; font-size: 0.28rem; margin: 0 auto; background:#39404d; color: #e5ba7d; border-radius: 0.1rem;">我要提供线索</p>
+				</div>
+			</div>
+			<div style="height: 0.8rem; background: #f7ecda; position: fixed; width: 100%; top:4.8rem;z-index: 2">
+				<span style="font-size: 0.28rem; line-height: 0.8rem; padding: 0rem 0.1rem; color: #b67535;">赚钱技巧</span>
+				<span id="tip" style="font-size: 0.28rem; line-height: 0.8rem; color: #b67535;"> · 邀请更多“粉丝”，让粉丝帮你赚钱！</span>
+			</div>
+			<div style="width: 100%; height: 0.2rem; background: #F8F8F8; position: fixed; top: 5.6rem; z-index: 2;"></div>
+			<div id='bigC_clue_title' style="background-color: white;top: 5.8rem; height: 0.8rem; position: fixed; z-index:
+     2; border-bottom: 0.02rem #eeeeee solid;">
+				<div class="mui-segmented-control mui-segmented-control-inverted">
+					<div style="position: relative; width: 86%; margin:0 auto; height: 0.8rem;">
+						<a id="alltype" style="position: absolute; top: 0; left: 0.42rem;width: 2rem;font-size: 0.28rem;line-height: 0.78rem;" class="mui-control-item mui-active" href="#item1">
+							线索动态
+						</a>
+						<a id="allstate" style="position: absolute; right: 0.42rem;width: 2rem;font-size: 0.28rem;line-height: 0.78rem;" class="mui-control-item otheritem" href="#item2">
+							线索列表
+						</a>
+					</div>
+				</div>
+			</div>
+			<!--<div style="width: 100%; position: absolute; top: 6.67rem; bottom: 0;">-->
+			<!--<div class="mui-scroll-wrapper" style="">
+    <div class="mui-scroll">-->
+			<div id="list_container">
+				<!--这里放置真实显示的DOM内容-->
+				<div id="item1" class="mui-control-content mui-active">
+					<ul id="cluedyList" class="mui-table-view clue-list" style="margin-top: 0; margin-bottom: 0; top:
+			6.6rem; z-index: 0; height: 100%;">
+						<!--<li class="mui-table-view-cell" style="height: 1.25rem; padding-left: 0.1rem;">
+            <img class="mui-pull-left my-bc-image my-bc-image-xiaoshou" style="position: relative;">
+            <p style="position: absolute; font-size: 0.25rem; top: 0.42rem; left: 0.29rem; color: #FFFFFF;">线索</p>
+            </img>
+            <div style="position: relative; margin-left: 1.04rem;">
+                <p class="my-p-taskname">长江科技 提交线索成功</p>
+                <span class="my-p-taskname" style="position: absolute; top: 0.52rem; left: 0rem;">2月7日 13:34</span>
+            </div>
+        </li>
+        <li class="mui-table-view-cell" style="height: 1.25rem; padding-left: 0.1rem;">
+            <img class="mui-pull-left my-bc-image my-bc-image-zhuce" style="position: relative;">
+            <p style="position: absolute; font-size: 0.25rem; top: 0.42rem; left: 0.29rem; color: #B67535;">提交</p>
+            </img>
+            <div style="position: relative; margin-left: 1.04rem;">
+                <p class="my-p-taskname">长江科技 提交线索成功</p>
+                <span class="my-p-taskname" style="position: absolute; top: 0.52rem; left: 0rem;">2月7日 13:34</span>
+            </div>
+        </li>-->
+					</ul>
+					<div id="dynothingid" style="text-align: center; position:fixed; width: 100%; height: 100%; top: 6.6rem; display: none; background: #FFFFFF;">
+						<img src="../images/nomessage.png" style="height: 2.08rem; margin-top: 1.25rem;" />
+						<p style="margin-bottom: 0.63rem;color: #333333;font-size: 0.29rem;margin-top: 0.42rem;">还没有线索哦，赶紧去提供线索吧~</p>
+					</div>
+				</div>
+				<div id="item2" class="mui-control-content ">
+					<ul id="clueList" class="mui-table-view clue-list" style="margin-top: 0; margin-bottom: 0; top:
+			6.6rem; z-index: 0; height: 100%;">
+						<li class="mui-table-view-cell" style="height: 1.25rem; padding-left: 0.1rem;">
+							<span class="mui-pull-left my-bc-image my-bc-image-xiaoshou" style="position: relative;">
+							<p style="text-align: center;line-height:0.84rem;font-size: 0.25rem;color: #FFFFFF;">线索</p>
+							</span>
+							<div style="position: relative; margin-left: 1.04rem;">
+								<p class="my-p-taskname">长江科技 提交线索成功</p>
+								<span class="my-p-taskname" style="position: absolute; top: 0.52rem; left: 0rem;">2月7日 13:34</span>
+							</div>
+						</li>
+						<li class="mui-table-view-cell" style="height: 1.25rem; padding-left: 0.1rem;">
+							<span class="mui-pull-left my-bc-image my-bc-image-zhuce" style="position: relative;">
+							<p style="text-align: center;line-height:0.84rem;font-size: 0.25rem;color: #B67535;">提交</p>
+							</span>
+							<div style="position: relative; margin-left: 1.04rem;">
+								<p class="my-p-taskname">长江科技 提交线索成功</p>
+								<span class="my-p-taskname" style="position: absolute; top: 0.52rem; left: 0rem;">2月7日 13:34</span>
+							</div>
+						</li>
+						<li class="mui-table-view-cell" style="height: 1.25rem; padding-left: 0.1rem;">
+							<span class="mui-pull-left my-bc-image my-bc-image-zhuce" style="position: relative;">
+							<p style="text-align: center;line-height:0.84rem;font-size: 0.25rem;color: #B67535;">提交</p>
+							</span>
+							<span style="float: right; position: absolute; right: 0.21rem; top:0.38rem; font-size: 0.29rem;">待跟进</span>
+							<div style="position: relative; margin-left: 1.04rem;">
+								<p class="my-p-taskname">长江科技 提交线索成功</p>
+								<span class="my-p-taskname" style="position: absolute; top: 0.52rem; left: 0rem;">2月7日 13:34</span>
+							</div>
+						</li>
+						<!--<li class="mui-table-view-cell my-li-tasklist">
+                        <img class="mui-pull-left my-image-task" src="../images/60x60.gif">
+                        <span style="float: right; position: absolute; right: 0.21rem; top:0.42rem; font-size: 0.29rem;">待跟进</span>
+                        <div class="liu-task-container">
+                            <p class="my-p-taskname">长江科技</p>
+                            <span class="my-p-taskname" style="position: absolute; top: 0.63rem; left: 0rem;">2月7日 13:34</span>
+                        </div>
+                    </li>
+                    <li class="mui-table-view-cell my-li-tasklist">
+                        <img class="mui-pull-left my-image-task" src="../images/60x60.gif">
+                        <span style="float: right; position: absolute; right: 0.21rem; top:0.42rem; font-size: 0.29rem;">待跟进</span>
+                        <div class="liu-task-container">
+                            <p class="my-p-taskname">长江科技</p>
+                            <span class="my-p-taskname" style="position: absolute; top: 0.63rem; left: 0rem;">2月7日 13:34</span>
+                        </div>
+                    </li>
+                    <li class="mui-table-view-cell my-li-tasklist">
+                        <img class="mui-pull-left my-image-task" src="../images/60x60.gif">
+                        <span style="float: right; position: absolute; right: 0.21rem; top:0.42rem; font-size: 0.29rem;">待跟进</span>
+                        <div class="liu-task-container">
+                            <p class="my-p-taskname">长江科技</p>
+                            <span class="my-p-taskname" style="position: absolute; top: 0.63rem; left: 0rem;">2月7日 13:34</span>
+                        </div>
+                    </li>-->
+					</ul>
+					<div id="cluenothingid" style="text-align: center; position:fixed; width: 100%; height: 100%; top: 6.6rem; display: none; background: #FFFFFF;">
+						<img src="../images/nomessage.png" style="height: 2.08rem; margin-top: 1.25rem;" />
+						<p style="margin-bottom: 0.63rem;color: #333333;font-size: 0.29rem;margin-top: 0.42rem;">还没有线索哦，赶紧去提供线索吧~</p>
+					</div>
+				</div>
+			</div>
+			<!--<div style="height: 100%;display: block;background-color: #F8F8F8;width: 100%;"></div>-->
+			<!--<div style="height: 0.94rem;"></div>-->
+			<!--</div>
+</div>-->
+			<!--</div>-->
+		</section>
+		<div id='show_partner_view' style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.4); z-index: 999;">
+			<img src="../images/beijingguang.png" style="height: 7.08rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; margin: auto;" />
+			<div style="position: fixed; top: 4.54rem; left: 0; right: 0; height: 3.75rem; width: 5.21rem; border-radius: 0.21rem; background: #FFFFFF; margin:auto; text-align: center; z-index: 1;">
+				<img src="../images/gongxi.png" style="width: 4.02rem; position: relative; margin-top: -0.9rem;" />
+				<div style="font-size: 0.31rem; color: #FB5237; margin-top: 0.17rem;"><b>营销合伙人</b></div>
+				<div style="font-size: 0.27rem; color: #333333; margin-top: 0.21rem; line-height: 0.35rem;">已经通过筛选，成为营销合伙人！ <br /> 期待您赢取终极大奖！</div>
+				<img id="partner_button" src="../images/partnerbutton.png" style="width: 2.71rem; margin-top: 0.46rem;" />
+			</div>
+		</div>
+		<div id="pop_tequan_view" style="width: 100%;position:fixed;top:0;z-index: 10;text-align: center;display:none;height: 100%; background-color: rgba(0,0,0,0.4);">
+			<div style="position: relative; height: 1rem; width: 6.2rem;  background: #39404d; text-align: center;margin: 10% auto 0 auto; border-radius: 0.1rem 0.1rem 0rem 0rem; color: #FFFFFF; font-size: 0.28rem;line-height: 1rem;">
+				合伙人特权
+			</div>
+			<div style="position: relative; width: 6.2rem; background: #FFFFFF;  margin: auto; border-radius: 0rem 0rem 0.1rem 0.1rem; color: #e5ba7d; font-size: 0.25rem; padding: 0.5rem 0.5rem ">
+				<p style="font-size: 0.28rem; color: #FB5237;">恭喜您成为企赚宝营销合伙人！</p>
+				<p style="line-height: 0.68rem;font-size: 0.28rem; color: #333333; margin-top: 0.2rem; text-align: left; padding-left: 0;">您的特权：</p>
+				<p id="tequan1" style="font-size: 0.24rem;line-height: 0.44rem; color: #333333; text-align: left;">-</p>
+				<p id="tequan12" style="font-size: 0.24rem;line-height: 0.44rem; color: #333333; text-align: left;">-</p>
+				<p id="tequan2" style="font-size: 0.24rem;line-height: 0.44rem; color: #333333; text-align: left;">-</p>
+				<p id="tequan3" style="font-size: 0.24rem;line-height: 0.44rem; color: #333333; text-align: left;">-</p>
+				<p id="tequan4" style="font-size: 0.24rem;line-height: 0.44rem; color: #333333; text-align: left;">-</p>
+				<span style="line-height: 0.38rem;font-size: 0.25rem; color: #333333; margin:0; text-align: left;">更多特权详情咨询电话：</span>
+				<a href="tel:4006-717-656" style="line-height: 0.29rem;font-size: 0.31rem; color: #268ef9; text-align: left; ">4006-717-656</a>
+				<div id='cancel_tequan_button' style="position: relative; height: 0.52rem; line-height: 0.52rem; width: 2.5rem;  background: #39404d; text-align: center; margin: 0.25rem auto 0 auto; border-radius: 0.63rem; color: #e5ba7d; font-size: 0.27rem;">
+					我知道了
+				</div>
+			</div>
+		</div>
+		<!--<div id="pop_ziliao_view" style="height: 100%; width: 100%; position:fixed;top:0;z-index: 10;text-align: center;display:none; background-color: rgba(0,0,0,0.4);">
+<div style="position: relative; height: 1.04rem; width: 5rem;  background: #39404d; text-align: center; margin: 2.92rem auto 0 auto; border-radius: 0.1rem 0.1rem 0rem 0rem; color: #FFFFFF; font-size: 0.29rem; padding-top: 0.38rem;">
+薪人薪事资料领取
+</div>
+<div style="position: relative; height: 4.38rem; width: 5rem; background: #FFFFFF;  margin: 0 auto; border-radius: 0rem 0rem 0.1rem 0.1rem; color: #e5ba7d; font-size: 0.25rem; padding: 0.1rem ">
+<p style="line-height: 0.33rem; margin: 0.27rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem;">1.打开微信</p>
+<p style="line-height: 0.33rem; margin: 0.19rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem;">2.搜索“企赚宝”并关注</p>
+<p style="line-height: 0.33rem; margin: 0.19rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem;">3.在如何赚钱-领取资料中领取资料</p>
+<p style="line-height: 0.33rem; margin: 0.19rem 0 0 0;padding: 0; font-size: 0.25rem; color: #333333; text-align: left;padding-left: 0.31rem; line-height: 0.38rem;">4.通过资料，您可以更好的了解薪人薪 <br /> &nbsp;&nbsp;&nbsp;事，并推荐和介绍给朋友。您也可以<br /> &nbsp;&nbsp;&nbsp;直接把资料发送给感兴趣的人哦</p>
+<div id='cancel_ziliao_button' style="position: relative; height: 0.52rem; line-height: 0.52rem; width: 2.5rem;  background: #39404d; text-align: center; margin: 0.42rem auto 0 auto; border-radius: 0.63rem; color: #e5ba7d; font-size: 0.27rem;">
+    我知道了
+</div>
+</div>
+</div>-->
+		<div id="video_view" style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.75); z-index: 999;">
+			<video webkit-playsinline id="videoMedia" poster="../images/banner_03_02_02.png" controls="controls" preload style="width: 100%; height: 240px; margin-top: 180px;">
+				<source src="http://static.qizhuanbao.com/public/vedio-intro640.mp4" type='video/mp4'>
+				<p>浏览器不支持Html5 Video!</p>
+			</video>
+			<!--<img id="videoMediaDefaultImg" src="../images/muwu.jpg" />-->
+		</div>
+
+		<div id='popClueView' style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.4); z-index: 999;">
+			<img src="../images/beijingguang.png" style="height: 7.08rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; margin: auto;" />
+			<div style="position: fixed; top: 4.54rem; left: 0; right: 0; height: 3.75rem; width: 5.21rem; border-radius: 0.21rem; background: #FFFFFF; margin:auto; text-align: center; z-index: 1;">
+				<img src="../images/gongxi.png" style="width: 4.02rem; position: relative; margin-top: -0.9rem;" />
+				<div style="font-size: 0.31rem; color: #FB5237; margin-top: 0.17rem;"><b>营销合伙人</b></div>
+				<div id="popClueMessage" style="font-size: 0.27rem; color: #333333; margin-top: 0.21rem; line-height: 0.42rem; padding:0 0.1rem;"></div>
+				<img id="popClueButton" src="../images/welcome_button.png" style="width: 2.71rem; margin-top: 0.29rem;" />
+			</div>
+		</div>
+	</body>
+
+</html>

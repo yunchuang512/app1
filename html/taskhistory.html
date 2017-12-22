@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<link rel="stylesheet" href="../css/style1.css">
+		<style>
+			html,
+			body {
+				background-color: #ffffff;
+			}
+			
+			.mui-control-content {
+				background-color: white;
+				width: 100%;
+			}
+			
+			.mui-control-content .mui-loading {
+				margin-top: 1rem;
+			}
+			
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item {
+				color: #333333;
+				font-size: 0.31rem;
+				line-height: 0.46rem;
+			}
+			
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				color: #fb4237;
+				border-bottom: 0.02rem solid #FFFFFF;
+			}
+			
+			.my-h-allstate {
+				text-align: center;
+				font-size: 0.28rem;
+				border-top: 0.02rem solid #EEEEEE;
+				margin: 0;
+				padding: 0;
+				height: 1rem;
+				line-height: 1rem;
+			}
+			
+			.my-h-alltype {
+				text-align: center;
+				font-size: 0.28rem;
+				border-top: 0.02rem solid #EEEEEE;
+				margin: 0;
+				padding: 0;
+				height: 1rem;
+				line-height: 1rem;
+			}
+			
+			.my-li-tasklist {
+				padding: 0;
+				height: 1.4rem;
+			}
+			
+			.my-p-state {
+				font-size: 0.24rem;
+				line-height: 0.36rem;
+				text-align: right;
+				color: #FB5237;
+				margin: 0.1rem 0.2rem;
+			}
+			
+			.my-p-state-complete {
+				font-size: 0.24rem;
+				line-height: 0.36rem;
+				text-align: right;
+				color: #80c900;
+				margin: 0.1rem 0.2rem;
+			}
+			
+			.my-p-point {
+				position: absolute;
+				top: 0.75rem;
+				color: #999999;
+				float: right;
+				right: 0.21rem;
+				font-size: 0.29rem;
+			}
+			
+			.my-p-tasktitle {
+				margin-top: 0.3rem;
+				margin-bottom: 0;
+				font-size: 0.28rem;
+				color: #333333;
+			}
+			
+			.my-image-task {
+				margin: 0.21rem;
+				width: 1.04rem;
+				height: 1.04rem;
+			}
+			
+			.my-span-type {
+				position: absolute;
+				bottom: 0.2rem;
+				border: 0.03rem solid #007AFF;
+				color: #007AFF;
+				font-size: 0.2rem;
+				padding: 0.02rem 0.1rem;
+				border-radius: 0.04rem;
+				line-height: 0.24rem;
+			}
+			
+			.my-h-nowstate {
+				color: #FB5237;
+				font-size: 0.28rem;
+			}
+			
+			.my-h-unstate {
+				color: #999999;
+				font-size: 0.28rem;
+			}
+			
+			.my-h-nowtype {
+				color: #FB5237;
+				font-size: 0.28rem;
+			}
+			
+			.my-h-untype {
+				color: #999999;
+				font-size: 0.28rem;
+			}
+			
+			.row {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.col-9 {
+				width: 60%;
+			}
+			
+			.col-3 {
+				padding: 0;
+				width: 40%;
+			}
+			
+			.mui-media-body .row .col-3 {
+				padding: 0;
+				padding-top: 0.2rem;
+				/*padding-right: 0.2rem;*/
+			}
+			
+			.my-list-btn {
+				padding: 0.06rem;
+				margin: 0.04rem;
+			}
+			
+			.mui-btn.my-list-btn {
+				font-size: 0.26rem;
+				background: #eeeeee;
+				border: 0;
+				margin: 0.1rem;
+				width: 88.9%;
+				height: 0.6rem;
+			}
+			/*#alltypecontent {
+				position: fixed;
+				top: 1.76rem;
+				width: 100%;
+				padding: 0 0;
+				background-color: white;
+				display: none;
+				border: 0;
+				text-align: center;
+			}*/
+			
+			.my-div-allstate {
+				position: fixed;
+				width: 100%;
+				top: 1.8rem;
+				left: 0;
+				background-color: white;
+				display: none;
+			}
+			
+			.my-div-alltype {
+				position: fixed;
+				width: 100%;
+				top: 1.8rem;
+				left: 0;
+				background-color: white;
+				display: none;
+			}
+			
+			.mask {
+				position: absolute;
+				top: 0;
+				filter: alpha(opacity=60);
+				background-color: #777;
+				z-index: 1002;
+				left: 0;
+				opacity: 0.5;
+				-moz-opacity: 0.5;
+			}
+			
+			.my-a-clip {
+				position: absolute;
+				line-height: 0.24rem;
+				height: 0.24rem;
+				padding: 0 0.4rem;
+				margin: 0.1rem 0 0 -0.4rem;
+				text-align: center;
+				color: #ffffff;
+				background-color: #fb5237;
+				font-size: 0.16rem;
+				/* Safari and Chrome */
+				transform: rotate(-45deg);
+				-ms-transform: rotate(-45deg);
+				/* IE 9 */
+				-webkit-transform: rotate(-45deg);
+				/* Safari and Chrome */
+			}
+			
+			#segmentedControl {
+				height: 0.8rem;
+			}
+			
+			#segmentedControl * {
+				line-height: 0.8rem;
+			}
+		</style>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				getAllTask(0);
+				var isshowalltype = 0; //下拉面板是否展示
+				var isshowallstate = 0;
+				var preSelectedType = 'type_all';
+				var flag = 0; //flag=0说明在item1, flag=1说明在item2
+				var taskdata = [];
+
+				function changeArrow(){
+					if(isshowalltype==false){
+						$("#alltypearrow").removeClass("icon-jiantou2");
+						$("#alltypearrow").addClass("icon-sanjiao");
+					}else{
+						$("#alltypearrow").removeClass("icon-sanjiao");
+						$("#alltypearrow").addClass("icon-jiantou2");
+					}
+					if(isshowallstate==false){
+						$("#allstatearrow").removeClass("icon-jiantou2");
+						$("#allstatearrow").addClass("icon-sanjiao");
+					}else{
+						$("#allstatearrow").removeClass("icon-sanjiao");
+						$("#allstatearrow").addClass("icon-jiantou2");
+					}
+				}
+
+				document.getElementById("alltype").addEventListener("tap", function(event) {
+					if(flag == 0) { //本来就是全部任务
+						if(isshowalltype == 1) {
+							$("#alltypecontentbox").slideUp("fast", function() {
+								$("#alltypecontent").fadeOut("fast");
+							});
+							isshowalltype = 0;
+							changeArrow();
+
+						} else {
+							$("#alltypecontent").fadeIn("fast", function() {
+								$("#alltypecontentbox").slideDown("fast");
+							});
+							isshowalltype = 1;
+							changeArrow();
+						}
+					} else { //之前是全部状态
+						if(isshowallstate == 1) { //收起全部状态
+							$("#allstatecontentbox").slideUp("fast", function() {
+								$("#allstatecontent").fadeOut("fast");
+							});
+							isshowallstate = 0;
+							changeArrow();
+						}
+						flag = 0;
+						//不管之前是什么，右边变为“全部状态”
+						$("#runstateid").removeClass("my-h-nowstate");
+						$("#checkstateid").removeClass("my-h-nowstate");
+						$("#finishstateid").removeClass("my-h-nowstate");
+						$("#runstateid").addClass("my-h-unstate");
+						$("#checkstateid").addClass("my-h-unstate");
+						$("#finishstateid").addClass("my-h-unstate");
+						$("#allstateid").removeClass("my-h-unstate");
+						$("#allstateid").addClass("my-h-nowstate");
+						document.getElementById('allstate').innerHTML = '全部状态' + '<span id="allstatearrow" class="icon-sanjiao" style="font-size:0.24rem;margin-left:0.1rem;"></span>';
+
+						getAllTask(1); //展示全部任务
+					}
+
+				});
+				document.getElementById("allstate").addEventListener("tap", function(event) {
+
+					if(flag == 1) { //之前本来就是全部状态
+						if(isshowallstate == 1) {
+							$("#allstatecontentbox").slideUp("fast", function() {
+								$("#allstatecontent").fadeOut("fast");
+							});
+							isshowallstate = 0;
+							changeArrow();
+						} else {
+							$("#allstatecontent").fadeIn("fast", function() {
+								$("#allstatecontentbox").slideDown("fast");
+							});
+							isshowallstate = 1;
+							changeArrow();
+						}
+					} else {
+						if(isshowalltype == 1) { //收起全部状态
+							$("#alltypecontentbox").slideUp("fast", function() {
+								$("#alltypecontent").fadeOut("fast");
+							});
+							isshowalltype = 0;
+							changeArrow();
+						}
+						flag = 1;
+
+						//不管之前是什么，左边边变为“全部任务”
+						$("#type_share").removeClass("my-h-nowtype");
+						$("#type_questionnaire").removeClass("my-h-nowtype");
+						$("#type_problem").removeClass("my-h-nowtype");
+						$("#type_share").addClass("my-h-untype");
+						$("#type_questionnaire").addClass("my-h-untype");
+						$("#type_problem").addClass("my-h-untype");
+						$("#type_all").removeClass("my-h-untype");
+						$("#type_all").addClass("my-h-nowtype");
+						document.getElementById('alltype').innerHTML = '全部任务' + '<span id="alltypearrow" class="icon-sanjiao" style="font-size:0.24rem;margin-left:0.1rem;"></span>';
+
+						getAllTask(2); //展示全部状态
+					}
+				});
+				document.getElementById("alltypecontent").addEventListener('tap', function() {
+					if(isshowalltype == 1) {
+						$("#alltypecontentbox").slideUp("fast", function() {
+							$("#alltypecontent").fadeOut("fast");
+						});
+						isshowalltype = 0;
+						changeArrow();
+					}
+				});
+				document.getElementById("allstatecontent").addEventListener('tap', function() {
+					if(isshowallstate == 1) {
+						$("#allstatecontentbox").slideUp("fast", function() {
+							$("#allstatecontent").fadeOut("fast");
+						});
+						isshowallstate = 0;
+						changeArrow();
+					}
+				});
+
+				//任务类型监听
+				mui('.my-div-alltype').on('tap', '.my-h-alltype', function(event) {
+					$("#type_all").removeClass("my-h-nowtype");
+					$("#type_share").removeClass("my-h-nowtype");
+					$("#type_questionnaire").removeClass("my-h-nowtype");
+					$("#type_problem").removeClass("my-h-nowtype");
+					$("#type_all").addClass("my-h-untype");
+					$("#type_share").addClass("my-h-untype");
+					$("#type_questionnaire").addClass("my-h-untype");
+					$("#type_problem").addClass("my-h-untype");
+					this.classList.remove('my-h-untype');
+					this.classList.add('my-h-nowtype');
+
+					document.getElementById('alltype').innerHTML = this.innerHTML + '<span id="alltypearrow" class="icon-sanjiao" style="font-size:0.24rem;margin-left:0.1rem;"></span>';
+					var txt = this.innerText;
+					$("#alltypecontentbox").slideUp("fast", function() {
+						$("#alltypecontent").fadeOut("fast");
+					});
+					isshowalltype = 0;
+					changeArrow();
+					if(txt == "全部任务") {
+						//刷新数据
+						getAllTask(1);
+					}
+					setAlltaskView(txt);
+				});
+				//任务状态监听
+				mui('.my-div-allstate').on('tap', '.my-h-allstate', function(event) {
+
+					$("#allstateid").removeClass("my-h-nowstate");
+					$("#runstateid").removeClass("my-h-nowstate");
+					$("#checkstateid").removeClass("my-h-nowstate");
+					$("#finishstateid").removeClass("my-h-nowstate");
+					$("#allstateid").addClass("my-h-unstate");
+					$("#runstateid").addClass("my-h-unstate");
+					$("#checkstateid").addClass("my-h-unstate");
+					$("#finishstateid").addClass("my-h-unstate");
+					this.classList.remove('my-h-unstate');
+					this.classList.add('my-h-nowstate');
+
+					document.getElementById('allstate').innerHTML = this.innerHTML + '<span id="allstatearrow" class="icon-sanjiao" style="font-size:0.24rem;margin-left:0.1rem;"></span>';
+					var txt = this.innerText;
+					$("#allstatecontentbox").slideUp("fast", function() {
+						$("#allstatecontent").fadeOut("fast");
+					});
+					isshowallstate = 0;
+					changeArrow();
+					if(txt == "全部状态") {
+						//刷新数据
+						getAllTask(2);
+					}
+					setAllStateView(txt);
+
+				});
+
+				function getAllTask(tag) {
+					var url = getBaseUrl() + 'person/Operation/getHistoryTaskList?type=' + encodeURI("") + '&state=' + encodeURI("");
+					console.log("url>>>>>" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log("成功");
+							console.log('data=' + JSON.stringify(data));
+							if(data.status == 'success') {
+								data = data.data;
+								taskdata = data;
+								if(tag == 0) {
+									setAllStateView("全部状态");
+									setAlltaskView("全部任务");
+								} else if(tag == 1) {
+									setAlltaskView("全部任务");
+								} else if(tag == 2) {
+									setAllStateView("全部状态");
+								}
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+
+				}
+
+				function setAlltaskView(type) {
+					var alltypeul = document.getElementById('alltypeul');
+					console.log('taskdata' + JSON.stringify(taskdata));
+					var lihtml = "";
+					var num = 0;
+					for(var i = 0; i < taskdata.length; i++) {
+						data = taskdata[i];
+						var temp_type = data.type;
+						if(temp_type == '新手转发') {
+							temp_type = '分享';
+						}
+						if(temp_type == '新手调研' || temp_type == '调查问卷') {
+							temp_type = '调研';
+						}
+						if(type == '全部任务' || type == temp_type) {
+							if(data.type == '新手转发' || data.type == '新手调研') {
+								if(data.state == "已完成") {
+									lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="新手">' +
+										'<span class="mui-pull-left my-a-clip">新手</span>' +
+										'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+										'<div class="mui-media-body">' +
+										'<div class="row">' +
+										'<div class="col-9">' +
+										'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+										'<span class="my-span-type">' + temp_type + '</span>' +
+										'</div>' +
+										'<div class="col-3">' +
+										'<p class="my-p-state-complete">' + data.state + '</p>' +
+										'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+										'</div>' +
+										'</div>' +
+										'</div>' +
+										'</li>';
+								} else {
+									lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="新手">' +
+										'<span class="mui-pull-left my-a-clip">新手</span>' +
+										'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+										'<div class="mui-media-body">' +
+										'<div class="row">' +
+										'<div class="col-9">' +
+										'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+										'<span class="my-span-type">' + temp_type + '</span>' +
+										'</div>' +
+										'<div class="col-3">' +
+										'<p class="my-p-state">' + data.state + '</p>' +
+										'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+										'</div>' +
+										'</div>' +
+										'</div>' +
+										'</li>';
+								}
+							} else if(data.state == "已完成") {
+								lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="' + temp_type + '">' +
+									'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+									'<div class="mui-media-body">' +
+									'<div class="row">' +
+									'<div class="col-9">' +
+									'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+									'<span class="my-span-type">' + temp_type + '</span>' +
+									'</div>' +
+									'<div class="col-3">' +
+									'<p class="my-p-state-complete">' + data.state + '</p>' +
+									'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+									'</div>' +
+									'</div>' +
+									'</div>' +
+									'</li>';
+							} else {
+								lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="' + temp_type + '">' +
+									'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+									'<div class="mui-media-body">' +
+									'<div class="row">' +
+									'<div class="col-9">' +
+									'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+									'<span class="my-span-type">' + temp_type + '</span>' +
+									'</div>' +
+									'<div class="col-3">' +
+									'<p class="my-p-state">' + data.state + '</p>' +
+									'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+									'</div>' +
+									'</div>' +
+									'</div>' +
+									'</li>';
+							}
+							num++;
+						}
+						alltypeul.innerHTML = lihtml;
+					}
+					if(num == 0) {
+						$("#nothingid").css("display", "block");
+					} else {
+						$("#nothingid").css("display", "none");
+					}
+				}
+
+				function setAllStateView(state) {
+					var allstateul = document.getElementById('allstateul');
+					var lihtml = "";
+					var num = 0;
+					for(var i = 0; i < taskdata.length; i++) {
+						data = taskdata[i];
+						var temp_type = data.type;
+						if(temp_type == '新手转发') {
+							temp_type = '分享';
+						}
+						if(temp_type == '新手调研' || temp_type == '调查问卷') {
+							temp_type = '调研';
+						}
+						if(state == '全部状态' || state == data.state) {
+							if(data.type == '新手转发' || data.type == '新手调研') {
+								if(data.state == "已完成") {
+									lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="新手">' +
+										'<span class="mui-pull-left my-a-clip">新手</span>' +
+										'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+										'<div class="mui-media-body">' +
+										'<div class="row">' +
+										'<div class="col-9">' +
+										'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+										'<span class="my-span-type">' + temp_type + '</span>' +
+										'</div>' +
+										'<div class="col-3">' +
+										'<p class="my-p-state-complete">' + data.state + '</p>' +
+										'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+										'</div>' +
+										'</div>' +
+										'</div>' +
+										'</li>';
+								} else {
+									lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="新手">' +
+										'<span class="mui-pull-left my-a-clip">新手</span>' +
+										'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+										'<div class="mui-media-body">' +
+										'<div class="row">' +
+										'<div class="col-9">' +
+										'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+										'<span class="my-span-type">' + temp_type + '</span>' +
+										'</div>' +
+										'<div class="col-3">' +
+										'<p class="my-p-state">' + data.state + '</p>' +
+										'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+										'</div>' +
+										'</div>' +
+										'</div>' +
+										'</li>';
+								}
+							} else if(data.state == "已完成") {
+								lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="' + temp_type + '">' +
+									'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+									'<div class="mui-media-body">' +
+									'<div class="row">' +
+									'<div class="col-9">' +
+									'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+									'<span class="my-span-type">' + temp_type + '</span>' +
+									'</div>' +
+									'<div class="col-3">' +
+									'<p class="my-p-state-complete">' + data.state + '</p>' +
+									'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+									'</div>' +
+									'</div>' +
+									'</div>' +
+									'</li>';
+							} else {
+								lihtml += '<li class="mui-table-view-cell mui-media my-li-tasklist" myId="' + data.tr_task_id + '" type="' + temp_type + '">' +
+									'<img class="mui-media-object mui-pull-left my-image-task" src=' + getBaseUrl() + data.icon + '>' +
+									'<div class="mui-media-body">' +
+									'<div class="row">' +
+									'<div class="col-9">' +
+									'<p class="mui-ellipsis my-p-tasktitle">' + data.title + '</p>' +
+									'<span class="my-span-type">' + temp_type + '</span>' +
+									'</div>' +
+									'<div class="col-3">' +
+									'<p class="my-p-state">' + data.state + '</p>' +
+									'<p class="my-p-point">' + data.beans + '薪豆' + '</p>' +
+									'</div>' +
+									'</div>' +
+									'</div>' +
+									'</li>';
+							}
+							num++;
+						}
+
+						allstateul.innerHTML = lihtml;
+					}
+					if(num == 0) {
+						$("#nothingid").css("display", "block");
+					} else {
+						$("#nothingid").css("display", "none");
+					}
+				}
+
+				mui(".mui-table-view").on('tap', '.mui-table-view-cell', function() {
+					var id = this.getAttribute('myid');
+					var tv_type = this.getAttribute('type');
+
+					console.log('id=' + id + ' type=' + tv_type);
+					var targetUrl = '';
+					var targetId = '';
+
+					switch(tv_type) {
+						/*case "阅读":
+							targetUrl = 'tasks/taskReadingHomepage.html';
+							targetId = 'readinghomepage';
+							break;*/
+						case "新手":
+							if(id == '1') {
+								targetUrl = 'tasks/taskshare.html';
+								targetId = 'sharehomepage';
+							} else {
+								targetUrl = 'tasks/task_questionnaire_homepage.html';
+								targetId = 'questionnairehomepage';
+							}
+							break;
+						case "分享":
+							targetUrl = 'tasks/taskshare.html';
+							targetId = 'sharehomepage';
+							break;
+						case "调研":
+							targetUrl = 'tasks/task_questionnaire_homepage.html';
+							targetId = 'questionnairehomepage';
+							break;
+						case "答题":
+							targetUrl = 'tasks/task_problem_homepage.html';
+							targetId = 'problemhomepage';
+							break;
+							/*case "邀请粉丝":
+								targetUrl = 'tasks/task_invitefans.html';
+								targetId = 'invitefanshomepage';
+								break;
+							case "分享注册":
+								targetUrl = 'tasks/task_invite_to_register_xinrenxinshi.html';
+								targetId = 'invitefanshomepage';
+								break;
+							case "提供线索":
+								targetUrl = 'tasks/taskprovideclue.html';
+								targetId = 'providecluehomepage';
+								break;
+							case "销售产品":
+								targetUrl = 'tasks/taskclient.html';
+								targetId = 'clienthomepage';
+								break;
+							case "邀请注册":
+								targetUrl = 'tasks/task_invite_to_register_xinrenxinshi.html';
+								targetId = 'task_invite_to_register_xinrenxinshi';
+								break;*/
+						default:
+							break;
+					}
+					if(tv_type == "调研") {
+						tv_type = '问卷';
+					}
+					mui.openWindow({
+						url: targetUrl,
+						id: targetId,
+						show: {
+							duration: 300
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							taskId: id,
+							taskType: tv_type
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-back mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">任务历史</h1>
+		</header>
+		<div class="mui-content" style="background-color: white;">
+			<div style="padding-top: 0.8rem;">
+				<div id="item1" class="mui-control-content mui-active">
+					<ul id="alltypeul" class="mui-table-view" style="margin-top: 0;">
+						<!--<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<img class="mui-media-object mui-pull-left my-image-task" src="../images/60x60.gif">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+										<p class="my-p-tasktitle">薪酬心理问卷</p>
+										<span class="my-span-type">问卷</span>
+									</div>
+									<div class="col-3">
+										<p class="my-p-state">进行中</p>
+										<p class="my-p-point">1000薪豆</p>
+									</div>
+								</div>
+							</div>
+						</li>-->
+					</ul>
+				</div>
+				<div id="item2" class="mui-control-content">
+					<ul id="allstateul" class="mui-table-view" style="margin-top: 0;"></ul>
+				</div>
+			</div>
+
+			<div style="position: fixed;width: 100%;top: 0.4rem;left: 0;background-color: white;padding-top: 0.6rem;">
+				<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted">
+					<a id="alltype" class="mui-control-item mui-active" href="#item1" style="border-bottom: 0.02rem #EEEEEE solid;">
+						全部任务
+						<span id="alltypearrow" class="icon-sanjiao" style="font-size: 0.24rem;"></span>
+					</a>
+					<a id="allstate" class="mui-control-item otheritem" href="#item2" style="border-bottom: 0.02rem #EEEEEE solid;">
+						全部状态
+						<span id="allstatearrow" class="icon-sanjiao" style="font-size: 0.24rem;"></span>
+					</a>
+				</div>
+			</div>
+			<div id="alltypecontent" class="my-div-alltype" style="height: 100%;background-color: rgba(0,0,0,0.3);">
+				<div id="alltypecontentbox" style="background-color: #FFFFFF;display: none;">
+					<h5 id="type_all" class="my-h-alltype my-h-nowtype">全部任务</h5>
+					<h5 id="type_share" class="my-h-alltype my-h-untype">分享</h5>
+					<h5 id="type_questionnaire" class="my-h-alltype my-h-untype">调研</h5>
+					<h5 id="type_problem" class="my-h-alltype my-h-untype">答题</h5>
+				</div>
+			</div>
+
+			<div id="allstatecontent" class="my-div-allstate" style="height: 100%;background-color: rgba(0,0,0,0.3);">
+				<div id="allstatecontentbox" style="background-color: #FFFFFF;display: none;">
+					<h5 id="allstateid" class="my-h-allstate my-h-nowstate">全部状态</h5>
+					<h5 id="runstateid" class="my-h-allstate my-h-unstate">进行中</h5>
+					<h5 id="checkstateid" class="my-h-allstate my-h-unstate">审核中</h5>
+					<h5 id="finishstateid" class="my-h-allstate my-h-unstate">已完成</h5>
+				</div>
+			</div>
+
+			<div id="nothingid" class="mui-content" style="text-align: center;padding-top: 2rem;display: none;background: transparent;">
+				<img src="../images/nomessage.png" style="height: 2rem;" />
+				<!--				<p style="margin-bottom: 0.6rem;color: #333333;font-size: 0.28rem;margin-top: 0.4rem;">这里还没有内容，赶快去做任务赚钱吧~</p>
+-->
+			</div>
+		</div>
+	</body>
+
+</html>

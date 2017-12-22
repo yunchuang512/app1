@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#333333">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<link rel="stylesheet" href="../css/style1.css">
+		<link rel="stylesheet" href="../css/demo_videoPlaySimple.css" />
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.mui-bar .mui-pull-left .mui-icon {
+				padding-right: 0.1rem;
+				font-size: 0.56rem;
+			}
+			
+			.mui-bar .mui-btn {
+				font-weight: normal;
+				font-size: 0.34rem;
+			}
+			
+			.mui-bar .mui-btn-link {
+				top: 0.02rem;
+			}
+			
+			.mui-content img {
+				width: 100%;
+			}
+			
+			.hm-description {
+				margin: .5em 0 2em;
+			}
+			
+			.hm-description>li {
+				font-size: 0.28rem;
+				color: #8f8f94;
+			}
+			
+			.my-list-btn {
+				padding: 0.06rem;
+				margin: 0.04rem;
+			}
+			
+			.col-4 {
+				padding-top: 0.3rem;
+			}
+			/*.my-class:active {
+            background-color: #DDDDDD
+        }*/
+
+			.my-button:active {
+				background-color: #ffffff;
+			}
+
+			.my-p-style {
+				font-size: 0.26rem;
+				line-height: 0.68rem;
+				color: #333333;
+			}
+
+			.mui-icon .mui-badge {
+				font-size: 0.18rem;
+				position: absolute;
+				top: 0.08rem;
+				left: 100%;
+				margin-left: -0.21rem;
+				padding: 0.02rem 0.1rem;
+				color: #fff;
+				background: red;
+			}
+
+			.mui-table-view:before {
+				background-color: #FFFFFF;
+			}
+
+			.mui-table-view:after {
+				background-color: #FFFFFF;
+			}
+
+			.liu-processbar-container {
+				/*width: 100%;*/
+				width: 2rem;
+				height: 0.06rem;
+				background-color: #fa968a;
+				margin-top: 0.2rem;
+				border-radius: 0.04rem;
+				display: block;
+			}
+
+			.liu-processbar {
+				border-bottom-left-radius: 0.04rem;
+				border-top-left-radius: 0.04rem;
+				width: 10%;
+				background-color: #ffd615;
+				height: 0.06rem;
+				display: block;
+				text-align: center;
+				float: left;
+			}
+
+			.liu-processbar-head {
+				position: absolute;
+				left: 10%;
+				background-color: #ffd615;
+				height: 0.14rem;
+				width: 0.14rem;
+				display: block;
+				float: left;
+				margin-top: -0.04rem;
+				border-radius: 0.08rem;
+				box-shadow: 0 0 0.16rem #FFFFFF;
+			}
+		</style>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				//设置滚动参数
+				mui('.mui-scroll-wrapper').scroll({
+					indicators: false,
+					bounce: true
+				});
+
+				var speedlefttime = "";
+				var speedtype = -1;
+				var loginbanner = document.getElementById("loginbanner");
+				var nologinbanner = document.getElementById("nologinbanner");
+				var islogin = false;
+
+				var isPlayingVideo = false;
+
+				function mypageInit() {
+					if(localStorage.islogin == "1") {
+						islogin = true;
+					} else {
+						islogin = false;
+					}
+					console.log('islogin=' + islogin);
+					//islogin=false;
+					if(islogin) {
+						console.log("设置登录状态");
+						loginbanner.style.display = "block";
+						nologinbanner.style.display = "none";
+						getUserInfo();
+						//						getMessageNumber();
+					} else {
+						console.log("设置未登录状态");
+						document.getElementById("totalBeans").innerText = "-";
+						document.getElementById("balance").innerText = "";
+						loginbanner.style.display = "none";
+						nologinbanner.style.display = "block";
+					}
+				}
+				mypageInit();
+				//打开登录页
+				function openLoginpage() {
+					mui.openWindow({
+						url: '../login.html',
+						id: 'login',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}
+				document.getElementById("speedingid").addEventListener('tap', function() {
+					if(speedlefttime != "") {
+						mui.toast(speedlefttime);
+					}
+				});
+				//打开查看等级
+				document.getElementById('checklevel').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'checklevel.html',
+							id: 'checklevel',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//打开薪豆兑换
+
+				document.getElementById('pointexchangeid').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'pointexchange.html',
+							id: 'pointexchange',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//打开薪豆记录
+				document.getElementById('pointrecord').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'pointrecord.html',
+							id: 'pointrecord',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//打开历史任务
+				document.getElementById('taskhistory').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'taskhistory.html',
+							id: 'taskhistory',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//个人资料
+				document.getElementById('personalprofile').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'personalprofile.html',
+							id: 'personalprofile',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				document.getElementById('icon').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'personalprofile.html',
+							id: 'personalprofile',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//修改密码
+				document.getElementById('changepassword').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'changepassword.html',
+							id: 'changepassword',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//反馈
+				document.getElementById('feedback').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'feedback.html',
+							id: 'feedback',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+
+				});
+				//如何赚钱
+				document.getElementById('howgainmoney').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'howgainmoney.html',
+							id: 'howgainmoney',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//提现
+				document.getElementById('withdrawbtn').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'withdraw.html',
+							id: 'withdraw',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//消息
+				document.getElementById('message').addEventListener('tap', function(event) {
+					console.log('点击了消息');
+					if(islogin) {
+						mui.openWindow({
+							url: 'messagelist.html',
+							id: 'messagelist',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//设置
+				document.getElementById('setting').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'setup.html',
+						id: 'setup',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+
+				document.getElementById('loginnow').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: '../login.html',
+						id: 'login',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+
+				function getUserInfo() {
+					var url = getBaseUrl() + 'person/Person/personInfo';
+					console.log("获取“我的”页面展示信息url:" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						data: {
+							phoneNumber: localStorage.phonenumber
+						},
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log("我的 页面信息：" + JSON.stringify(data));
+
+							if(data.status == 'success') {
+								data = data.data;
+								//登录成功，跳转到主页，若以后加了安全验证，在此处写jessionId
+								var time = new Date().getTime();
+								document.getElementById("nickname").innerText = data.nickname;
+								localStorage.nickname = data.nickname;
+								document.getElementById("totalBeans").innerText = data.totalBeans;
+								document.getElementById("balance").innerText = data.balance + "元";
+								document.getElementById("experience").innerText = data.needexp;
+								document.getElementById("icon").src = getBaseUrl() + data.icon + '?x=' + time;
+								
+								//用户头像路径暂存起来，其它地方备用
+								localStorage.userPhoto = getBaseUrl() + data.icon;
+								
+								document.getElementById("levelicon").src = "../images/level" + data.level + ".png"
+								document.getElementById("processbar").style.width = 100 * parseFloat(data.percen) + '%';
+								document.getElementById("processbarHead").style.left = 100 * parseFloat(data.percen) + '%';
+
+							} else {
+								//这个接口没有error_code
+								//console.log(data.error_code);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+
+				}
+
+				//				function getMessageNumber() {
+				//					var url = getBaseUrl() + "index/Message/receiveUnreadInfoNum?phoneNumber=" + localStorage.phonenumber;
+				//					console.log("getMessageNumber url>>>>>>>>" + url);
+				//					mui.ajax(url, {
+				//						dataType: 'json', //服务器返回json格式数据
+				//						type: 'get', //HTTP请求类型
+				//						timeout: 10000, //超时时间设置为10秒；
+				//
+				//						headers: {
+				//							'Content-Type': 'application/json'
+				//						},
+				//						success: function(returnInfo) {
+				//							console.log(JSON.stringify(returnInfo));
+				//							//如果未读消息数为零，则隐藏
+				//							if(returnInfo.number == 0) {
+				//								document.getElementById("messagecount").style.display = "none";
+				//							} else {
+				//								document.getElementById('messagecount').innerText = returnInfo.number;
+				//							}
+				//						},
+				//						error: function(xhr, type, errorThrown) {
+				//							//异常处理；
+				//							console.log(type);
+				//						}
+				//					});
+				//				}
+				window.addEventListener('initpage', function(event) {
+					mypageInit();
+					if(localStorage.isPartner == 1) {
+						document.getElementById("hehuoren").style.display = "block";
+					} else {
+						document.getElementById("hehuoren").style.display = "none";
+					}
+
+				});
+				window.addEventListener('updateSpeeding', function(event) {
+					speedlefttime = event.detail.speedlefttime;
+					speedtype = event.detail.speedtype;
+					if(speedtype == 0) {
+						document.getElementById("speedingid").style.display = "initial";
+						document.getElementById("speedingid").src = "../images/speeding1.png";
+					} else if(speedtype == 1) {
+						document.getElementById("speedingid").style.display = "initial";
+						document.getElementById("speedingid").src = "../images/speeding7.png";
+					} else {
+						document.getElementById("speedingid").style.display = "none";
+					}
+
+				});
+				window.addEventListener('updateMessageNumber', function(event) {
+
+					var number = parseInt(event.detail.number);
+
+					if(number == 0) {
+						document.getElementById("messagecount").style.display = "none";
+					} else {
+						document.getElementById('messagecount').style.display = "block";
+						if(number > 99) {
+							document.getElementById('messagecount').innerText = "···";
+						} else {
+							document.getElementById('messagecount').innerText = number;
+						}
+					}
+				});
+
+				window.addEventListener('showPartnerResult', function() {
+					localStorage.showPartnerResult = 0;
+					$("#show_partner_view").fadeIn(300);
+				});
+
+				document.getElementById("video_button").addEventListener('tap', function() {
+					//plus.runtime.openFile("../video/CEO.mp4");
+					try {
+						$("#video_view").fadeIn(300);
+						mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+						document.getElementById("videoMedia").currentTime = 0;
+						if(isPlayingVideo == false) {
+							isPlayingVideo = true;
+							document.getElementById("videoMedia").play();
+						}
+					} catch(e) {
+
+						//TODO handle the exception
+					}
+				});
+				document.getElementById("video_view").addEventListener('tap', function(e) {
+					try {
+						var target = $(e.target);
+						if($(target).is("#video_view")) {
+							mui.fire(plus.webview.currentWebview().opener(), 'closeMask');
+							if(isPlayingVideo == true) {
+								document.getElementById("videoMedia").currentTime = document.getElementById("videoMedia").duration;
+								isPlayingVideo = false;
+								document.getElementById("video_view").style.display = "none";
+							}
+
+							//							location.reload();
+							//							document.getElementById("videoMedia").pause();
+							//							document.getElementById("video_view").style.display = "none";
+							//							//$("#video_view").fadeOut(300);
+						}
+					} catch(e) {
+						//TODO handle the exception
+					}
+
+				});
+
+				document.getElementById("partner_button").addEventListener('tap', function() {
+					localStorage.showPartnerResult = 0;
+					localStorage.isPartner = 1;
+					changePopResult();
+					mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+					var homepage = plus.webview.getWebviewById('html/homepage.html');
+					mui.fire(homepage, 'reload', {});
+					var mypage = plus.webview.getWebviewById('html/mypage.html');
+					mui.fire(mypage, 'initpage', {});
+					var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+					mui.fire(fanspage, 'initpage', {});
+					var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+					mui.fire(taskpage, 'reload', {});
+					mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+					mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+					document.getElementById("show_partner_view").style.display = "none";
+					mui.fire(plus.webview.currentWebview().opener(), 'closeMask', {});
+					mui.fire(plus.webview.currentWebview().opener(), 'moveToHome', {});
+				});
+
+				function videoError(e) {
+					switch(e.target.error.code) {
+						case e.target.error.MEDIA_ERR_ABORTED:
+							alert('You aborted the video playback.');
+							break;
+						case e.target.error.MEDIA_ERR_NETWORK:
+							alert('A network error caused the video download to fail part-way.');
+							break;
+						case e.target.error.MEDIA_ERR_DECODE:
+							alert('The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+							break;
+						case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+							alert('The video could not be loaded, either because the server or network failed or because the format is not supported.');
+							break;
+						default:
+							alert('An unknown error occurred.');
+							break;
+					}
+
+					plus.nativeUI.alert("无效的视频资源", function() {
+						back();
+					});
+				}
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="header" class="mui-bar mui-bar-transparent" style="background-color: #FFFFFF;height: 0.88rem">
+			<h1 class="mui-title" style="color: #333333;font-size: 0.38rem;line-height: 0.88rem;font-weight: normal;">我的</h1>
+			<img id="speedingid" style="position: absolute;display: none;height: 0.6rem;width:0.6rem;" src="../images/speeding1.png"></img>
+			<a id="message" class="mui-pull-right mui-icon icon-xiaoxi" style="color: #333333;margin:0;padding:0;margin-right: 0.1rem;line-height: 0.88rem;font-size: 0.40rem;">
+				<span id="messagecount" class="mui-badge" style="display:none;color: white;margin-left: -0.21rem;"></span>
+			</a>
+		</div>
+		<div class="mui-content" style="background-color: #f8f8f8;">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="loginbanner" style="background-color:#FB5237;display: block; height: 2.4rem;margin-top: 0.88rem;">
+
+						<div class="row" style="padding-top: 1rem;">
+							<img id="icon" src="../images/userhead.png" style="position:absolute; width: 1.2rem; top: 1.5rem; left: 0.3rem; border-radius: 0.6rem;" />
+							<img id="levelicon" src="../images/level1.png" style="height: 0.4rem;width: 0.4rem;position: absolute;top: 2rem;left: 1.2rem;" />
+							<p id="nickname" style="position:absolute; left: 1.9rem; color: white;font-size: 0.28rem; top: 1.5rem;">---</p>
+							<div style="position: absolute; top:1.9rem; left: 1.9rem;">
+								<div class="liu-processbar-container">
+									<span id="processbar" class="liu-processbar"></span>
+									<span id="processbarHead" class="liu-processbar-head"></span>
+								</div>
+							</div>
+							<p style="position: absolute; top:1.9rem; right:0;color: white;font-size: 0.26rem;">距升级还需
+								<span id="experience" style="color: #ffd615;font-size: 0.28rem;padding-left: 0.02rem;padding-right: 0.1rem;">---</span>
+							</p>
+							<a id="checklevel" type="button" class="mui-btn my-button" style="display: none;position: absolute; top: 1.6rem; right:0.4rem; padding: 0.02rem; padding-left:0.2rem;padding-right:0.1rem;background-color: rgba(255,255,255,0.15);color: white;float: right;font-size: 0.24rem;border-radius: 0.3rem; border: 0; height: 0.5rem;  line-height: 0.5rem;">
+								查看等级
+								<span class="mui-icon icon-youjiantou" style="font: 0.24rem;"></span>
+							</a>
+							<div id="hehuoren" style="display:block;position: absolute; top: 2.28rem; left: 2rem; right: 0; color: #FFFFFF; font-size: 0.26rem;">
+								<span class="mui-icon icon-tequan" style="font-size: 0.34rem;" />
+								<div style="font-size: 0.26rem; color: #ffffff; position: absolute; top: 0.02rem; left: 0.4rem;">营销合伙人</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="nologinbanner" style="background-color:#FB5237;display: none; height: 3.2rem;margin-top: 0.88rem;">
+						<!--<div id="header" class="mui-bar mui-bar-transparent" style="background-color: #FFFFFF;">
+                    <h1 class="mui-title" style="color: #333333;font-size: 0.36rem;">我的</h1>
+                </div>-->
+						<div class="row" style="padding-top: 1.2rem;padding-bottom: 1.4rem;">
+
+							<div class="col-12" style="text-align: center;">
+								<a id="loginnow" type="button" class="mui-btn my-button" style="background-color: rgba(255,255,255,0.13);color: white;font-size: 0.24rem;margin: 0.1rem;border-radius: 0.4rem;padding-left: 0.4rem;padding-right: 0.4rem;">
+									立即登录
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="background-color: white;">
+						<div class="col-4" style="text-align: center;border-right: 0.02rem solid #D5D5D5;margin-bottom: 0.2rem;margin-top: 0.2rem;padding: 0;">
+							<img src="../images/point.png" style="width: 0.46rem;" /><br/>
+							<span style="color: #333333;font-size: 0.26rem;line-height: 0.39rem;">薪豆</span>
+							<span id="totalBeans" style="padding-left: 0.1rem;color: #FB5237;font-size: 0.32rem;">- -</span>
+						</div>
+						<div id="pointrecord" class="col-4 my-class" style="text-align: center;border-right: 0.02rem solid #D5D5D5;margin-top: 0.2rem;margin-bottom: 0.2rem;padding: 0;">
+							<span class="icon-jilu" style="font-size: 0.5rem;color: #FB5237;"></span><br />
+							<span style="color: #333333;font-size: 0.26rem;line-height: 0.39rem;">薪豆记录</span>
+						</div>
+						<div id="pointexchangeid" class="col-4 my-class" style="text-align: center; margin-top: 0.2rem;margin-bottom: 0.2rem;padding: 0;">
+							<span class="icon-duihuan" style="font-size: 0.5rem;color: #FB5237;"></span><br />
+							<span style="color: #333333;font-size: 0.26rem;line-height: 0.39rem;">薪豆兑换</span>
+						</div>
+					</div>
+					<div style="display: block;height: 0.3rem;background-color: #F8F8F8;"></div>
+					<ul class="mui-table-view mui-table-view-chevron" style="margin-top: 0;">
+						<li id="personalprofile" class="mui-table-view-cell mui-media">
+							<a>
+								<span class="mui-pull-left icon-ziliao" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+								<div class="mui-media-body">
+									<p class="my-p-style">个人资料</p>
+								</div>
+							</a>
+						</li>
+						<li id="changepassword" class="mui-table-view-cell mui-media">
+							<a>
+								<span class="mui-pull-left icon-mima" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+								<div class="mui-media-body">
+									<p class="my-p-style">修改密码</p>
+								</div>
+							</a>
+						</li>
+						<li id="taskhistory" class="mui-table-view-cell mui-media">
+							<a>
+								<span class="mui-pull-left icon-lishi" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+								<div class="mui-media-body">
+									<p class="my-p-style">历史任务</p>
+								</div>
+							</a>
+						</li>
+						<li id="withdrawbtn" class="mui-table-view-cell mui-media">
+							<a class="mui-navigate-right">
+								<span class="mui-pull-left icon-yue" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+								<div class="mui-media-body">
+									<div class="my-p-style">
+										<span>账户余额</span><span id="balance" style="padding-left: 0.2rem;color: #Fb5237;">--</span>
+										<span style="color: #999999;" class="mui-pull-right">提现</span>
+									</div>
+								</div>
+							</a>
+						</li>
+
+					</ul>
+					<div style="display: block;height: 0.3rem;background-color: #F8F8F8;"></div>
+					<ul class="mui-table-view mui-table-view-chevron" style="margin-top: 0;">
+						<li id="feedback" class="mui-table-view-cell mui-media">
+							<a>
+								<span class="mui-pull-left icon-yijian" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+								<div class="mui-media-body">
+									<p class="my-p-style">意见反馈</p>
+								</div>
+							</a>
+						</li>
+						<li id="howgainmoney" class="mui-table-view-cell mui-media">
+							<a>
+								<span class="mui-pull-left icon-zhuanqian" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+								<div class="mui-media-body">
+									<p class="my-p-style">如何赚钱</p>
+								</div>
+							</a>
+						</li>
+						<li id="video_button" class="mui-table-view-cell mui-media">
+							
+								<a class="mui-navigate-right">
+									<span class="mui-pull-left icon-CEO" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+									<div class="mui-media-body">
+										<div class="my-p-style">
+											<span>CEO说</span>
+											<span style="color: #999999;" class="mui-pull-right">播放</span>
+										</div>
+									</div>
+								</a>
+						</li>
+						<li id="setting" class="mui-table-view-cell mui-media">
+							<a>
+								<span class="mui-pull-left icon-shezhi" style="font-size: 0.4rem;padding: 0.14rem;color: #333333;"></span>
+								<div class="mui-media-body">
+									<p class="my-p-style">设置</p>
+								</div>
+							</a>
+						</li>
+					</ul>
+					<br />
+				</div>
+			</div>
+		</div>
+
+		<div id='show_partner_view' style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.75); z-index: 999;">
+			<img src="../images/beijingguang.png" style="height: 6.8rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; margin: auto;" />
+			<div style="position: fixed; top: 4.36rem; left: 0; right: 0; height: 3.6rem; width: 5rem; border-radius: 0.2rem; background: #FFFFFF; margin:auto; text-align: center; z-index: 1;">
+				<img src="../images/gongxi.png" style="width: 3.86rem; position: relative; margin-top: -0.86rem;" />
+				<div style="font-size: 0.3rem; color: #FB5237; margin-top: 0.16rem;"><b>营销合伙人</b></div>
+				<div style="font-size: 0.26rem; color: #333333; margin-top: 0.2rem; line-height: 0.34rem;">已经通过筛选，成为营销合伙人！ <br /> 期待您赢取终极大奖！</div>
+				<img id="partner_button" src="../images/partnerbutton.png" style="width: 2.6rem; margin-top: 0.44rem;" />
+			</div>
+		</div>
+
+		<div id="video_view" style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.75); z-index: 999;">
+			<video webkit-playsinline id="videoMedia" poster="../images/banner_03_02_02.png" controls="controls" preload onerror="videoError(event);" style="width: 100%; height: 240px; margin-top: 180px;">
+				<source src="http://static.qizhuanbao.com/public/vedio-intro640.mp4" type='video/mp4'>
+				<p>浏览器不支持Html5 Video!</p>
+			</video>
+			<!--<img id="videoMediaDefaultImg" src="../images/muwu.jpg" />-->
+		</div>
+		<!--<script src="../js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		script <script src="../js/demo_videoPlaySimple.js" type="text/javascript" charset="utf-8"></script>-->
+	</body>
+
+</html>

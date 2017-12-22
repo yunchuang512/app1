@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.my-card {
+				margin: 0px;
+				border-radius: 0px;
+				box-shadow: 0 0.4px 0.1px rgba(0, 0, 0, .3);
+				;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #888888;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">任务详情</h1>
+		</header>
+
+		<div class="mui-content">
+			<div class="mui-card my-card" style="margin-top: 1px;">
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner" style="padding: 0px;">
+						<div class="row">
+							<div class="col-3">
+								<img src="../images/60x60.gif" style="padding: 5px;"/>
+							</div>
+							<div class="col-6">
+								<h5 style="padding-top: 5px;font-size: 18px;">阅读任务</h5>
+								<p style="font-size: 12px;">第一次阅读奖励50积分
+									<p>
+							</div>
+							<div class="col-3">
+								<h5 style="padding-top: 20px;font-size: 14px;">未开始</h5> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mui-card my-card" style="margin-top: 20px;">
+				<div class="mui-card-header" style="">
+					<p style="padding-top: 5px;">任务步骤</p>
+				</div>
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner" style="padding: 10px;">
+						<p>1.点击“阅读文章”阅读每日文章</p>
+						<p>2.阅读即可获得奖励</p>
+						<p style="text-align: center;">每日只有第一次阅读奖励积分</p>
+					</div>
+				</div>
+			</div>
+			<p id="submitok" style="margin-bottom: 0px;font-size:18px;text-align: center;position: fixed;bottom: 0px;left:0px;background: #CCCCCC;width: 100%;color: white;padding: 10px;">
+				已下线
+			</p>
+		</div>
+
+	</body>
+
+</html>

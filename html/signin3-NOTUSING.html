@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/jquery.rotate.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				document.getElementById('signinbutton').addEventListener('tap', function(event) {
+					$("#signimage").rotate({
+						angle: 0,
+						animateTo: 3300,
+						callback: signcallback,
+						duration: 10000
+					});
+				});
+				var signcallback = function() {
+					alert("什么也没抽到！");
+				}
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #888888;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">每日签到</h1>
+		</header>
+
+		<div class="mui-content">
+			<div style="text-align: center;">
+				<p style="text-align: right;padding:5px;">
+					我的薪豆 522
+				</p>
+				<img id="signimage" src="../images/rotateimg.gif" style="height: 250px;width: 250px;" />
+				<p style="margin-bottom: 0px;margin-top: 10px;">签到可以免费抽奖</p>
+				<p>快来试试手气吧！</p>
+				<p id="signinbutton" style="background: #888888;padding: 10px;text-align: center;margin:auto;color: white;width: 200px;">
+					签到
+				</p>
+				<div class="row" style="margin:20px;">
+					<div class="col-3" style="border-top: 1px solid #CCCCCC;margin-top: 15px;">&nbsp;</div>
+					<div class="col-6">
+						<p style="">完成每日任务可以获得更多薪豆</p>
+					</div>
+					<div class="col-3" style="border-top: 1px solid #CCCCCC;margin-top: 15px;">&nbsp;</div>
+				</div>
+			</div>
+			<div class="mui-row" style="margin-left: 20px;margin-right: 20px;border: 1px solid#CCCCCC;border-radius: 2px;height: 80px;">
+				<div class="mui-col-sm-3">
+					<img src="../images/60x60.gif" style="padding: 5px;" />
+				</div>
+				<div class="mui-col-sm-7">
+					<p style="margin-bottom: 0px;margin-top: 15px;">阅读任务</p>
+					<p style="font-size: 12px;">每日阅读一篇小文章</p>
+				</div>
+				<div class="mui-col-sm-2" style="background-color: #CCCCCC;height: 100%;float: right;">
+					<p style="text-align: center;color: white;margin-bottom: 0px;">奖励</p>
+					<p style="text-align: center;color: white;margin-bottom: 0px;">50薪豆</p>
+					<p style="text-align: center;margin-bottom: 0px;background-color: white;border-radius: 15px;font-size: 12px;">去做任务</p>
+				</div>
+			</div>
+			<br /><br /><br />
+		</div>
+
+	</body>
+
+</html>

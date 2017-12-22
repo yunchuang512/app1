@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#333333">
+		<link rel="stylesheet" href="../css/style1.css">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<style>
+			html {
+				height: 100%;
+			}
+			
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.mui-toast-container {
+				bottom: 18% !important;
+				/*离布局底部的距离*/
+			}
+			
+			.mui-icon .mui-badge {
+				font-size: 0.18rem;
+				position: absolute;
+				top: 0.08rem;
+				left: 100%;
+				margin-left: -0.21rem;
+				padding: 0.02rem 0.1rem;
+				color: #fff;
+				background: red;
+			}
+			
+			.mui-toast-message {
+				opacity: 0.8;
+				color: #fff;
+				align: center;
+				border-radius: 0.4rem;
+			}
+			
+			.mui-table-view:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-table-view:after {
+				background-color: #FFFFFF;
+			}
+			
+			.my-liu-fans-icon {
+				width: 0.6rem;
+				height: 0.6rem;
+				float: right;
+				margin: 0 0.2rem;
+			}
+			
+			.mui-table-view-cell:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 0.02rem;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.cha {
+				display: inline-block;
+				width: 0.4rem;
+				height: 0.02rem;
+				background: red;
+				line-height: 0;
+				font-size: 0;
+				vertical-align: middle;
+				-webkit-transform: rotate(45deg);
+			}
+			
+			.cha:after {
+				content: '/';
+				display: block;
+				width: 0.4rem;
+				height: 0.02rem;
+				background: red;
+				-webkit-transform: rotate(-90deg);
+			}
+			
+			#show_share_view {
+				position: absolute;
+				bottom: 0;
+				z-index: 1000;
+				background-color: #ffffff;
+				width: 100%;
+				display: none;
+			}
+			
+			#window_mask {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5);
+				z-index: 999;
+				display: none;
+			}
+			
+			.my-name {
+				font-size: 0.24rem;
+			}
+			
+			.mui-table-view.mui-grid-view {
+				font-size: 0;
+				display: block;
+				width: 100%;
+				padding: 0 0.2rem 0 0;
+				white-space: normal;
+			}
+			
+			button {
+				height: 0.88rem;
+				line-height: 0.88rem;
+				padding: 0 0;
+			}
+		</style>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript">
+			var shares = {};
+			var nickname = '';
+			var imagePath = '';
+			var linkUrl = '';
+			document.addEventListener('plusready', function() {
+				console.log('【通知】启动同步消息数计时器');
+				localStorage.unReadedMessageNumber = 0;
+				//首先立即拉取一次消息数
+				if(localStorage.islogin == '1') {
+					refreshMessageNumber();
+				}
+				setInterval(function() {
+					if(localStorage.islogin == '1') {
+						refreshMessageNumber();
+					}
+				}, 10000);
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: true
+				});
+				plus.navigator.closeSplashscreen();
+				plus.share.getServices(function(s) {
+					if(s && s.length > 0) {
+						for(var i = 0; i < s.length; i++) {
+							var t = s[i];
+							shares[t.id] = t;
+							//console.log(JSON.stringify(t));
+						}
+					}
+				}, function() {
+					console.log("获取分享服务列表失败");
+				});
+				document.getElementById("share").addEventListener('tap', function() {
+					if(islogin) {
+						openShare();
+					} else {
+						openLoginpage();
+					}
+				});
+				var islogin = false;
+
+				function fanspageInit() {
+					if(localStorage.islogin == "1") {
+						islogin = true;
+					} else {
+						islogin = false;
+					}
+					if(islogin) {
+						getInfo();
+						document.getElementById("message").style.display = "block";
+					} else {
+						document.getElementById("fansNumber").innerText = "-";
+						document.getElementById("fansIncome").innerText = "-";
+						document.getElementById("firstFans").innerText = "";
+						document.getElementById("secondFans").innerText = "";
+						document.getElementById("message").style.display = "none";
+						document.getElementById("invitationCode").innerText = "未登录";
+					}
+				}
+				fanspageInit();
+				//打开登录页
+				function openLoginpage() {
+					mui.openWindow({
+						url: '../login.html',
+						id: 'login',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}
+				document.getElementById('fanses').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'firstfanslist.html',
+							id: 'firstfanslist.html',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				document.getElementById('secondfansid').addEventListener('tap', function() {
+					if(islogin) {
+						mui.openWindow({
+							url: 'secondfanspage.html',
+							id: 'secondfanspage.html',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				document.getElementById('activityruleid').addEventListener('tap', function() {
+					mui.openWindow({
+						url: 'activityrule.html',
+						id: 'activityrule',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				document.getElementById("invitationCode").addEventListener('tap', function() {
+					if(islogin) {
+						copyToClip(document.getElementById("invitationCode").innerText);
+						mui.toast('已复制', {
+							type: 'div'
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				//消息
+				document.getElementById('message').addEventListener('tap', function(event) {
+					if(islogin) {
+						mui.openWindow({
+							url: 'messagelist.html',
+							id: 'messagelist',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				document.getElementById("qrcodeid").addEventListener('tap', function(event) {
+					if(islogin) {
+						$("#popqrcodeviewid").fadeIn(100, function() {
+							mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'showMask');
+							$("#qrcodecontent").slideDown(300);
+						});
+					} else {
+						openLoginpage();
+					}
+				});
+				document.getElementById("cancelpopid").addEventListener('tap', function(event) {
+					$("#qrcodecontent").slideUp(300, function() {
+						$("#popqrcodeviewid").fadeOut(100);
+						mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'closeMask');
+					});
+				});
+				document.getElementById("popqrcodeviewid").addEventListener('tap', function(event) {
+					$("#qrcodecontent").slideUp(300, function() {
+						$("#popqrcodeviewid").fadeOut(100);
+						mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'closeMask');
+					});
+				});
+				var header = document.getElementById("header");
+
+				function getInfo() {
+					var url = getBaseUrl() + 'fans/fans/fanslist?phoneNumber=' + localStorage.phonenumber;
+					console.log(url);
+					mui.ajax(url, {
+						dataType: 'json',
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(!data.fansNumber || isNaN(data.fansNumber)) {
+								return;
+							}
+							document.getElementById("fansNumber").innerText = data.fansNumber + "人";
+							document.getElementById("fansIncome").innerText = data.fansIncome + "薪豆";
+							document.getElementById("firstFans").innerText = data.firstFans + "人";
+							document.getElementById("secondFans").innerText = data.secondFans + "人";
+							document.getElementById("invitationCode").innerText = data.inviteCode;
+							/**
+							 * 2017.03.21 二维码图片不再返回相对地址，而是返回生成链接
+							 * */
+							//                      document.getElementById("qrcodeimgid").src = getBaseUrl() + data.qrcode;
+							document.getElementById("qrcodeimgid").src = data.qrcode;
+							nickname = data.nickname;
+							//                      imagePath = getBaseUrl() + data.qrcode;
+							imagePath = data.qrcode;
+							linkUrl = data.linkurl;
+							console.log("url = " + linkUrl);
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(JSON.stringify(xhr));
+							console.log(JSON.stringify(errorThrown));
+							console.log(type);
+						}
+					});
+					var url2 = getBaseUrl() + 'fans/Fans/getfansinvitescore';
+					console.log('url2= ' + url2);
+					mui.ajax(url2, {
+						dataType: 'json',
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							/*console.log('url2的数据为' + JSON.stringify(data));*/
+							document.getElementById('mybeans').innerText = data.invitebeans;
+							document.getElementById('fansbeans').innerText = data.fansbeans;
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(JSON.stringify(xhr));
+							console.log(JSON.stringify(errorThrown));
+							console.log(type);
+						}
+					});
+				}
+
+				function openShare() {
+					//                ws = plus.webview.currentWebview();
+					//                ws.setStyle({
+					//                    mask: "rgba(0,0,0,0.5)"
+					//                });
+					var mask = document.getElementById('window_mask');
+					mask.style.display = 'block';
+					var shareView = document.getElementById('show_share_view');
+					shareView.style.display = 'block';
+					mui.fire(plus.webview.currentWebview().opener(), 'showMask');
+
+					// 点击关闭遮罩层
+					mask.addEventListener("tap", closeMask, false);
+					mui(".mui-table-view").on('tap', '.mui-table-view-cell', function() {
+						var id = this.getAttribute('id');
+						console.log(id);
+						//                    var sourcePage = plus.webview.getWebviewById(pageSourceId);
+						//                    if(sourcePage) {
+						//                        console.log('select("' + id + '")');
+						//				sourcePage.evalJS('"select(' + id + ')"');
+						//					sourcePage.evalJS("select(\"" + id + "\")");
+						mui.fire(plus.webview.currentWebview(), 'share', {
+							id: id
+						});
+						//                    }
+						closeMask();
+					});
+					document.getElementById("cancel").addEventListener('tap', function() {
+						closeMask();
+					});
+					//                mui.back = function() {
+					//                    console.log(pageSourceId);
+					//                    var sourcePage = plus.webview.getWebviewById(pageSourceId);
+					//
+					//                    if(sourcePage) {
+					//                        //sourcePage.evalJS("closeMask()");
+					//                        mui.fire(sourcePage, 'closeMask', {});
+					//                    }
+					//                }
+					//                shareWebview();
+				}
+				var sharew;
+				var ws = null;
+				/**
+				 *分享窗口
+				 */
+				//            function shareWebview() {
+				////                ws = plus.webview.currentWebview();
+				////                if(sharew) { // 避免快速多次点击创建多个窗口
+				//////						alert("已经创建过弹窗了");
+				////                    return;
+				////                }
+				////                var top = plus.display.resolutionHeight - 145;
+				////                var href = "tasks/share.html";
+				//
+				//                //=========
+				////                try {
+				////                    sharew = plus.webview.create(href, "share.html", {
+				////                        width: '100%',
+				////                        height: '245',
+				////                        top: top,
+				////                        scrollIndicator: 'none',
+				////                        scalable: false,
+				////                        popGesture: 'none'
+				////                    }, {
+				////                        shareInfo: {
+				////                            "url": "share",
+				////                            "title": "测试",
+				////                            "content": "测试",
+				////                            "pageSourceId": ws.id
+				////                        }
+				////                    });
+				////                } catch(e) {
+				//////						alert("创建弹窗时出错");
+				////                }
+				////                try {
+				////                    sharew.addEventListener("loaded", function() {
+				//////							alert("加载完成，准备展示弹窗");
+				////                        sharew.show('slide-in-bottom', 245);
+				////                    }, false);
+				////                    // 显示遮罩层
+				////                } catch(e) {
+				//////						alert("展示弹窗时出错");
+				////                }
+				//                ws.setStyle({
+				//                    mask: "rgba(0,0,0,0.5)"
+				//                });
+				//                // 点击关闭遮罩层
+				//                ws.addEventListener("maskClick", closeMask, false);
+				//            }
+				function closeMask() {
+					var shareView = document.getElementById('show_share_view');
+					shareView.style.display = 'none';
+					var mask = document.getElementById('window_mask');
+					mask.style.display = 'none';
+					mui.fire(plus.webview.currentWebview().opener(), 'closeMask');
+					//                if(ws) {
+					//
+					//                    ws.setStyle({
+					//                        mask: "none"
+					//                    });
+					//                }
+					//                //避免出现特殊情况，确保分享页面在初始化时关闭
+					//                if(!sharew) {
+					//                    sharew = plus.webview.getWebviewById("share.html");
+					//                }
+					//                if(sharew) {
+					//                    sharew.close();
+					//                    sharew = null;
+					//                }
+					//                document.getElementById("popqrcodeviewid").style.display = "none";
+				}
+
+				function select(id) {
+					var msg;
+					var type, s_id, s_ex;
+					switch(id) {
+						case 'weixin': //微信好友
+							type = 1;
+							s_id = 'weixin';
+							s_ex = 'WXSceneSession';
+							break;
+						case 'weixinfriend': //朋友圈
+							type = 1;
+							s_id = 'weixin';
+							s_ex = 'WXSceneTimeline';
+							break;
+						case 'qq': //qq
+							type = 1;
+							s_id = 'qq';
+							s_ex = '';
+							break;
+						case 'sinaweibo':
+							type = 1;
+							s_id = 'sinaweibo';
+							break;
+						case 'copy':
+							type = 0;
+							break;
+						case 'save':
+							type = 2;
+							break;
+						default:
+							break;
+					}
+					if(type == 1) { //分享
+						var share = shares[s_id];
+						console.log(JSON.stringify(share));
+						if(share.authenticated) {
+							shareMessage(share, s_ex);
+						} else {
+							share.authorize(function() {
+								shareMessage(share, s_ex);
+							}, function(e) {
+								if(e.code == -8) mui.alert("客户端未安装");
+								console.log("认证授权失败：" + e.code + " - " + e.message);
+							});
+						}
+					} else if(type == 0) { //保存
+						copyToClip(linkUrl);
+						mui.toast("复制链接成功");
+					} else if(type == 2) {
+						saveNetPicture(imagePath);
+						console.log(imagePath);
+						mui.toast("二维码已保存至系统相册");
+					}
+				}
+
+				function shareMessage(share, ex) {
+					var msg = {
+						extra: {
+							scene: ex
+						}
+					};
+					msg.href = linkUrl;
+					console.log(linkUrl);
+					msg.title = nickname + "邀请您注册企赚宝！";
+					msg.content = "动动手指，获取万元佣金！提供线索，专业团队帮您跟单！";
+					//alert(localStorage.userPhoto);
+					if(localStorage.userPhoto != undefined) {
+						msg.thumbs = [localStorage.userPhoto];
+					} else {
+						msg.thumbs = ["http://139.217.25.169/static/img/portrait/1.png"];
+					}
+					//msg.thumbs = ["http://imgsrc.baidu.com/forum/w%3D580/sign=64abc0fba7c27d1ea5263bcc2bd4adaf/c472a8177f3e670979a937a038c79f3df9dc553c.jpg"];
+					share.send(msg, function() {
+						console.log("分享到\"" + share.description + "\"成功");
+					}, function(e) {
+						console.log("分享到\"" + share.description + "\"失败: " + e.code + "-" + e.message);
+					});
+				}
+				window.addEventListener('initpage', function(event) {
+					//获得事件参数
+					console.log('刷新粉丝界面');
+					fanspageInit();
+				});
+				window.addEventListener('share', function(event) {
+					//执行分享
+					var id = event.detail.id;
+					select(id);
+				});
+				window.addEventListener('closeMask', function(event) {
+					//执行分享
+					closeMask();
+				});
+				window.addEventListener('updateMessageNumber', function(event) {
+					var number = parseInt(event.detail.number);
+					if(number == 0) {
+						document.getElementById("messagecount").style.display = "none";
+					} else {
+						document.getElementById("messagecount").style.display = "block";
+						if(number > 99) {
+							document.getElementById('messagecount').innerText = "···";
+						} else {
+							document.getElementById('messagecount').innerText = number;
+						}
+					}
+				});
+				window.addEventListener('refreshallmessagecount', function(event) {
+					//
+					refreshMessageNumber();
+				});
+
+				function refreshMessageNumber() {
+					var url = getBaseUrl() + "index/Message/receiveUnreadInfoNum?phoneNumber=" + localStorage.phonenumber;
+					//console.log("公共获取消息数的接口:" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							//console.log(JSON.stringify(data));
+							if(data.status == "failure") {
+								if(localStorage.islogin == '1') {
+									var url = getBaseUrl() + 'user/ClientUser/login';
+									mui.ajax(url, {
+										data: {
+											cu_phonenumber: localStorage.phonenumber,
+											cu_password: localStorage.password
+										},
+										dataType: 'json', //服务器返回json格式数据
+										type: 'post', //HTTP请求类型
+										timeout: 10000, //超时时间设置为10秒；
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										success: function(data) {
+											//console.log(JSON.stringify(data));
+											if(data.status == 'success') {
+												var homepage = plus.webview.getWebviewById('html/homepage.html');
+												mui.fire(homepage, 'updateMessageNumber', {});
+												var mypage = plus.webview.getWebviewById('html/mypage.html');
+												mui.fire(mypage, 'updateMessageNumber', {});
+												var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+												mui.fire(fanspage, 'updateMessageNumber', {});
+												var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+												mui.fire(taskpage, 'updateMessageNumber', {});
+												mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+												localStorage.blockup = '0';
+											} else {
+												localStorage.islogin = '0';
+												if(parseInt(data.error_code) == 3) {
+													localStorage.blockup = '1';
+													var homepage = plus.webview.getWebviewById('html/homepage.html');
+													mui.fire(homepage, 'initpage', {});
+													var mypage = plus.webview.getWebviewById('html/mypage.html');
+													mui.fire(mypage, 'initpage', {});
+													var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+													mui.fire(fanspage, 'initpage', {});
+													var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+													mui.fire(taskpage, 'initpage', {});
+													mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+												}
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(JSON.stringify(xhr));
+											console.log(type);
+										}
+									});
+								}
+							} else {
+								var number = 0;
+								if(data && !isNaN(data.number)) {
+									number = parseInt(data.number);
+								}
+								//								console.log('number = ' + number);
+								var homepage = plus.webview.getWebviewById('html/homepage.html');
+								var mypage = plus.webview.getWebviewById('html/mypage.html');
+								var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+								var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+								//console.log('num=' + number);
+								if(homepage) {
+									//console.log('【通知】首页');
+									mui.fire(homepage, 'updateMessageNumber', {
+										number: number
+									});
+								}
+								if(mypage) {
+									//console.log('【通知】我的');
+									mui.fire(mypage, 'updateMessageNumber', {
+										number: number
+									});
+								}
+								if(fanspage) {
+									//console.log('【通知】粉丝');
+									mui.fire(fanspage, 'updateMessageNumber', {
+										number: number
+									});
+								}
+								if(taskpage) {
+									//console.log('【通知】任务');
+									mui.fire(taskpage, 'updateMessageNumber', {
+										number: number
+									});
+								}
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+				window.addEventListener('showPartnerResult', function() {
+					localStorage.showPartnerResult = 0;
+					$("#show_partner_view").fadeIn(300);
+				});
+				document.getElementById("partner_button").addEventListener('tap', function() {
+					localStorage.showPartnerResult = 0;
+					localStorage.isPartner = 1;
+					changePopResult();
+					mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+					var homepage = plus.webview.getWebviewById('html/homepage.html');
+					mui.fire(homepage, 'reload', {});
+					var mypage = plus.webview.getWebviewById('html/mypage.html');
+					mui.fire(mypage, 'initpage', {});
+					var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+					mui.fire(fanspage, 'initpage', {});
+					var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+					mui.fire(taskpage, 'reload', {});
+					mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+					mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+					document.getElementById("show_partner_view").style.display = "none";
+					mui.fire(plus.webview.currentWebview().opener(), 'closeMask', {});
+					mui.fire(plus.webview.currentWebview().opener(), 'moveToHome', {});
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-transparent" style="background-color: #FFFFFF;border-bottom: 0.02rem solid #DDDDDD;height: 0.88rem;display: inline-block;">
+			<a id="message" class="mui-pull-right mui-icon icon-xiaoxi" style="color: #333333;margin:0;padding:0;margin-right: 0.1rem;line-height: 0.88rem;font-size: 0.40rem;">
+				<span id="messagecount" class="mui-badge" style="display:none;background-color: #FF5033;color: white;margin-left: -0.21rem;">2</span>
+			</a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.38rem;line-height: 0.88rem;font-weight: normal;">粉丝</h1>
+		</header>
+		<div class="mui-content" style="height: 100%;">
+			<div class="mui-scroll-wrapper" style="margin-top: 0.88rem;">
+				<div class="mui-scroll">
+					<div id="activityruleid" class="mui-table-view" style="height: 1.4rem;padding: 0.2rem 0.3rem;">
+						<div style="float: right;text-align: center;padding: 0.02rem;">
+							<p class="icon-youjiantou" style="font-size: 0.28rem;float: right;line-height:1rem;margin-left: 0.1rem;color: #FB5237;"></p>
+							<p style="color: #FB5237;font-size: 0.28rem;line-height:1rem;float: right;">活动规则</p>
+						</div>
+						<span style="color: #999999;font-size: 0.26rem;line-height: 0.39rem;">拒绝独来独往</span>
+						<br />
+						<span style="color: #333333;font-size: 0.44rem;line-height: 0.66rem;">赚钱就要</span><span style="color: #fb9a37;font-size: 0.44rem;line-height: 0.66rem;">分享</span>
+					</div>
+					<div style="background-color: #F8F8F8;display: block;height: 0.2rem;"></div>
+					<div class="row" style="background-color: white; height: 1.4rem; padding: 0.4rem 0;">
+						<div class="col-6" style=" border-right:0.02rem solid #FB5237; padding: 0; margin: 0; height: 0.6rem;">
+							<div class="row" style="height: inherit;">
+								<div class="col-6" style="height: inherit; padding: 0; margin: 0;">
+									<img src="../images/fans_number.png" class="my-liu-fans-icon" />
+								</div>
+								<div class="col-6" style="position: relative; height: inherit; padding: 0; margin: 0;">
+									<p id="fansNumber" style="position: absolute; color: #382c2b;  font-size: 0.34rem;height: 0.26rem; padding: 0; margin: 0; top: -0.04rem;">-</p>
+									<p style="position: absolute; font-size: 0.26rem; line-height: 0.26rem; padding:0; margin: 0; top: 0.38rem;">粉丝总数</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-6" style="padding: 0; margin: 0; height: 0.6rem;">
+							<div class="row">
+								<div class="col-6" style="height: inherit; padding: 0; margin: 0;">
+									<img src="../images/fans_income.png" class="my-liu-fans-icon" />
+								</div>
+								<div class="col-6" style="position: relative; height: inherit; padding: 0; margin: 0;">
+									<p id="fansIncome" style="position: absolute; color: #382c2b;  font-size: 0.34rem;height: 0.26rem; padding: 0; margin: 0; top: -0.04rem;">-</p>
+									<p style="position: absolute; font-size: 0.26rem; line-height: 0.26rem; padding:0; margin: 0; top: 0.38rem;">粉丝收益</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="height: 0.02rem;"></div>
+					<ul class="mui-table-view mui-table-view-chevron" style="border-bottom: none;">
+						<li class="mui-table-view-cell mui-media">
+							<a style="padding-right: 0.4rem;">
+								<div id='fanses' class="mui-media-body" style="position: relative;">
+									<p style="font-size: 0.28rem;line-height:0.42rem;float: left;color: #333333;margin-left: 0.3rem;">一级粉丝数</p>
+									<p id="firstFans" style="position: absolute;right: 0.3rem; font-size: 0.28rem;line-height:0.42rem;color:#FB5237 ;"></p>
+									<p class="icon-youjiantou" style="position: absolute; line-height:0.42rem;right: 0; font-size: 0.28rem;color:#FB5237 ;"></p>
+								</div>
+							</a>
+						</li>
+						<li class="mui-table-view-cell mui-media">
+							<a style="padding-right: 0.4rem;">
+								<div id="secondfansid" class="mui-media-body" style="position: relative;">
+									<p style="font-size: 0.28rem;line-height:0.42rem;float: left;color: #333333;margin-left: 0.3rem;">二级粉丝数</p>
+									<p id="secondFans" style="position: absolute;right: 0.3rem; font-size: 0.28rem;line-height:0.42rem; color:#FB5237 ;"></p>
+									<p class="icon-youjiantou" style="position: absolute; line-height:0.42rem;right: 0; font-size: 0.28rem;color:#FB5237 ;"></p>
+								</div>
+							</a>
+						</li>
+					</ul>
+					<p style="text-align: left;background-color: white;margin-top:0.2rem;margin-bottom: 0.02rem;padding: 0.3rem;font-size: 0.28rem;color: #333333;padding-left: 0.4rem;">邀请粉丝</p>
+					<div style="background-color: white;padding: 0.4rem;text-align: center;">
+						<p id="share" style="width: 5rem;background-color: #FB5237; color: white;padding-bottom: 0.2rem;padding-top: 0.2rem;font-size:0.28rem;border-radius: 0.04rem;margin: 0 auto;margin-top: 0.5rem;">立即邀请粉丝</p>
+						<p style="text-align: center;font-size: 0.26rem; margin-bottom: 0.4rem;margin-top: 0.2rem;color: #FB5237;">
+							邀请成功您将获得<span id="mybeans">--</span>薪豆，粉丝获得<span id="fansbeans">--</span>薪豆
+						</p>
+						<div class="row">
+							<div class="col-6" style="text-align: center;">
+								<span id="qrcodeid" class="icon-erweima" style="font-size: 1rem;color: #333333;"></span>
+								<p style="text-align: center;font-size: 0.24rem; margin-top: 0.2rem;color: #999999;">点击放大</p>
+							</div>
+							<div class="col-6" style="text-align: center;">
+								<div id='invitationCode' style="margin:0 auto;height: 1rem;width: 2rem;color: #555555;font-size: 0.36rem;border:0.02rem dashed #FB5237;text-align: center;line-height: 1rem;">未登录</div>
+								<p style="text-align: center;font-size: 0.24rem; margin-top: 0.26rem;color: #999999;">点击复制</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="popqrcodeviewid" style="height: 100%;width: 100%; top: 0;position: absolute;z-index: 99;text-align: center;display:none ;background-color: rgba(0,0,0,0.4);padding-top: 1.6rem;">
+				<div id="qrcodecontent" style="display: none;">
+					<img id="qrcodeimgid" src="../images/qrcode1.png" style="width: 4rem;height: 4rem;border-radius: 0.1rem;background-color: #FFFFFF;padding-right: 0.1rem;" />
+					<div style="margin: 0 auto;width: 3.6rem;height: 1.6rem;border-right: 0.02rem solid #fb5237;margin-top: -0.1rem;">
+						<img id="cancelpopid" style="float: right;margin-top: 1.36rem;margin-right: -0.46rem;width: 0.9rem;padding: 0.2rem;" src="../images/roundcha.png" ;></img>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id='show_partner_view' style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.4); z-index: 1000;">
+			<img src="../images/beijingguang.png" style="height: 6.8rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; margin: auto;" />
+			<div style="position: fixed; top: 4.36rem; left: 0; right: 0; height: 3.6rem; width: 5rem; border-radius: 0.2rem; background: #FFFFFF; margin:auto; text-align: center; z-index: 1000;">
+				<img src="../images/gongxi.png" style="width: 3.86rem; position: relative; margin-top: -0.86rem;" />
+				<div style="font-size: 0.3rem; color: #FB5237; margin-top: 0.16rem;"><b>营销合伙人</b></div>
+				<div style="font-size: 0.26rem; color: #333333; margin-top: 0.2rem; line-height: 0.34rem;">已经通过筛选，成为营销合伙人！ <br /> 期待您赢取终极大奖！</div>
+				<img id="partner_button" src="../images/partnerbutton.png" style="width: 2.6rem; margin-top: 0.44rem;" />
+			</div>
+		</div>
+		<div id="show_share_view" style="display: none;">
+			<div>
+				<ul class="mui-table-view mui-grid-view row">
+					<li id="weixin" class="mui-table-view-cell mui-media col-3">
+						<a href="#">
+							<img src="../images/share_weixin.png" style="width:1.1rem;" alt="微信">
+							<div class="mui-media-body my-name" style="font-size: 0.24rem;">微信好友</div>
+						</a>
+					</li>
+					<li id="weixinfriend" class="mui-table-view-cell mui-media col-3">
+						<a href="#">
+							<img src="../images/share_weinxin_pyq.png" style="width:1.1rem ;" alt="微信朋友圈">
+							<div class="mui-media-body my-name" style="font-size: 0.24rem;">微信朋友圈</div>
+						</a>
+					</li>
+					<li id="copy" class="mui-table-view-cell mui-media col-3">
+						<a href="#">
+							<img src="../images/share_copy.png" style="width:1.1rem ;" alt="复制链接">
+							<div class="mui-media-body" style="font-size: 0.24rem;">复制链接</div>
+						</a>
+					</li>
+					<li id="save" class="mui-table-view-cell mui-media col-3">
+						<a href="#">
+							<img src="../images/share_save.png" style="width:1.1rem ;" alt="保存二维码">
+							<div class="mui-media-body" style="font-size: 0.24rem;">保存二维码</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div>
+				<button id="cancel" type="button" class="mui-btn mui-btn-block" style="border:0;padding: 0; top: 0.2rem;">取消</button>
+			</div>
+		</div>
+		<div id="window_mask"></div>
+	</body>
+
+</html>

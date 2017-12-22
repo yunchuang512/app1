@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/style.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mydefine.css">
+		<link rel="stylesheet" href="../../css/style1.css">
+		<style>
+			.my-name {
+				font-size: 12px;
+			}
+
+			.mui-table-view.mui-grid-view {
+				font-size: 0;
+				display: block;
+				width: 100%;
+				padding: 0 10px 0px 0;
+				white-space: normal;
+			}
+
+			button {
+				height: 44px;
+				line-height: 44px;
+				padding: 0px 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<ul class="mui-table-view mui-grid-view row">
+				<li id="weixin" class="mui-table-view-cell mui-media col-3">
+					<a href="#">
+						<img src="../../images/share_weixin.png" style="width:55px ;"></img>
+						<div class="mui-media-body my-name" style="font-size: 12px;">微信好友</div>
+					</a>
+				</li>
+				<li id="weixinfriend" class="mui-table-view-cell mui-media col-3">
+					<a href="#">
+						<img src="../../images/share_weinxin_pyq.png" style="width:55px ;"></img>
+						<div class="mui-media-body my-name" style="font-size: 12px;">微信朋友圈</div>
+					</a>
+				</li>
+			<!--	<li id="qq" class="mui-table-view-cell mui-media col-3">
+					<a href="#">
+						<img src="../../images/share_qq.png" style="width:55px ;"></img>
+						<div class="mui-media-body" style="font-size: 12px;">QQ</div>
+					</a>
+				</li>
+				<li id="sinaweibo" class="mui-table-view-cell mui-media col-3">
+					<a href="#">
+						<img src="../../images/share_sina.png" style="width:55px ;"></img>
+						<div class="mui-media-body" style="font-size: 12px;">新浪微博</div>
+					</a>
+				</li>-->
+				<li id="copy" class="mui-table-view-cell mui-media col-3">
+					<a href="#">
+						<img src="../../images/share_copy.png" style="width:55px ;"></img>
+						<div class="mui-media-body" style="font-size: 12px;">复制链接</div>
+					</a>
+				</li>
+				<li id="save" class="mui-table-view-cell mui-media col-3">
+					<a href="#">
+						<img src="../../images/share_save.png" style="width:55px ;"></img>
+						<div class="mui-media-body" style="font-size: 12px;">保存二维码</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<div>
+			<button id="cancel" type="button" class="mui-btn mui-btn-block" style="border:0px;padding: 0px; top: 10px;">取消</button>
+		</div>
+	</body>
+	<script src="../../js/mui.min.js"></script>
+	<script type="text/javascript">
+		var pageSourceId;
+		document.addEventListener('plusready', function() {
+			plus.screen.lockOrientation("portrait-primary");
+			var self = plus.webview.currentWebview();
+//			console.log(JSON.stringify(plus.webview.currentWebview()));
+			pageSourceId = self.shareInfo.pageSourceId;
+
+			mui(".mui-table-view").on('tap', '.mui-table-view-cell', function() {
+				var id = this.getAttribute('id');
+				console.log(id);
+				var sourcePage = plus.webview.getWebviewById(pageSourceId);
+				if(sourcePage) {
+					console.log('select("' + id + '")');
+					//				sourcePage.evalJS('"select(' + id + ')"');
+//					sourcePage.evalJS("select(\"" + id + "\")");
+					mui.fire(sourcePage, 'share', {
+						id:id
+					});
+				}
+				mui.back();
+			});
+
+			document.getElementById("cancel").addEventListener('tap', function(){
+				mui.back();
+			});
+
+			mui.back = function() {
+				console.log(pageSourceId);
+				var sourcePage = plus.webview.getWebviewById(pageSourceId);
+
+				if(sourcePage) {
+					//sourcePage.evalJS("closeMask()");
+					mui.fire(sourcePage, 'closeMask', {});
+				}
+			}
+		});
+	</script>
+
+</html>

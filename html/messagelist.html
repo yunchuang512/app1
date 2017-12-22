@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<script src="../js/app.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				var html = document.getElementsByTagName('html');
+		        var htmlFontSize = Number(html[0].style.fontSize.replace("px",""));
+		        if(htmlFontSize > 100){
+		        		htmlFontSize = 100;
+		        }
+		        var topSize = Math.floor(htmlFontSize * 0.88);
+		        var topSizePx = topSize + 'px';
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true,
+					gestureConfig: {
+						doubletap: true
+					},
+					subpages: [{
+						url: 'messagelist_sub.html',
+						id: 'messagelist_sub',
+						styles: {
+							top: topSizePx,
+							bottom: '0'
+						}
+					}]
+				});
+				var contentWebview = null;
+				document.querySelector('header').addEventListener('doubletap', function() {
+					if(contentWebview == null) {
+						contentWebview = plus.webview.currentWebview().children()[0];
+					}
+					contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,"+topSize+")");
+				});
+			});
+			//启用双击监听
+		</script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav my-bar-nav" style="background-color: #FFFFFF;height: 0.88rem;">
+			<h1 id="title" class="my-title mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">消息中心</h1>
+			<a class="my-icon-back mui-action-back mui-icon mui-icon-back"style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+		</header>
+		<div class="mui-content"></div>
+	</body>
+</html>

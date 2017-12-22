@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			li {
+				padding-right: 0.3rem;
+			}
+			
+			div,
+			span,
+			p {
+				font-size: 0.28rem;
+			}
+			
+			.my {
+				display: inline-block;
+				width: 33.3%;
+				text-align: center;
+			}
+			
+			.mui-table-view-chevron .mui-table-view-cell {
+				padding-right: 0.3rem;
+			}
+			
+			.mui-table-view-cell:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 0.02rem;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.mui-bar-nav {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+			
+			.mui-table-view-cell {
+				padding: 0.04rem 0.2rem;
+			}
+			
+			.mui-bar-nav~.mui-content{
+	            padding-top: 0.88rem;
+	        }
+		</style>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script>
+			mui.init();
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				var url = getBaseUrl() + 'fans/Fans/level2FansInfo';
+				console.log(">>>>>>>粉丝收益信息url" + url);
+
+				mui.ajax(url, {
+					dataType: 'json',
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(data.totalincome == null) {
+							document.getElementById("totalincomeid").innerHTML = "0";
+						} else {
+							document.getElementById("totalincomeid").innerHTML = data.totalincome;
+						}
+						if(data.yesterdayincome == null) {
+							document.getElementById("incomeid").innerHTML = "0";
+						} else {
+							document.getElementById("incomeid").innerHTML = data.yesterdayincome;
+						}
+						if(data.secondfansnumber == null) {
+							document.getElementById("fanscount").innerHTML = "0";
+						} else {
+							document.getElementById("fanscount").innerHTML = data.secondfansnumber;
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(JSON.stringify(xhr));
+						console.log(JSON.stringify(errorThrown));
+						console.log(type);
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 id="title" class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">二级粉丝</h1>
+		</header>
+		<div class="mui-content" style="text-align: center; font-size: 0.28rem; height: 0.88rem; line-height: 0.88rem; text-align: center;">
+			<div style="background-color: #FB5237;line-height: initial;">
+				<div style="text-align: left;padding: 0.2rem;padding-left: 0.4rem">
+					<span style="color: #fccdc8;font-size: 0.28rem;">粉丝总收益（薪豆）</span>
+					<br />
+					<span id="totalincomeid" style="color: white;font-size: 0.6rem;">-</span>
+
+				</div>
+				<div class="row" style="padding-bottom: 0.2rem;">
+					<div class="col-6" style="text-align: left;padding: 0.2rem;border-right: 0.0.1rem solid #fccdc8;padding-left: 0.4rem">
+						<span style="text-align: center;color: #fccdc8;font-size: 0.28rem;">昨日收益（薪豆）</span>
+						<br />
+						<span id="incomeid" style="text-align: center;color: white;font-size: 0.4rem;">-</span>
+					</div>
+
+					<div class="col-6" style="text-align: left;padding: 0.2rem;padding-left: 0.4rem">
+						<span style="text-align: center;color: #fccdc8;font-size: 0.28rem;">粉丝人数（人）</span>
+						<br />
+						<span id="fanscount" style="text-align: center;color: white;font-size: 0.4rem;">-</span>
+					</div>
+				</div>
+			</div>
+			<div style="background: white;margin-top: 0.2rem;" align="center">
+				<p style="text-align:left;padding: 0.2rem;margin-bottom: 0.1rem;line-height: 0.6rem;font-size: 0.28rem;color: #333333;">
+				为了感谢您给我们介绍了这么多给力的小伙伴，您的二级粉丝（粉丝的粉丝）完成任务，我们也会给您<span style="color: #fb9a37;font-weight:bold;">5%</span>的<span style="color: #fb9a37;font-weight:bold;">收益奖励</span>（该奖励由企赚宝官方补贴）！
+				</p>
+				<p style="padding-bottom:0.1rem;color: #fb9a37;font-size: 0.28rem;">还等什么，赶快邀请更多小伙伴参与吧！</p>
+			</div>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<style>
+			html {
+				background: #F8F8F8;
+			}
+			
+			body {
+				background: #F8F8F8;
+			}
+			.mui-popup-button {
+				color: #FB5237;
+				font-size: 15px;
+				height: 40px;
+			}
+			.mui-popup-text {
+				padding: 10px;
+				color: #333333;
+				font-size: 15px;
+			}
+			.my-text {
+				color: #333333;
+				font-size: 14px;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-input-group .mui-input-row {
+				height: 50px;
+				line-height: 50px;
+			}
+			
+			.mui-input-row label {
+				color: #333333;
+				height: 50px;
+				line-height: 50px;
+				padding: 0 0 0 10px;
+			}
+			
+			.mui-input-row input {
+				color: #333333;
+				height: 50px;
+				line-height: 30px;
+				padding: 0 0 0 10px;
+			}
+			
+			.mui-input-group .mui-input-row:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0px;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+			    color: #D5D5D5;  
+			}
+			
+			::-moz-placeholder { /* Mozilla Firefox 19+ */
+			    color: #D5D5D5;
+			}
+			
+			input:-ms-input-placeholder,
+			textarea:-ms-input-placeholder {
+			    color: #D5D5D5;
+			}
+
+			input::-webkit-input-placeholder,
+			textarea::-webkit-input-placeholder {
+			    color: #D5D5D5;
+			}
+			
+			.mui-toast-container {
+			    bottom: 40% !important;/*离布局底部的距离*/
+			}
+			
+			.mui-toast-message {
+				opacity: 0.6;
+				color: #fff;
+				width: 180px;
+				align: center;
+				font-size: 13px;
+				border-radius: 10px;
+				padding: 35px 20px;
+			}
+			
+			.mui-bar-nav~.mui-content{
+				padding-top: 0.88rem;
+			}
+		</style>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				
+				/*mui.fire(plus.webview.currentWebview().opener(), 'closeself', {});*/
+				getCurrentBalance();
+				
+				//提现金额
+				document.getElementById('finishbutton').addEventListener('tap', function(event) {
+					$("#inputBalance").blur();
+					$("#name").blur();
+					$("#cardnumber").blur();
+					$("#bank").blur();
+					if(!checkabox(document.getElementById("inputBalance").value)) {
+						mui.toast('请输入提现金额');
+						return;
+					}
+					//校验正数
+//					var reg = /^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$/;
+					var reg =  /^\d+$/;
+					if(reg.test(document.getElementById("inputBalance").value) == false) {
+						mui.toast('提现金额必须为整数');
+						return;
+					}
+					if(parseFloat(document.getElementById("inputBalance").value) < 100) {
+						mui.toast('银行卡提现，不能低于100元哦');
+						return;
+					}
+					if(parseFloat(document.getElementById("inputBalance").value) > 100000) {
+						mui.toast('单次提现不能超过100000元哦');
+						return;
+					}
+					if(parseFloat(document.getElementById("inputBalance").value) > parseFloat(document.getElementById("availableBalance").value)) {
+						mui.toast('提现金额不能超过可用余额哦');
+						return;
+					}
+					
+					//持卡人姓名
+					if(!checkabox(document.getElementById('name').value)) {
+						mui.toast('请输入持卡人姓名');
+						return;
+					}
+					if (document.getElementById('name').value.length > 20) {
+						mui.toast('姓名格式不正确');
+						return;
+					}
+					
+					//银行卡号
+					if(!checkabox(document.getElementById('cardnumber').value)) {
+						mui.toast('请输入银行卡号');
+						return;
+					}
+					if ((!reg.test(document.getElementById("cardnumber").value)) || document.getElementById('cardnumber').value.length > 20) {
+						mui.toast('卡号格式不正确');
+						return;
+					}
+					
+					//开户行
+					if(!checkabox(document.getElementById('bank').value)) {
+						mui.toast('请输入开户行');
+						return;
+					}
+					if (document.getElementById('bank').value.length > 20) {
+						mui.toast('开户行格式不正确');
+						return;
+					}
+					var btnArray = ['否', '是'];
+					mui.confirm('确认提现吗？', ' ', ['取消', '确认'],
+						function(e) {
+							if(e.index == 1) {
+								var money = document.getElementById("inputBalance").value;
+								var name = document.getElementById("name").value;
+								var account = document.getElementById('cardnumber').value;
+								var bank = document.getElementById('bank').value;
+								submitData(money, name, account, bank);
+							} else {
+
+							}
+						}, 'div');
+				});
+				
+				//检查每个控件
+				function checkabox(text) {
+					if(text == null || text.length == 0 || Trim(text).length == 0) {
+						return false;
+					}
+					return true;
+				}
+				//去除空格
+				function Trim(str)          {              
+					return  str.replace(/(^\s*)|(\s*$)/g,  "");     
+				}
+				
+				/*var balanceBox = document.getElementById("inputBalance");
+				var submitBtn = document.getElementById("finishbutton");
+				balanceBox.addEventListener('input', function() {
+					var flag = true;
+					if((!balanceBox.value) || balanceBox.value.length == 0) flag = false;
+					if(flag) {
+						submitBtn.style.backgroundColor = "#fb5237";
+						submitBtn.style.color = "#ffffff";
+					} else {
+						submitBtn.style.backgroundColor = "#eeeeee";
+						submitBtn.style.color = "#999999";
+					}
+				});*/
+				
+				function getCurrentBalance() {
+					var url = getBaseUrl() + 'person/Operation/availableBalance';
+					var mdata = {
+						photoNumber: localStorage.phonenumber
+					};
+					console.log(JSON.stringify(mdata));
+					console.log(url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						data: {
+							//							photoNumber: localStorage.phonenumber
+						},
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								document.getElementById("availableBalance").value = data.availableBalance + ' 元';
+							} else {
+								mui.toast(data.error_code);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+
+				function submitData(money,name,account,bank) {
+					var url = getBaseUrl() + 'person/Operation/bankCash';
+					
+					console.log(JSON.stringify(mdata));
+					console.log(url);
+					var mdata = {
+						money:money,
+						name:name,
+						account:account,
+						bank:bank
+					};
+					console.log(JSON.stringify(mdata));
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						data: {
+							money:money,
+							name:name,
+							account:account,
+							bank:bank
+						},
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								mui.toast('提交成功\n审核后将于5个工作日内到账',{type:'div'});
+								var homepage = plus.webview.getWebviewById('html/homepage.html');
+								mui.fire(homepage, 'initpage', {});
+								var mypage = plus.webview.getWebviewById('html/mypage.html');
+								mui.fire(mypage, 'initpage', {});
+								var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+								mui.fire(fanspage, 'initpage', {});
+								var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+								mui.fire(taskpage, 'initpage', {});
+								setTimeout(function(){
+									mui.back();
+								}, 2000);
+							} else {
+								if(parseInt(data.error_code) == 9) {
+									mui.toast('每天只能提现一次哦');	
+								} else if (parseInt(data.error_code) == 10) {
+									mui.toast('您还有尚未审核的提现申请');
+								}
+								else{
+									/*mui.toast('提现失败\n请稍后尝试');*/
+									mui.toast(data.error_code+'\n提现失败\n请稍后尝试');
+								}
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+				
+				document.getElementById('record').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'withdrawrecord.html',
+						id: 'withdrawrecord',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">银行卡提现</h1>
+			<p id="record" style="color: #333333;text-align: center;font-size:0.24rem;line-height: 0.88rem;float: right;">提现记录</p>
+		</header>
+		<!--<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;"></a>
+			<h1 class="mui-title" style="color: #000000;font-size: 18px;">银行卡提现</h1>
+			<p id="record" style="color: #333333;font-size: 12px;float: right;line-height: 44px;">提现记录</p>
+		</header>-->
+
+		<div class="mui-content" style="background-color: #f8f8f8;margin-top: 10px;">
+			<form class="mui-input-group">
+				<div class="mui-input-row" style="background: #f7ecda; position: relative;">
+					<label class="my-text" style="color: #B67535;">可用余额：</label>
+					<input id="availableBalance" class="my-text" type="text" value="-" style="position: absolute; left: 85px; color: #B67535;padding-right: 10px;" readonly="readonly">
+				</div>
+				<div class="mui-input-row">
+					<label class="my-text">提现金额</label>
+					<input id="inputBalance" type="number" class="my-text" style="text-align: right;padding-right: 10px;" type="text" placeholder="请输入提现金额（最低100元）">
+				</div>
+				<div class="mui-input-row">
+					<label class="my-text">持卡人姓名</label>
+					<input id="name" type="text" class="my-text" style="text-align: right;padding-right: 10px;" placeholder="请输入持卡人姓名">
+				</div>
+				<div class="mui-input-row">
+					<label class="my-text">银行卡号</label>
+					<input id="cardnumber" type="number" class="my-text" style="text-align: right;padding-right: 10px;" placeholder="请输入银行卡号">
+				</div>
+				<div class="mui-input-row">
+					<label class="my-text">开户行</label>
+					<input id="bank" type="text" class="my-text" style="text-align: right;padding-right: 10px;" placeholder="请输入开户行，具体到支行">
+				</div>
+			</form>
+			<div align="center" style="padding:50px 10px;">
+				<button id="finishbutton" class="mui-btn mui-btn-grey mui-btn-block" style="border:none;font-size: 14px;padding:0px;text-align: center;height:44px; line-height:44px;background-color:#39404d;text-decoration: none;color:#e5ba7d;width: 300px;">提交</button>
+			</div>
+		</div>
+
+	</body>
+
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+		<script src="../../js/mui.picker.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.picker.css" rel="stylesheet" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../../js/mui.picker.js"></script>
+		<script src="../../js/mui.poppicker.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+		<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+
+			.mui-input-row {
+				color: #333333;
+				font-size: 15px;
+			}
+
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+
+			input {
+				font-size: 15px;
+				color: #333333;
+			}
+
+			.my-label-style {
+				font-size: 14px;
+				color: #333333;
+				padding: 5px;
+				margin-left: 10px;
+			}
+		</style>
+		<style>
+			.mui-input-clear{
+				position: absolute;
+				text-align: right;
+				right: 20px;
+
+			}
+		</style>
+		<script src="../../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				//初始化控件
+				var namebox = document.getElementById('name');
+				var areabox = document.getElementById('area');
+				var typebox = document.getElementById('type');
+				var numberbox = document.getElementById('number');
+				var contactnamebox = document.getElementById('contactname');
+				var positionbox = document.getElementById('position');
+				var phonenumberbox = document.getElementById('phonenumber');
+				var remarkBox = document.getElementById("remark");
+
+				//地区选择器
+				var cityPicker = new mui.PopPicker({
+					layer: 2
+				});
+				cityPicker.setData(cityData);
+				document.getElementById('area').addEventListener('tap', function(event) {
+
+					cityPicker.show(function(items) {
+						var address = (items[0] || {}).text + " " + (items[1] || {}).text;
+						document.getElementById("area").value = address;
+						//返回 false 可以阻止选择框的关闭
+						//return false;
+					});
+				});
+				//行业选择器
+				var eduPicker = new mui.PopPicker();
+				eduPicker.setData([{
+					value: '互联网·游戏·软件',
+					text: '互联网·游戏·软件'
+				}, {
+					value: '电子·通信·硬件',
+					text: '电子·通信·硬件'
+				}, {
+					value: '房地产·建筑·物业',
+					text: '房地产·建筑·物业'
+				}, {
+					value: '金融',
+					text: '金融'
+				}, {
+					value: '消费品',
+					text: '消费品'
+				}, {
+					value: '汽车·机械·制造',
+					text: '汽车·机械·制造'
+				}, {
+					value: '服务·外包·中介',
+					text: '服务·外包·中介'
+				}, {
+					value: '广告·传媒·教育·文化',
+					text: '广告·传媒·教育·文化'
+				}, {
+					value: '交通·贸易·物流',
+					text: '交通·贸易·物流'
+				}, {
+					value: '制药·医疗',
+					text: '制药·医疗'
+				}, {
+					value: '能源·化工·环保',
+					text: '能源·化工·环保'
+				}, {
+					value: '政府·农林牧渔',
+					text: '政府·农林牧渔'
+				}, {
+					value: '其他',
+					text: '其他'
+				}]);
+				document.getElementById('type').addEventListener('tap', function(event) {
+					eduPicker.show(function(items) {
+						document.getElementById("type").value = items[0].value;
+
+					});
+				});
+				//提交数据
+				document.getElementById('submit').addEventListener('tap', function() {
+					if(checkbox()) {
+						//提交数据
+						var baseUrl = getBaseUrl();
+						var url = baseUrl + 'task/clue/submitclue';
+						console.log("提交提供线索url:" + url);
+						mui.ajax(url, {
+							data: {
+								phoneNumber: localStorage.phonenumber,
+								name: namebox.value,
+								session: areabox.value,
+								field: typebox.value,
+								staff: numberbox.value,
+								linkman: contactnamebox.value,
+								position: positionbox.value,
+								phone: phonenumberbox.value,
+								remark: remarkBox.value
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								var issuccess = true;
+								if(issuccess) {
+									var btnArray = ['返回', '还有线索'];
+									mui.confirm('\n我们会尽快审核，审核通过后可以获得1000薪豆\n', '提交成功', btnArray, function(e) {
+										if(e.index == 0) {
+											mui.back();
+										} else {
+											namebox.value = "";
+											areabox.value = "";
+											typebox.value = "";
+											numberbox.value = "";
+											contactnamebox.value = "";
+											positionbox.value = "";
+											phonenumberbox.value = "";
+											remarkBox.value = "";
+										}
+									})
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log("error!");
+								console.log(JSON.stringify(xhr));
+								console.log(type);
+							}
+						});
+
+					}
+				});
+				//清除焦点
+				areabox.addEventListener('tap', function() {
+					namebox.blur();
+					numberbox.blur();
+					contactnamebox.blur();
+					positionbox.blur();
+					phonenumberbox.blur();
+					remarkBox.blur();
+				});
+				typebox.addEventListener('tap', function() {
+					namebox.blur();
+					numberbox.blur();
+					contactnamebox.blur();
+					positionbox.blur();
+					phonenumberbox.blur();
+					remarkBox.blur();
+				});
+				//检查数据完整性
+				function checkbox() {
+					if(!checkabox(namebox)) {
+						mui.toast("请填写公司名称");
+						return false;
+					} else {
+						var text = namebox.value;
+						if(text.length < 2 || text.length > 20) {
+							mui.toast("公司名称应为2-20个字符");
+							return false;
+						}
+					}
+					if(!checkabox(areabox)) {
+						mui.toast("请选择所属地区");
+						return false;
+					}
+					console.log('num='+numberbox.innerText);
+					if(checkabox(numberbox)) {
+						var text = numberbox.value;
+						console.log(text);
+//						var reg = /^\d+$/;
+//						if(!reg.test(text) || parseInt(text) <= 0 || parseInt(text) >= 1000000) {
+//							mui.toast("请填写正确的员工数量");
+//							return false;
+//						}
+					}
+					if(!checkabox(contactnamebox)) {
+						mui.toast("请填写联系人姓名");
+						return false;
+					} else {
+						var text = contactnamebox.value;
+						if(text.length < 2 || text.length > 20) {
+							mui.toast("姓名应为2-20个字符");
+							return false;
+						}
+					}
+					if(!checkabox(phonenumberbox)) {
+						mui.toast("请填写联系电话");
+						return false;
+					} else {
+						var reg = /^\d{11}$/;
+						if(reg.test(phonenumberbox.value) == false) {
+							mui.toast("请填写正确的电话");
+							return false;
+						}
+					}
+					if(checkabox(remarkBox)){//备注不为空
+						var text = remarkBox.value;
+						if(text.length > 140) {
+							mui.toast("备注最多140个字符");
+							return false;
+						}
+					}
+					return true;
+				}
+				//检查每个控件
+				function checkabox(boxname) {
+					var text = boxname.value;
+					if(text == null || text.length == 0 || Trim(text).length == 0) {
+						return false;
+					}
+					return true;
+				}
+				//去除空格
+				function  Trim(str)          {              
+					return  str.replace(/(^\s*)|(\s*$)/g,  "");     
+				}
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">线索详情</h1>
+		</header>
+
+
+		<div class="mui-content">
+			<div class="my-label-style">线索信息</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>*公司名称</label>
+					<input id="name" type="text" class="mui-input-clear" placeholder="必填">
+				</div>
+				<div class="mui-input-row">
+					<label>*所属地区</label>
+					<input id="area" type="text" readonly="true" class="mui-input-clear" placeholder="--请选择--">
+				</div>
+
+				<div class="mui-input-row">
+					<label>所属行业</label>
+					<input id="type" type="text" readonly="true" class="mui-input-clear" placeholder="--请选择--">
+				</div>
+				<div class="mui-input-row">
+					<label>员工数量</label>
+					<input id="number" type="number" class="mui-input-clear" placeholder="未填写">
+				</div>
+			</form>
+			<div class="my-label-style">联系人信息</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>*联系人姓名</label>
+					<input id="contactname" type="text" class="mui-input-clear" placeholder="必填">
+				</div>
+				<div class="mui-input-row">
+					<label>联系人职位</label>
+					<input id="position" type="text" class="mui-input-clear" placeholder="未填写">
+				</div>
+				<div class="mui-input-row">
+					<label>*联系电话</label>
+					<input id="phonenumber" type="number" class="mui-input-clear" placeholder="必填">
+				</div>
+			</form>
+			<div class="my-label-style">备注</div>
+			<div class="mui-input-row" style="">
+				<textarea id="remark" rows="8" placeholder="140以内" style="border-radius: 0px; border: none;"></textarea>
+			</div>
+			<p id="submit" style="margin-bottom: 0px;font-size:18px;text-align: center;position: fixed;bottom: 0px;left:0px;background: #FB5237;width: 100%;color: white;padding: 10px;">
+				提交
+			</p>
+		</div>
+	</body>
+
+</html>

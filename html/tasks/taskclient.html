@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<style>
+			html {
+				background-color: #F8F8F8;
+			}
+
+			.my-card {
+				margin: 0px;
+				border-radius: 0px;
+				box-shadow: 0 0.4px 0.1px rgba(0, 0, 0, 0);
+				;
+			}
+
+			.mui-content>.mui-card:first-child {
+				margin-top: 0px;
+			}
+
+			.my-box-new:active {
+				background-color: #DCDCDC;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				//初始化控件
+				var titlebox = document.getElementById('title');
+				var descriptionbox = document.getElementById('description');
+				var taskstepbox = document.getElementById('taskstep');
+				var introducebox = document.getElementById('introduce');
+				var taskiconbox = document.getElementById('taskicon');
+				//获取兼职销售状态
+				var bottombutton = document.getElementById('bottombutton');
+				//0表示是不是兼职销售，1表示正在审核中，2表示已经是兼职销售
+				isParttime = 0;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: true
+				});
+
+				function initpage() {
+					var baseUrl = getBaseUrl();
+					var url = baseUrl + 'task/Customer/prepCustomerIllustration';
+					console.log("url>>>>>>>>>>" + url);
+					mui.ajax(url, {
+						data: {
+							phoneNumber: localStorage.phonenumber
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							var issuccess = data.status;
+							var mydata = data.data;
+							if(issuccess == "success") {
+								titlebox.innerText = mydata.title;
+								//descriptionbox.innerText = mydata.description;
+								taskstepbox.innerText = mydata.context;
+								//introducebox.innerText = mydata.introduction;
+								taskiconbox.src = baseUrl + mydata.icon
+								isParttime = mydata.state;
+								//isParttime=2;
+								if(isParttime == 0) {
+									bottombutton.innerText = "成为兼职销售";
+								} else if(isParttime == 1) {
+									bottombutton.innerText = "审核中";
+									bottombutton.style.background = "#DCDCDC";
+									bottombutton.style.color = ""
+								} else if(isParttime == 2) {
+									bottombutton.innerText = "我要成交客户";
+								}
+							}
+
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error!");
+							console.log(JSON.stringify(xhr) + errorThrown);
+							console.log(type);
+						}
+					});
+				}
+				//初始化页面信息
+				initpage();
+				document.getElementById('taskhistoryclue').addEventListener('tap', function(event) {
+					if(localStorage.islogin == "1") {
+						if(isParttime == "2") {
+							mui.openWindow({
+								url: 'taskhistoryclient.html',
+								id: 'taskhistoryclient',
+								show: {
+									duration: 200
+								},
+								createNew: true,
+								waiting: {
+									autoShow: false
+								}
+							});
+						} else {
+							mui.toast("还未成为兼职销售");
+						}
+					} else {
+						openLoginpage2();
+					}
+				});
+				document.getElementById('bottombutton').addEventListener('tap', function(event) {
+					if(localStorage.islogin == "1") {
+						if(isParttime == 1) {
+							return;
+						} else if(isParttime == 0) {
+							mui.openWindow({
+								url: 'taskapplyparttime.html',
+								id: 'taskapplyparttime',
+								show: {
+									duration: 200
+								},
+								waiting: {
+									autoShow: false
+								}
+							});
+						} else if(isParttime == 2) {
+							mui.openWindow({
+								url: 'taskclientdetail.html',
+								id: 'taskclientdetail',
+								show: {
+									duration: 200
+								},
+								waiting: {
+									autoShow: false
+								}
+							});
+						}
+					} else {
+						openLoginpage2();
+					}
+
+				});
+				window.addEventListener('initpage', function(event) {
+					//获得事件参数
+					//mui.currentWebview.close();
+					initpage();
+					console.log("刷新成交客户任务页面");
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<a id="taskhistoryclue" class="mui-pull-right" style="color: white;text-align: center;padding-right:5px;margin-top: 12px;">历史成交</a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;margin-right: 80px;padding-left: 80px;">成交客户任务</h1>
+		</header>
+
+		<div class="mui-content" style="background-color: #F8F8F8;">
+			<div class="mui-scroll-wrapper" style="margin-top: 44px; z-index: -1;">
+				<div class="mui-scroll">
+					<div class="mui-card my-card" style="margin-top: 1px;">
+						<div class="mui-card-content">
+							<div class="mui-card-content-inner" style="padding: 0px;">
+								<div class="row">
+									<div class="col-3" style="text-align: center;">
+										<img id="taskicon" src="../../images/60x60.gif" style="padding: 5px;width: 80px;" />
+									</div>
+									<div class="col-9">
+										<h5 id="title" style="padding-top: 5px;font-size: 18px;color: #333333;">成交客户</h5>
+										<p id="description" class="mui-ellipsis-2" style="font-size: 14px;color: #999999;">
+											成交客户，奖励<span id="beanid1" style="color: #FB5327;padding-left: 5px;padding-right: 5px;font-size: 14px;">100000~500000</span>薪豆
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="mui-card my-card" style="margin-top: 20px;">
+						<div class="mui-card-header" style="">
+							<p style="margin-bottom: 0px;color: #333333;font-size: 16px;">任务步骤</p>
+						</div>
+						<div class="mui-card-content">
+							<div class="mui-card-content-inner" style="padding: 10px;">
+								<p id="taskstep" style="color: #333333;">1.点击“成为兼职销售”填写信息</p>
+							</div>
+						</div>
+					</div>
+					<div class="mui-card my-card" style="margin-top: 20px;">
+						<div class="mui-card-header" style="">
+							<p style="margin-bottom: 0px;color: #333333;font-size: 16px;">薪人薪事介绍</p>
+						</div>
+						<div class="mui-card-content">
+							<img src="../../images/xinrenxinshi.png " style="width: 100%; " />
+						</div>
+						<!--防止图片底部被遮挡-->
+						<div style="height: 100px; "></div>
+					</div>
+
+				</div>
+			</div>
+			<p id="bottombutton" style="margin-bottom: 0px;font-size:18px;text-align: center;position: fixed;bottom: 0px;left:0px;background: #FB5237;width: 100%;color: white;padding: 10px; ">
+				成为兼职销售
+			</p>
+		</div>
+
+	</body>
+
+</html>

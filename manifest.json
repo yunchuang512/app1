@@ -1,0 +1,1626 @@
+{
+	"@platforms": [
+		"android",
+		"iPhone",
+		"iPad"
+	],
+	"id": "qizhuanbao",/*应用的标识，创建应用时自动生成，勿手动修改*/
+	"name": "企赚C端APP",/*应用名称，程序桌面图标名称*/
+	"version": {
+		"name": "1.0.0",/*应用版本名称*/
+		"code": "83"
+	},
+	"description": "",/*应用描述信息*/
+	"icons": {
+		"72": "icon.png"
+	},
+	"launch_path": "main.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+	"developer": {
+		"name": "",/*开发者名称*/
+		"email": "",/*开发者邮箱地址*/
+		"url": "http://www.dcloud.io"
+	},
+	"permissions": {
+		"Accelerometer": {
+			"description": "访问加速度感应器"
+		},
+
+		"Cache": {
+			"description": "管理应用缓存"
+		},
+
+		"Console": {
+			"description": "跟踪调试输出日志"
+		},
+
+
+		"Downloader": {
+			"description": "文件下载管理"
+		},
+		"Events": {
+			"description": "应用扩展事件"
+		},
+		"File": {
+			"description": "访问本地文件系统"
+		},
+		"Gallery": {
+			"description": "访问系统相册"
+		},
+
+		"Invocation": {
+			"description": "使用Native.js能力"
+		},
+
+		"Orientation": {
+			"description": "访问方向感应器"
+		},
+		"Proximity": {
+			"description": "访问距离感应器"
+		},
+		"Storage": {
+			"description": "管理应用本地数据"
+		},
+		"UI": {},
+		"Uploader": {
+			"description": "管理文件上传任务"
+		},
+		"Runtime": {
+			"description": "访问运行期环境"
+		},
+		"XMLHttpRequest": {
+			"description": "跨域网络访问"
+		},
+		"Zip": {
+			"description": "文件压缩与解压缩"
+		},
+
+
+
+
+
+
+		"Webview": {},
+		"NativeUI": {},
+		"Navigator": {},
+		"NativeObj": {},
+
+
+		"Device": {},
+		"Share": {},
+		"Camera": {}
+	},
+	"plus": {
+		"splashscreen": {
+			"autoclose": true,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
+			"waiting": true,
+			"delay": "0"
+		},
+		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
+		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
+		"distribute": {
+			"plugins": {
+				"share": {
+
+
+					"weixin": {
+						"appid": "wxe802db0fbcb29463",
+						"appsecret": "34d806a3ed5680354b86a0203ad9bf14",
+						"description": "可选，微信分享"
+					}
+				}
+			},
+			"apple": {
+				"appid": "",/*iOS应用标识，苹果开发网站申请的appid，如io.dcloud.HelloH5*/
+				"mobileprovision": "",/*iOS应用打包配置文件*/
+				"password": "",/*iOS应用打包个人证书导入密码*/
+				"p12": "",/*iOS应用打包个人证书，打包配置文件关联的个人证书*/
+				"devices": "universal",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
+				"frameworks": []
+			},
+			"google": {
+				"packagename": "",/*Android应用包名，如io.dcloud.HelloH5*/
+				"keystore": "",/*Android应用打包使用的密钥库文件*/
+				"password": "",/*Android应用打包使用密钥库中证书的密码*/
+				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
+				"permissions": [
+					"<uses-feature android:name=\"android.hardware.camera\"/>",
+					"<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.CAMERA\"/>"
+				]
+			},
+			"orientation": [
+				"portrait-primary",
+				"portrait-secondary"
+			],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+			"icons": {
+				"ios": {
+					"prerendered": true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
+					"auto": "", /*应用图标，分辨率：512x512，用于自动生成各种尺寸程序图标*/
+					"iphone": {
+						"normal": "unpackage/res/icons/57x57.png",/*iPhone普通屏幕程序图标，分辨率：57x57*/
+						"retina": "unpackage/res/icons/114x114.png",/*iPhone高分屏程序图标，分辨率：114x114*/
+						"retina7": "unpackage/res/icons/120x120.png",/*iPhone iOS7高分屏程序图标，分辨率：120x120*/
+						"spotlight-normal": "unpackage/res/icons/29x29.png", /*iPhone Spotlight搜索程序图标，分辨率：29x29*/
+						"spotlight-retina": "unpackage/res/icons/58x58.png", /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
+						"spotlight-retina7": "unpackage/res/icons/80x80.png",/*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+						"settings-normal": "unpackage/res/icons/29x29.png", /*iPhone设置页面程序图标，分辨率：29x29*/
+						"settings-retina": "unpackage/res/icons/58x58.png",
+						"retina8": "unpackage/res/icons/180x180.png",
+						"settings-retina8": "unpackage/res/icons/87x87.png"
+					},
+					"ipad": {
+						"normal": "unpackage/res/icons/72x72.png", /*iPad普通屏幕程序图标，分辨率：72x72*/
+						"retina": "unpackage/res/icons/144x144.png", /*iPad高分屏程序图标，分辨率：144x144*/
+						"normal7": "unpackage/res/icons/76x76.png", /*iPad iOS7程序图标，分辨率：76x76*/
+						"retina7": "unpackage/res/icons/152x152.png", /*iPad iOS7高分屏程序图标，分辨率：152x152*/
+						"spotlight-normal": "unpackage/res/icons/50x50.png", /*iPad Spotlight搜索程序图标，分辨率：50x50*/
+						"spotlight-retina": "unpackage/res/icons/100x100.png", /*iPad高分屏Spotlight搜索程序图标，分辨率：100x100*/
+						"spotlight-normal7": "unpackage/res/icons/40x40.png",/*iPad iOS7 Spotlight搜索程序图标，分辨率：40x40*/
+						"spotlight-retina7": "unpackage/res/icons/80x80.png",/*iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+						"settings-normal": "unpackage/res/icons/29x29.png",/*iPad设置页面程序图标，分辨率：29x29*/
+						"settings-retina": "unpackage/res/icons/58x58.png"
+					}
+				},
+				"android": {
+					"mdpi": "unpackage/res/icons/48x48.png", /*普通屏程序图标，分辨率：48x48*/
+					"ldpi": "unpackage/res/icons/48x48.png", /*大屏程序图标，分辨率：48x48*/
+					"hdpi": "unpackage/res/icons/72x72.png", /*高分屏程序图标，分辨率：72x72*/
+					"xhdpi": "unpackage/res/icons/96x96.png",/*720P高分屏程序图标，分辨率：96x96*/
+					"xxhdpi": "unpackage/res/icons/144x144.png"
+				}
+			},
+			"splashscreen": {
+				"ios": {
+					"iphone": {
+						"default": "images/start/iphone3.png", /*iPhone3启动图片选，分辨率：320x480*/
+						"retina35": "images/start/iphone4_4s.png",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+						"retina40": "images/start/iphone5_5s.png",
+						"retina55": "images/start/iphone6p.png",
+						"retina47": "images/start/iphone6.png"
+					},
+					"ipad": {
+						"portrait": "", /*iPad竖屏启动图片，分辨率：768x1004*/
+						"portrait-retina": "",/*iPad高分屏竖屏图片，分辨率：1536x2008*/
+						"landscape": "", /*iPad横屏启动图片，分辨率：1024x748*/
+						"landscape-retina": "", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
+						"portrait7": "", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
+						"portrait-retina7": "",/*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
+						"landscape7": "", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
+						"landscape-retina7": ""
+					}
+				},
+				"android": {
+					"mdpi": "images/start/putongpingqidongtupian.png", /*普通屏启动图片，分辨率：240x282*/
+					"ldpi": "images/start/dapingqidongtupian.png", /*大屏启动图片，分辨率：320x442*/
+					"hdpi": "images/start/gaofenpingqidongtupian.png", /*高分屏启动图片，分辨率：480x762*/
+					"xhdpi": "images/start/720Pgaofenping.png", /*720P高分屏启动图片，分辨率：720x1242*/
+					"xxhdpi": "images/start/1080Pgaofenping.png"
+				}
+			},
+			"debug": true
+		}
+	},
+	"dependencies": {
+		"pages": {
+			"setting.html": {
+				"href": "setting.html",
+				"resources": [
+					"js/mui.min.js",
+					"js/mui.view.js",
+					"libs/easymob-webim-sdk/jquery-1.11.1.js",
+					"libs/easymob-webim-sdk/strophe-custom-2.0.0.js",
+					"libs/easymob-webim-sdk/json2.js",
+					"libs/easymob-webim-sdk/easemob.im-1.0.5.js",
+					"js/feedback.js",
+					"js/feedback-page.js",
+					"js/mui.locker.js",
+					"js/app.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"css/feedback-page.css",
+					"images/iconfont-tianjia.png"
+				],
+				"refer": [
+					"login.html"
+				],
+				"priority": 1
+			},
+			"main.html": {
+				"href": "main.html",
+				"resources": [
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"js/mui.min.js",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"css/bootstrap-theme.min.css",
+					"images/sinaweibo.png",
+					"html/homepage.html",
+					"images/qihoo.png",
+					"js/bootstrap.min.js",
+					"images/weixin.png",
+					"images/qq.png",
+					"css/bootstrap.min.css",
+					"images/user-photo.png",
+					"css/style1.css",
+					"fonts/icomoon.ttf",
+					"css/mydefine.css"
+				],
+				"refer": [
+					"setting.html",
+					"html/fanspage.html",
+					"html/taskpage.html",
+					"html/mypage.html",
+					"html/guide.html"
+				],
+				"priority": 1
+			},
+			"unlock.html": {
+				"href": "unlock.html",
+				"resources": [
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"js/mui.min.js",
+					"js/mui.locker.js",
+					"js/app.js"
+				],
+				"refer": [
+					"login.html",
+					"main.html"
+				],
+				"priority": 0
+			},
+			"forget_password.html": {
+				"href": "forget_password.html",
+				"resources": [
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"css/style.css",
+					"js/mui.min.js",
+					"js/app.js"
+				],
+				"priority": 1,
+				"refer": [
+					"html/forget_password_confirm_phonenumber.html"
+				]
+			},
+			"reg.html": {
+				"href": "reg.html",
+				"resources": [
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"css/style.css",
+					"js/mui.min.js",
+					"js/app.js"
+				],
+				"refer": [
+					"login.html"
+				],
+				"priority": 3
+			},
+			"login.html": {
+				"href": "login.html",
+				"resources": [
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"css/style.css",
+					"js/mui.min.js",
+					"js/mui.enterfocus.js",
+					"js/app.js",
+					"images/qihoo.png",
+					"images/qq.png",
+					"images/sinaweibo.png",
+					"images/weixin.png",
+					"images/logo(临时）.png",
+					"images/logo1.png",
+					"css/style1.css",
+					"css/mydefine.css",
+					"fonts/icomoon.ttf",
+					"fonts/icomoon.woff",
+					"images/welcome_button.png",
+					"images/welcome_head.png",
+					"images/beijingguang.png",
+					"js/jquery-3.1.1.min.js"
+				],
+				"refer": [
+					"unlock.html",
+					"forget_password.html",
+					"main.html",
+					"reg.html",
+					"html/forget_password_confirm_phonenumber.html",
+					"html/register_send_verify_code.html"
+				],
+				"priority": 0
+			},
+			"html/taskpage.html": {
+				"resources": [
+					"css/app.css",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"js/jquery-3.1.1.min.js",
+					"css/style1.css",
+					"fonts/icomoon.ttf",
+					"js/app.js",
+					"images/speeding1.png",
+					"images/headline_of_make_money.png",
+					"images/ranking.png",
+					"images/how_to_make_money.png",
+					"images/background_of_homepage.png",
+					"images/userhead.png",
+					"images/homepage_new_signin.png",
+					"images/homepage_ranking.png",
+					"images/homepage_new_howtomakemoney.png",
+					"images/discover.png",
+					"images/beijingguang.png",
+					"images/gongxi.png",
+					"images/partnerbutton.png"
+				],
+				"refer": [
+					"html/tasks/taskshare.html",
+					"html/tasks/task_reading.html",
+					"html/tasks/taskReadingHomepage.html",
+					"html/tasks/taskprovideclue.html",
+					"html/tasks/taskclient.html",
+					"html/tasks/task_questionnaire_homepage.html",
+					"html/tasks/task_problem_homepage.html",
+					"html/tasks/task_invitefans.html",
+					"html/tasks/task_invite_to_register_xinrenxinshi.html",
+					"html/messagelist.html",
+					"html/applypartner.html",
+					"html/rankinglist.html",
+					"login.html",
+					"html/partnerdetail.html"
+				],
+				"priority": 0
+			},
+			"html/homepage.html": {
+				"resources": [
+					"css/mydefine.css",
+					"images/60x60.gif",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"images/headline_of_make_money.png",
+					"images/ranking.png",
+					"images/how_to_make_money.png",
+					"images/background_of_homepage.png",
+					"images/sign_in.png",
+					"fonts/mui.ttf",
+					"js/jquery-3.1.1.min.js",
+					"css/style1.css",
+					"fonts/icomoon.ttf",
+					"js/app.js",
+					"images/homepage_sign_in.png",
+					"images/userhead.png",
+					"images/speeding1.png",
+					"images/speeding7.png",
+					"images/mainback.png",
+					"images/homepage_new_partner.png",
+					"images/homepage_ranking.png",
+					"images/homepage_new_banner.png",
+					"images/homepage_new_howtomakemoney.png",
+					"images/homepage_new_signin.png",
+					"images/nomessage.png",
+					"images/beijingguang.png",
+					"images/gongxi.png",
+					"images/partnerbutton.png",
+					"images/cbd.jpg",
+					"images/muwu.jpg",
+					"images/shuijiao.jpg",
+					"images/yuantiao.jpg",
+					"images/banner_03_02_02.png",
+					"video/CEO.mp4",
+					"images/welcome_button.png"
+				],
+				"refer": [
+					"html/alipaywithdraw.html",
+					"html/messagelist.html",
+					"html/howgainmoney.html",
+					"html/signin.html",
+					"html/rankinglist.html",
+					"html/tasks/taskshare.html",
+					"login.html",
+					"html/tasks/task_invitefans.html",
+					"html/tasks/taskprovideclue.html",
+					"html/tasks/task_questionnaire_homepage.html",
+					"html/tasks/taskReadingHomepage.html",
+					"html/provideClue.html",
+					"html/applypartner.html",
+					"html/clueDetail.html",
+					"html/tasks/task_problem_homepage.html"
+				],
+				"priority": 0
+			},
+			"html/mypage.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"css/style1.css",
+					"images/point.png",
+					"fonts/icomoon.ttf",
+					"css/demo.css",
+					"images/userhead.png",
+					"css/app.css",
+					"js/app.js",
+					"images/level1.png",
+					"images/level5.png",
+					"images/level0.png",
+					"images/speeding1.png",
+					"images/level2.png",
+					"images/level3.png",
+					"images/level4.png",
+					"images/mainback.png",
+					"images/level10.png",
+					"images/level9.png",
+					"images/level7.png",
+					"images/beijingguang.png",
+					"images/gongxi.png",
+					"images/partnerbutton.png",
+					"images/level8.png",
+					"video/test.mp4",
+					"video/muwu.jpg",
+					"js/jquery-3.1.1.min.js",
+					"js/demo_videoPlaySimple.js",
+					"js/zepto.min.js",
+					"images/muwu.jpg",
+					"css/demo_videoPlaySimple.css",
+					"video/CEO.mp4",
+					"images/banner_03_02_02.png"
+				],
+				"refer": [
+					"html/checklevel.html",
+					"html/pointexchange.html",
+					"html/exchangerecord_main.html",
+					"html/pointrecord.html",
+					"html/taskhistory.html",
+					"html/personalprofile.html",
+					"html/changepassword.html",
+					"html/withdraw.html",
+					"html/feedback.html",
+					"html/howgainmoney.html",
+					"html/test.html",
+					"html/setup.html",
+					"html/messagelist.html",
+					"login.html"
+				],
+				"priority": 0
+			},
+			"html/fanspage.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"images/fans_income.png",
+					"images/fans_number.png",
+					"css/style1.css",
+					"fonts/icomoon.ttf",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"images/speeding1.png",
+					"images/roundcha.png",
+					"images/qrcode1.png",
+					"images/beijingguang.png",
+					"images/gongxi.png",
+					"images/partnerbutton.png",
+					"images/share_weixin.png",
+					"images/share_copy.png",
+					"images/share_weinxin_pyq.png",
+					"images/share_save.png"
+				],
+				"refer": [
+					"html/fans_list_main.html",
+					"html/share.html",
+					"html/tasks/share.html",
+					"login.html",
+					"html/messagelist.html",
+					"html/secondfanspage.html",
+					"html/firstfanslist.html"
+				],
+				"priority": 0
+			},
+			"html/checklevel.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/60x60.gif",
+					"js/jquery-3.1.1.min.js",
+					"images/level6.png",
+					"images/level1.png",
+					"images/level5.png",
+					"images/level9.png",
+					"images/level7.png",
+					"images/level4.png",
+					"images/level0.png",
+					"images/level2.png",
+					"images/level3.png",
+					"images/level8.png",
+					"images/level10.png",
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/pointexchange.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/60x60.gif",
+					"images/thing2.png",
+					"images/speed2.png",
+					"images/thing4.png",
+					"images/thing3.png",
+					"images/speed1.png",
+					"images/thing1.png",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"images/pointexchange.png"
+				],
+				"refer": [
+					"html/commoditydetail.html",
+					"html/exchangerecord_main.html",
+					"html/withdraw.html",
+					"html/exchangerecord.html"
+				],
+				"priority": 0
+			},
+			"html/commoditydetail.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"js/jquery-3.1.1.min.js",
+					null,
+					"images/speed1.png",
+					"js/app.js"
+				],
+				"refer": [
+					"html/shipaddress.html"
+				],
+				"priority": 0
+			},
+			"html/shipaddress.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/mui.poppicker.css",
+					"css/mui.picker.css",
+					"css/app.css",
+					"js/mui.picker.js",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"js/city.data-3.js",
+					null,
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/exchangerecord_sub.html": {
+				"resources": [
+					"images/60x60.gif"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/exchangerecord_main.html": {
+				"resources": [
+					"css/mydefine.css",
+					"html/exchangerecord_sub.html",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/pointrecord.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js",
+					"images/pointhistoryback.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/taskhistory.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"fonts/mui.ttf",
+					"css/style1.css",
+					"fonts/icomoon.ttf",
+					"js/app.js",
+					"images/nomessage.png"
+				],
+				"refer": [
+					"html/taskdetail.html",
+					"html/tasks/task_reading.html",
+					"html/tasks/taskprovideclue.html",
+					"html/tasks/taskclient.html",
+					"html/tasks/taskReadingHomepage.html",
+					"html/tasks/task_questionnaire_homepage.html",
+					"html/tasks/task_problem_homepage.html",
+					"html/tasks/taskshare.html"
+				],
+				"priority": 0
+			},
+			"html/taskdetail.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/60x60.gif"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/personalprofile.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"js/mui.picker.js",
+					"js/mui.picker.min.js",
+					"js/mui.dtpicker.js",
+					"css/mui.picker.min.css",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"images/userhead.png",
+					"js/app.js",
+					"js/immersed.js",
+					"js/common.js"
+				],
+				"refer": [
+					"html/cutheadimage.html"
+				],
+				"priority": 0
+			},
+			"html/changepassword.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/withdraw.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/weixin.png",
+					"images/qq.png",
+					"js/app.js",
+					"images/60x60.gif",
+					"css/style1.css",
+					"fonts/icomoon.ttf"
+				],
+				"refer": [
+					"html/alipaywithdraw.html",
+					"html/binding_weixin.html",
+					"html/weixinwithdraw.html",
+					"html/cardwithdraw.html"
+				],
+				"priority": 0
+			},
+			"html/alipaywithdraw.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/messagelist.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"html/exchangerecord_sub.html",
+					"html/messagelist_sub.html",
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/messagelist_sub.html": {
+				"resources": [
+					"js/mui.min.js",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"js/app.js",
+					"css/style1.css",
+					"images/nomessage.png",
+					"fonts/icomoon.ttf",
+					"js/jquery-3.1.1.min.js",
+					"css/mydefine.css"
+				],
+				"refer": [
+					"html/messagedetail.html"
+				],
+				"priority": 0
+			},
+			"html/messagedetail.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/howgainmoney.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/signin.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"images/60x60.gif",
+					"js/jquery.rotate.min.js",
+					"images/rotateimg.gif",
+					"js/app.js",
+					"images/rotateimg.png",
+					"images/weixin.png",
+					"images/smallarrow.png",
+					"css/style1.css",
+					"images/sign_in_back.png",
+					"fonts/icomoon.ttf",
+					"images/signin_button.png",
+					"images/signin_button_pushed.png",
+					"images/signin_zhongjiang.png"
+				],
+				"refer": [
+					"html/tasks/taskReadingHomepage.html",
+					"html/tasks/taskshare.html"
+				],
+				"priority": 0
+			},
+			"html/fans_list_main.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"html/fans_list_sub.html",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/rankinglist.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					null,
+					"images/60x60.gif",
+					"images/sign_in.png",
+					"images/ranking.png",
+					"images/userhead.png",
+					"js/app.js",
+					"images/level7.png",
+					"images/level6.png",
+					"images/ranking3.png",
+					"images/ranking1.png",
+					"images/ranking2.png",
+					"images/ranking_top.png",
+					"images/level1.png",
+					"images/level4.png",
+					"images/level5.png",
+					"images/level3.png",
+					"images/level9.png",
+					"images/level10.png",
+					"images/404_03.png",
+					"css/style1.css",
+					"fonts/icomoon.ttf"
+				],
+				"refer": [
+					"html/pointrecord.html",
+					"html/fans_list_main.html"
+				],
+				"priority": 0
+			},
+			"html/forget_password_confirm_phonenumber.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css",
+					"css/style1.css",
+					"css/mydefine.css",
+					"fonts/icomoon.ttf",
+					"js/jquery-3.1.1.min.js"
+				],
+				"refer": [
+					"html/forget_password_send_verify_code.html",
+					"html/register_submit.html"
+				],
+				"priority": 0
+			},
+			"html/forget_password_send_verify_code.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css",
+					"css/style1.css",
+					"css/mydefine.css",
+					"fonts/icomoon.ttf",
+					"js/jquery-3.1.1.min.js",
+					"images/welcome_button.png",
+					"images/beijingguang.png",
+					"images/welcome_head.png"
+				],
+				"refer": [
+					"html/forget_password_set_new_password.html"
+				],
+				"priority": 0
+			},
+			"html/forget_password_set_new_password.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css",
+					"css/style1.css",
+					"css/mydefine.css",
+					"fonts/icomoon.ttf",
+					"login.html"
+				],
+				"refer": [
+					"main.html"
+				],
+				"priority": 0
+			},
+			"html/register_send_verify_code.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css",
+					"css/style1.css",
+					"css/mydefine.css",
+					"fonts/icomoon.ttf",
+					"js/jquery-3.1.1.min.js"
+				],
+				"refer": [
+					"html/forget_password_send_verify_code.html",
+					"html/register_submit.html",
+					"html/useragreement.html"
+				],
+				"priority": 0
+			},
+			"html/register_submit.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css",
+					"css/style1.css",
+					"css/mydefine.css",
+					"fonts/icomoon.ttf",
+					"js/jquery-3.1.1.min.js",
+					"images/welcome_button.png",
+					"images/beijingguang.png",
+					"images/welcome_head.png"
+				],
+				"refer": [
+					"login.html",
+					"html/register_set_password.html"
+				],
+				"priority": 0
+			},
+			"html/feedback.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/test.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/share.html"
+				],
+				"priority": 0
+			},
+			"html/exchangerecord.html": {
+				"resources": [
+					"images/thing2.png",
+					"images/thing4.png",
+					"images/thing3.png",
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/thing1.png",
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/task_reading.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/setup.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js"
+				],
+				"refer": [
+					"login.html",
+					"html/about.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/taskprovideclue.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"images/xinrenxinshi.png"
+				],
+				"refer": [
+					"html/tasks/taskcluedetail.html",
+					"html/tasks/taskhistoryclue.html",
+					"login.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/taskcluedetail.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/taskhistoryclue.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/tasks/taskcluedetail.html",
+					"html/tasks/taskhistorycluedetail.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/taskclient.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"images/xinrenxinshi.png"
+				],
+				"refer": [
+					"html/tasks/taskhistoryclient.html",
+					"html/tasks/taskapplyparttime.html",
+					"html/tasks/taskclientdetail.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/taskhistoryclient.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/tasks/taskcluedetail.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/taskhistorycluedetail.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/register_set_password.html": {
+				"resources": [
+					"css/style1.css",
+					"css/mydefine.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"fonts/icomoon.ttf",
+					"css/mui.min.css",
+					"css/style.css"
+				],
+				"refer": [
+					"login.html"
+				],
+				"priority": 0
+			},
+			"html/useragreement.html": {
+				"resources": [
+					"js/jquery-3.1.1.min.js",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/share.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/style1.css",
+					"css/mydefine.css",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css"
+				],
+				"refer": [
+					"html/beisongtext.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/taskshare.html": {
+				"resources": [
+					"js/app.js",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/tasks/share.html",
+					"login.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/share.html": {
+				"resources": [
+					"css/style1.css",
+					"css/style.css",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"images/share_sina.png",
+					"images/share_weinxin_pyq.png",
+					"images/share_qq.png",
+					"images/share_weixin.png",
+					"images/share_save.png",
+					"images/share_copy.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/fans_list_sub.html": {
+				"resources": [
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/beisongtext.html": {
+				"resources": [
+					"js/mui.js",
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/taskReadingHomepage.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/tasks/share.html",
+					"html/tasks/task_reading.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/task_questionnaire.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/task_questionnaire_homepage.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/tasks/task_questionnaire.html",
+					"login.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/task_problem_homepage.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/tasks/task_problem.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/task_problem.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"js/jquery-3.1.1.min.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/task_invitefans.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"js/app.js"
+				],
+				"refer": [
+					"html/tasks/share.html"
+				],
+				"priority": 0
+			},
+			"html/tasks/task_invite_to_register_xinrenxinshi.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"fonts/mui.ttf"
+				],
+				"refer": [
+					"login.html",
+					"html/tasks/share.html",
+					"html/tasks/taskregisterlist.html"
+				],
+				"priority": 0
+			},
+			"html/guide.html": {
+				"resources": [
+					"images/guide32.jpg",
+					"images/guide1.jpg",
+					"images/guide31.jpg",
+					"images/guide2.jpg",
+					"images/gu2.png",
+					"images/gu3.png",
+					"images/guidebean.png",
+					"images/guidestart.png",
+					"images/gu4.png",
+					"images/gu1.png",
+					"images/guide/引导页4.png",
+					"images/guide/4_03.png",
+					"images/guide/1_03.png",
+					"images/guide/3_03.png",
+					"images/guide/引导页8.png",
+					"images/guide/引导页5.png",
+					"images/guide/2_03.png",
+					"images/guide/引导页1.png",
+					"images/guide/引导页2.png",
+					"images/guide/引导页6.png",
+					"images/guide/引导页7.png",
+					"images/guide/引导页9.png",
+					"images/guide/navbar_01.png",
+					"images/guide/textDecoration_03.png",
+					"images/guide/guide_02.png",
+					"images/guide/navbar_04.png",
+					"images/guide/textDecoration_02.png",
+					"images/guide/textDecoration_04.png",
+					"images/guide/navbar_02.png",
+					"images/guide/guide_04.png",
+					"images/guide/textDecoration_01.png",
+					"images/guide/guide_03.png",
+					"images/guide/guide_01.png",
+					"images/guide/navbar_03.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/taskapplyparttime.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/cutheadimage.html": {
+				"resources": [
+					"css/cropper.css",
+					"js/cropper.js",
+					"js/mui.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/taskregisterlist.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/tasks/share.html"
+				],
+				"priority": 0
+			},
+			"html/binding_weixin.html": {
+				"resources": [
+					"images/binding_weinxin.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/weixinwithdraw.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/tasks/taskclientdetail.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/applypartner.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"images/60x60.gif",
+					"css/mui.min.css",
+					"images/idimage2.png",
+					"images/idimage1.png",
+					"css/style1.css",
+					"fonts/icomoon.ttf"
+				],
+				"refer": [
+					"html/cutidimage.html"
+				],
+				"priority": 0
+			},
+			"html/secondfanspage.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/firstfanslist.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/cutidimage.html": {
+				"resources": [
+					"css/cropper.css",
+					"js/cropper.js",
+					"js/mui.js",
+					"css/mydefine.css",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/provideClue.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"fonts/mui.ttf",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"js/app.js",
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"images/idimage2.png",
+					"images/idimage1.png",
+					"css/style1.css",
+					"fonts/icomoon.ttf",
+					"images/guize.png"
+				],
+				"refer": [
+					"html/cutinfoimage.html",
+					"html/tasks/share.html"
+				],
+				"priority": 0
+			},
+			"html/cutinfoimage.html": {
+				"resources": [
+					"css/cropper.css",
+					"js/cropper.js",
+					"js/mui.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/clueDetail.html": {
+				"resources": [
+					"js/mui.picker.js",
+					"js/mui.picker.min.js",
+					"js/mui.poppicker.js",
+					"js/city.data.js",
+					"css/mui.poppicker.css",
+					"css/mui.picker.min.css",
+					"css/mui.picker.css",
+					"js/city.data-3.js",
+					"js/app.js",
+					"fonts/mui.ttf",
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"css/style1.css",
+					"fonts/icomoon.ttf",
+					"images/muwu.jpg"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/about.html": {
+				"resources": [
+					"images/logo(320-320).png",
+					"css/mydefine.css",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/app.js",
+					"images/logo1.png"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/partnerdetail.html": {
+				"resources": [
+					"css/mydefine.css",
+					"js/app.js",
+					"js/jquery-3.1.1.min.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			}
+		},
+		"idle": {
+			"resources": [
+				"js/service.js",
+				"libs/easymob-webim-sdk/quickstart.md",
+				"README.md"
+			]
+		}
+	},
+	"unpackage": [
+		"README.md",
+		"libs/easymob-webim-sdk/quickstart.md"
+	],
+	"fullscreen": false
+}

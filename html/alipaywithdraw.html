@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.my-text {
+				color: #333333;
+			}
+			
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				document.getElementById('finishbutton').addEventListener('tap', function(event) {
+					var btnArray = ['否', '是'];
+					mui.confirm('\n方式：支付宝\n金额：10元\n账户：13204921892\n姓名：段睿泽', '请核对提现信息', btnArray, function(e) {
+						if(e.index == 1) {
+							var issuccess = true;
+							if(issuccess) {
+								mui.toast('提现成功\n1 个工作日内到账 ');
+							} else {
+								mui.toast('提交失败\n金额不足');
+							}
+						} else {
+
+						}
+					})
+
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;">支付宝提现</h1>
+		</header>
+
+		<div class="mui-content">
+
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label class="my-text">可用余额</label>
+					<input class="my-text" type="text" value="15.0元">
+				</div>
+				<div class="mui-input-row">
+					<label class="my-text">支付宝账号</label>
+					<input class="my-text" type="text" placeholder="请输入支付宝账号">
+				</div>
+				<div class="mui-input-row">
+					<label class="my-text">真实姓名</label>
+					<input class="my-text" type="text" placeholder="请输入提现账户姓名">
+				</div>
+				<div class="mui-input-row">
+					<label class="my-text">提现金额</label>
+					<input class="my-text" type="text" placeholder="请输入金额（最低10元）">
+				</div>
+
+			</form>
+			<div align="center" style="padding: 10px;margin-top: 20px;">
+				<button id='finishbutton' class="mui-btn mui-btn-grey mui-btn-block" style="background-color:#eeeeee;padding: 10px;text-decoration: none;color:#999999">完成</button>
+			</div>
+		</div>
+
+	</body>
+
+</html>

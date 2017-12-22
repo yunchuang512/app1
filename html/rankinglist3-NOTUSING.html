@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #FB5237;
+			}
+			
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				border-bottom: none;
+			}
+			
+			.my-span-pointrank1 {
+				background-color: #ffffff;
+				color: #FB5237;
+				font-size: 16px;
+				border-top-left-radius: 15px;
+				border-bottom-left-radius: 15px;
+				padding: 5px;
+			}
+			
+			.my-span-pointrank2 {
+				padding: 5px;
+				font-size: 16px;
+				padding: 4px;
+				border: 1px solid #ffffff;
+				border-bottom-left-radius: 15px;
+				border-top-left-radius: 15px;
+			}
+			
+			.my-span-fansrank1 {
+				background-color: #ffffff;
+				color: #FB5237;
+				font-size: 16px;
+				border-top-right-radius: 15px;
+				border-bottom-right-radius: 15px;
+				padding: 5px;
+			}
+			
+			.my-span-fansrank2 {
+				padding: 5px;
+				font-size: 16px;
+				padding: 4px;
+				border: 1px solid #ffffff;
+				border-bottom-right-radius: 15px;
+				border-top-right-radius: 15px;
+			}
+			
+			.mui-table-view-cell {
+				padding: 5px;
+			}
+			
+			.my-a-clip {
+				margin: 15px;
+				color: #FB5237;
+				font-weight: bold;
+			}
+			
+			.my-image-head {
+				margin-top: 5px;
+				height: 40px;
+				border-radius: 30px;
+			}
+			
+			.my-p-name {
+				font-size: 16px;
+				color: #999999;
+			}
+			
+			.my-span-level {
+				color: #FB5237;
+			}
+			
+			.my-image-level {
+				height: 15px;
+			}
+			
+			.my-p-point {
+				margin-top: 10px;
+				color: #FB5237;
+				font-size: 18px;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				document.getElementById('pointrank').addEventListener('tap', function(event) {
+					$("#pointrank").removeClass("my-span-pointrank2");
+					$("#pointrank").addClass("my-span-pointrank1");
+					$("#fansrank").removeClass("my-span-fansrank1");
+					$("#fansrank").addClass("my-span-fansrank2");
+					$("#pointrankcontent").css("display", "block");
+					$("#fansrankcontent").css("display", "none");
+				});
+				document.getElementById('fansrank').addEventListener('tap', function(event) {
+					$("#pointrank").removeClass("my-span-pointrank1");
+					$("#pointrank").addClass("my-span-pointrank2");
+					$("#fansrank").removeClass("my-span-fansrank2");
+					$("#fansrank").addClass("my-span-fansrank1");
+					$("#pointrankcontent").css("display", "none");
+					$("#fansrankcontent").css("display", "block");
+				});
+				document.getElementById('pointrankday').addEventListener('tap', function(event) {
+					$("#pointrankall").css("border-bottom", "none");
+					$("#pointrankday").css("border-bottom", "1px solid #FFFFFF");
+					$("#pointrankallcontent").css("display", "none");
+					$("#pointrankdaycontent").css("display", "block");
+				});
+				document.getElementById('pointrankall').addEventListener('tap', function(event) {
+					$("#pointrankday").css("border-bottom", "none");
+					$("#pointrankall").css("border-bottom", "1px solid #FFFFFF");
+					$("#pointrankdaycontent").css("display", "none");
+					$("#pointrankallcontent").css("display", "block");
+				});
+				document.getElementById('fansrankday').addEventListener('tap', function(event) {
+					$("#fansrankall").css("border-bottom", "none");
+					$("#fansrankday").css("border-bottom", "1px solid #FFFFFF");
+					$("#fansrankallcontent").css("display", "none");
+					$("#fansrankdaycontent").css("display", "block");
+				});
+				document.getElementById('fansrankall').addEventListener('tap', function(event) {
+					$("#fansrankday").css("border-bottom", "none");
+					$("#fansrankall").css("border-bottom", "1px solid #FFFFFF");
+					$("#fansrankdaycontent").css("display", "none");
+					$("#fansrankallcontent").css("display", "block");
+				});
+				/*document.getElementById('alipaywithdraw').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'alipaywithdraw.html',
+						id: 'alipaywithdraw',
+						show: {
+							duration: 400
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});*/
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FB5237;text-align: center;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;font-size: 18px;">
+				<a style="height: 45px;" >
+				<span id="pointrank" class="my-span-pointrank1" >薪豆排行</span><span id="fansrank" class="my-span-fansrank2">粉丝排行</span>				
+				</a>
+			</h>
+		</header>
+
+		<div class="mui-content" style="background-color: #FB5237;">
+			<div id="pointrankcontent" style="display: block;">	
+				<div id="pointrankdaycontent" style="margin-top: 30px;background-color: #FB5237;display: block;background-color: #ffffff;margin-left: 10px;margin-right: 10px;">
+					<div class="row">
+						<div class="col-4" style="text-align: center;margin-top: 30px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span>
+						</div>
+						<div class="col-4" style="text-align: center;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span>
+						</div>
+						<div class="col-4" style="text-align: center;margin-top: 50px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span></div>
+					</div>
+					<div style="background: #DCDCDC;height: 1px;"></div>
+					<ul class="mui-table-view" style="">
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">4</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">5</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">6</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">7</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">8</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">9</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">10</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div id="pointrankallcontent" style="margin-top: 30px;background-color: #FB5237;display: none;background-color: #ffffff;margin-left: 10px;margin-right: 10px;">
+					<div class="row">
+						<div class="col-4" style="text-align: center;margin-top: 30px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">2100</span>
+						</div>
+						<div class="col-4" style="text-align: center;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span>
+						</div>
+						<div class="col-4" style="text-align: center;margin-top: 50px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span></div>
+					</div>
+					<div style="background: #DCDCDC;height: 1px;"></div>
+					<ul class="mui-table-view" style="">
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">4</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">5</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">6</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">7</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">8</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">9</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">10</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="row" style="position: fixed;width: 100%;top: 10px;left: 0px;padding-top: 30px;background-color: #FB5237;">
+					<div class="col-6">
+						<span id="pointrankday" style="float: right;color: #ffffff;border-bottom: 1px solid #FFFFFF;">昨天</span>
+					</div>
+					<div  class="col-6">
+						<span id="pointrankall" style="float: left;color: #ffffff;">总计</span>
+					</div>
+				</div>
+				
+			</div>
+			<div id="fansrankcontent" style="display: none;">
+				<div id="fansrankdaycontent" style="margin-top: 30px;background-color: #FB5237;display: block;background-color: #ffffff;margin-left: 10px;margin-right: 10px;">
+					<div class="row">
+						<div class="col-4" style="text-align: center;margin-top: 30px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span>
+						</div>
+						<div class="col-4" style="text-align: center;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/60x60.gif" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span>
+						</div>
+						<div class="col-4" style="text-align: center;margin-top: 50px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span></div>
+					</div>
+					<div style="background: #DCDCDC;height: 1px;"></div>
+					<ul class="mui-table-view" style="">
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">4</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">5</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">6</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">7</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">8</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">9</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">10</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div id="fansrankallcontent" style="margin-top: 30px;background-color: #FB5237;display: none;background-color: #ffffff;margin-left: 10px;margin-right: 10px;">
+					<div class="row">
+						<div class="col-4" style="text-align: center;margin-top: 30px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">2100</span>
+						</div>
+						<div class="col-4" style="text-align: center;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span>
+						</div>
+						<div class="col-4" style="text-align: center;margin-top: 50px;">
+							<img src="../images/ranking.png" style="width: 30px;position: relative;top: 15px;"/>
+							<br />
+							<img src="../images/60x60.gif"  style="height: 60px;border-radius: 30px;">
+							<p>182******12</p>
+							<img src="../images/sign_in.png" style="height: 20px;"/><span style="color: #FB5237; padding: 5px;">900</span></div>
+					</div>
+					<div style="background: #DCDCDC;height: 1px;"></div>
+					<ul class="mui-table-view" style="">
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">4</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">5</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">6</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">7</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">8</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">9</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media my-li-tasklist">
+							<span class="mui-pull-left my-a-clip">10</span>
+							<img class="mui-media-object mui-pull-left my-image-head" src="../images/60x60.gif" style="">
+							<div class="mui-media-body">
+								<div class="row">
+									<div class="col-9">
+									<p class="my-p-name">小清晰</p>
+									<img class="my-image-level" src="../images/60x60.gif" /><span type="button" class="my-span-level" style="">&nbsp;&nbsp;lv.8&nbsp;&nbsp;</span>
+								</div>
+								<div class="col-3">
+									<p class="my-p-point">50</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="row" style="position: fixed;width: 100%;top: 10px;left: 0px;padding-top: 30px;background-color: #FB5237;">
+					<div class="col-6">
+						<span id="fansrankday" style="float: right;color: #ffffff;border-bottom: 1px solid #FFFFFF;">昨天</span>
+					</div>
+					<div  class="col-6">
+						<span id="fansrankall" style="float: left;color: #ffffff;">总计</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

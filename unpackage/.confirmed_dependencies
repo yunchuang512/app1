@@ -1,0 +1,207 @@
+{
+	"main.html": {
+		"resources": [
+			"css/mydefine.css",
+			"css/style1.css",
+			"js/app.js",
+			"js/jquery-3.1.1.min.js",
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"js/bootstrap.min.js",
+			"css/bootstrap.min.css",
+			"html/homepage.html",
+			"fonts/icomoon.ttf"
+		],
+		"refer": [
+			"html/fanspage.html",
+			"html/taskpage.html",
+			"html/homepage.html",
+			"html/mypage.html",
+			"html/guide.html"
+		]
+	},
+	"html/fanspage.html": {
+		"resources": [
+			"images/share_weinxin_pyq.png",
+			"images/share_weixin.png",
+			"images/share_save.png",
+			"images/roundcha.png",
+			"images/qrcode1.png",
+			"images/share_copy.png",
+			"images/fans_income.png",
+			"images/fans_number.png"
+		]
+	},
+	"html/taskpage.html": {
+		"resources": [
+			"images/60x60.gif",
+			"images/beijingguang.png",
+			"images/homepage_ranking.png",
+			"images/headline_of_make_money.png",
+			"images/gongxi.png",
+			"images/partnerbutton.png",
+			"images/homepage_new_howtomakemoney.png",
+			"images/userhead.png",
+			"images/speeding1.png",
+			"css/style1.css",
+			"js/app.js",
+			"images/discover.png",
+			"fonts/icomoon.ttf",
+			"css/mydefine.css",
+			"js/jquery-3.1.1.min.js",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"html/tasks/taskshare.html"
+		]
+	},
+	"html/homepage.html": {
+		"resources": [
+			"images/banner_03_02_02.png",
+			"images/homepage_ranking.png",
+			"images/headline_of_make_money.png",
+			"images/homepage_new_partner.png",
+			"images/beijingguang.png",
+			"images/nomessage.png",
+			"images/gongxi.png",
+			"images/partnerbutton.png",
+			"images/homepage_new_howtomakemoney.png",
+			"images/userhead.png",
+			"images/homepage_new_signin.png",
+			"images/welcome_button.png",
+			"images/homepage_new_banner.png",
+			"images/speeding1.png",
+			"css/style1.css",
+			"js/app.js",
+			"css/mydefine.css",
+			"js/jquery-3.1.1.min.js",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"html/clueDetail.html"
+		]
+	},
+	"html/mypage.html": {
+		"resources": [
+			"css/app.css",
+			"fonts/mui.ttf",
+			"images/point.png",
+			"images/level1.png",
+			"images/level5.png",
+			"images/banner_03_02_02.png"
+		],
+		"refer": [
+			"html/pointrecord.html",
+			"html/personalprofile.html",
+			"login.html"
+		]
+	},
+	"html/personalprofile.html": {
+		"resources": [
+			"js/app.js",
+			"js/mui.picker.js",
+			"js/mui.picker.min.js",
+			"fonts/mui.ttf",
+			"css/mui.picker.css",
+			"images/userhead.png",
+			"js/immersed.js",
+			"js/city.data-3.js",
+			"css/mydefine.css",
+			"js/common.js",
+			"js/jquery-3.1.1.min.js",
+			"js/mui.min.js",
+			"js/mui.poppicker.js",
+			"css/mui.min.css",
+			"css/mui.picker.min.css",
+			"css/mui.poppicker.css",
+			"js/city.data.js"
+		],
+		"refer": [
+			"html/cutheadimage.html"
+		]
+	},
+	"html/cutheadimage.html": {
+		"resources": [
+			"css/cropper.css",
+			"js/cropper.js",
+			"js/mui.js"
+		]
+	},
+	"html/guide.html": {
+		"resources": [
+			"images/guide/navbar_01.png",
+			"images/guide/textDecoration_03.png",
+			"images/guide/guide_02.png",
+			"images/guide/navbar_04.png",
+			"images/guide/textDecoration_02.png",
+			"images/guide/textDecoration_04.png",
+			"images/guidestart.png",
+			"images/guide/navbar_02.png",
+			"images/guide/guide_04.png",
+			"images/guide/textDecoration_01.png",
+			"images/guide/guide_03.png",
+			"images/guide/guide_01.png",
+			"images/guide/navbar_03.png"
+		]
+	},
+	"login.html": {
+		"resources": [
+			"css/style1.css",
+			"images/beijingguang.png",
+			"js/app.js",
+			"images/logo1.png",
+			"fonts/mui.ttf",
+			"fonts/icomoon.ttf",
+			"css/style.css",
+			"js/mui.enterfocus.js",
+			"images/welcome_button.png",
+			"css/mydefine.css",
+			"js/jquery-3.1.1.min.js",
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"images/welcome_head.png"
+		]
+	},
+	"html/tasks/taskshare.html": {
+		"resources": [
+			"fonts/mui.ttf"
+		],
+		"refer": [
+			"html/tasks/share.html"
+		]
+	},
+	"html/tasks/share.html": {
+		"resources": [
+			"images/share_weinxin_pyq.png",
+			"css/style.css",
+			"images/share_weixin.png",
+			"images/share_save.png",
+			"images/share_copy.png",
+			"css/style1.css",
+			"css/mydefine.css",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		]
+	},
+	"html/clueDetail.html": {
+		"resources": [
+			"css/style1.css",
+			"js/app.js",
+			"js/mui.picker.js",
+			"js/mui.picker.min.js",
+			"fonts/mui.ttf",
+			"css/mui.picker.css",
+			"js/city.data-3.js",
+			"css/mydefine.css",
+			"js/jquery-3.1.1.min.js",
+			"js/mui.min.js",
+			"js/mui.poppicker.js",
+			"css/mui.min.css",
+			"css/mui.picker.min.css",
+			"css/mui.poppicker.css",
+			"js/city.data.js"
+		]
+	}
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<script src="../js/app.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.mui-bar-nav~.mui-content{
+				padding-top: 0.88rem;
+			}
+		</style>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				var self = plus.webview.currentWebview();
+				console.log(self.msgId);
+				//
+				var msgtitlebox = document.getElementById('msgtitle');
+				var msgtimebox = document.getElementById('msgtime');
+				var msgcontentbox = document.getElementById('msgcontent');
+				var url = getBaseUrl() + 'index/Message/getMessageDetail';
+				console.log("url:" + url);
+				mui.ajax(url, {
+					data: {
+						phoneNumber: localStorage.phonenumber,
+						id: self.msgId
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						if(data.status == "success") {
+							console.log("success");
+							console.log(JSON.stringify(data));
+							var temp = data.data;
+							var title = "标题";
+							var abs = "";
+							switch(temp.type) {
+								case "1":
+									if(temp.result == "1") {
+										title = "线索审核通过";
+										abs = "您提交的销售线索：" + temp.firm + "，经审核已通过。" + temp.beans + "薪豆已经到账，欢迎您提供更多线索哦！"
+									} else if(temp.result == "0") {
+										title = "线索审核未通过";
+										abs = "您提交的销售线索：" + temp.firm + "，经审核未通过。原因是" + temp.reason + "。欢迎您提供其他线索赢取奖励哦！"
+									}
+									console.log("销售线索审核结果通知");
+									break;
+								case "2":
+									if(temp.result == "1") {
+										title = "销售资格审核通过";
+										abs = "您的营销合伙人申请已审核通过，恭喜您成为企赚宝营销合伙人！"
+									} else if(temp.result == "0") {
+										title = "销售资格审核未通过";
+										if (temp.reason.length > 0) {
+											abs = "非常遗憾，您的营销合伙人申请未能通过审核，原因是" + temp.reason + "。感谢您对企赚宝的关注，欢迎您通过其他任务赢取奖励哦！"
+										}
+										else {
+											abs = "非常遗憾，您的营销合伙人申请未能通过审核。感谢您对企赚宝的关注，欢迎您通过其他任务赢取奖励哦！"
+										}
+									}
+									console.log("营销合伙人申请结果通知");
+									break;
+								case "3":
+									title = "客户成交通知";
+									abs = "喜报：您所提交的销售线索：" + temp.firm + "已经成单！恭喜您获得" + temp.beans + "薪豆奖励！继续提交线索，赢取更多奖励吧！";
+									
+									console.log("成交客户审核结果通知");
+									break;
+								case "4":
+									title = "升级成功";
+									abs = "恭喜您升级成为" + temp.grade + "级用户，并获得" + temp.beans + "薪豆的升级奖励！";
+									console.log("升级成功通知");
+									break;
+								case "5":
+									title = "邀请线索提交成功";
+									abs = "恭喜您，您邀请的手机号为" + temp.phoneNumber + "的用户已经成功注册薪人薪事！销售线索提供成功，" + temp.beans + "薪豆已经到账！您还可以继续邀请，赢得更多奖励哦！"
+									console.log("邀请注册薪人薪事奖励到账");
+									break;
+								case "6":
+									title = "邀请粉丝成功";
+									abs = "恭喜您，已成功邀请" + temp.phoneNumber + "为您的粉丝，" + temp.beans + "薪豆已经到账！粉丝如果做任务，您还将持续获得奖励哦！";
+									console.log("邀请粉丝奖励到账");
+									break;
+								case "7":
+									title = "粉丝奖励到账";
+									abs = "恭喜您，通过昨天粉丝做任务，获得" + temp.beans + "薪豆！快去邀请更多粉丝，躺着也能赚钱哦！"
+									console.log("粉丝奖励到账");
+									break;
+								case "8":
+									if(temp.operate == "1") {
+										title = "平台增加薪豆";
+										abs = "平台为您增加了" + temp.beans + "薪豆，原因是" + temp.reason + "。恭喜您！"
+									} else if(temp.operate == "2") {
+										title = "平台扣除薪豆";
+										abs = "平台扣除了您" + temp.beans + "薪豆，原因是" + temp.reason + "。如有疑问请联系客服。"
+									}
+									console.log("通过后台操作了积分增减");
+									break;
+								case "9":
+									title = "提现申请被驳回";
+									if (temp.reason.length > 0) {
+										abs = "由于" + temp.reason + "，您" + temp.withdrawTime.substring(0,16) + "所提交的提现申请已被驳回，薪豆已返还。如有疑问请联系客服。";
+									} else {
+										abs = "您" + temp.withdrawTime + "所提交的提现申请已被驳回，薪豆已返还。如有疑问请联系客服。";
+									}
+									break;
+								case "10":
+									title = "提现成功";
+									abs = "恭喜您，您" + temp.withdrawTime.substring(0,16) + "所提现的" + temp.beans + "元已到账。快去赢取更多奖励吧！"
+									break;
+								case "11":
+									title = "提现失败";
+									if (temp.reason.length > 0) {
+										abs = "由于" + temp.reason + "，您" + temp.withdrawTime.substring(0,16) + "申请的提现失败，薪豆已返还。如有疑问请联系客服。"
+									} else {
+										abs = "您" + temp.withdrawTime + "申请的提现失败，薪豆已返还。如有疑问请联系客服。"
+									}
+									break;
+								default:
+									break;
+							}
+							msgcontentbox.innerText = abs;
+							msgtimebox.innerText = temp.time.substring(0,16);
+							msgtitlebox.innerText = title;
+
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log("error!");
+						console.log(JSON.stringify(xhr));
+						console.log(type);
+					}
+				});
+
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">消息详情</h1>
+		</header>
+
+		<div class="mui-content" style="padding-left: 0.42rem;padding-right: 0.42rem;background-color: #F8F8F8;">
+			<p id="msgtitle" style="text-align: center;font-size: 0.38rem;padding: 0.1rem;margin-bottom: 0;color: #333333;line-height: 0.57rem;"></p>
+			<p id="msgtime" style="text-align: center;font-size: 0.25rem;line-height: 0.38rem;"></p>
+			<div style="width: 100%; background-color: #CCCCCC;height: 0.02rem;margin-bottom: 0.21rem;"></div>
+			<p id="msgcontent" style="color: #333333;font-size: 0.25rem;line-height: 0.38rem;"></p>
+		</div>
+
+	</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+		<style>
+			html {
+				background-color: #F8F8F8;
+			}
+
+			.my-card {
+				margin: 0px;
+				border-radius: 0px;
+				box-shadow: 0 0.4px 0.1px rgba(0, 0, 0, 0);
+				;
+			}
+
+			.mui-content>.mui-card:first-child {
+				margin-top: 0px;
+			}
+
+			.my-box-new:active {
+				background-color: #DCDCDC;
+			}
+		</style>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				var articleId = -1;
+				var articleLink = '';
+				var taskId = plus.webview.currentWebview().taskId;
+				mui.init({
+					swipeBack: true, //启用右滑关闭功能
+				});
+
+				function taskreadingpageInit() {
+					var url = getBaseUrl() + 'taskmanage/DailyTaskApp/viewDailyTask?dt_id=' + taskId + '&cu_id=' + localStorage.userId;
+					console.log(url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								data = data.data;
+								//document.getElementById("status").innerText = data.status;
+								document.getElementById("articletitle").innerText = data.name;
+								//document.getElementById("stepTitle").innerText = data.task_title;
+								document.getElementById("steps").innerText = data.task_step;
+								document.getElementById("icon").src = getBaseUrl() + data.image;
+								document.getElementById("awarddescription").innerHTML = '阅读文章，立即奖励 <span style="color:#FB5237;">' + data.xindou + '</span> 薪豆';
+								articleId = data.id;
+								articleLink = data.link;
+								if (data.status == '未开始') {
+									document.getElementById("status").innerHTML = '<b style="color:#508CEE;">未开始</b>';
+								}
+								else if (data.status == '进行中') {
+									document.getElementById("status").innerHTML = '<b style="color:#FB5237;">进行中</b>';
+								}
+								else if (data.status == '已完成') {
+								}
+							} else {
+								alert(data.error_code);
+							}
+
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error!");
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+				taskreadingpageInit();
+				document.getElementById("read").addEventListener('tap', function() {
+					if(localStorage.islogin=="1"){
+					mui.openWindow({
+						url: 'task_reading.html',
+						id: 'readingPage',
+						show: {
+							duration: 300
+						},
+						waiting: {
+							autoShow: false
+						},
+						extras: {
+							taskId: taskId,
+							articleLink: articleLink
+						}
+					});}else{
+						openLoginpage2();
+					}
+				});
+
+				window.addEventListener('initpage', function(event) {
+					//获得事件参数
+					taskreadingpageInit();
+					console.log("init taskpage");
+				});
+				window.addEventListener('close', function(event) {
+					//获得事件参数
+					console.log('关闭阅读详情页面');
+					plus.webview.currentWebview().close();
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">任务详情</h1>
+		</header>
+
+		<div class="mui-content">
+			<ul class="mui-table-view" style="margin: 0px;">
+				<li class="mui-table-view-cell mui-media" style="height: 100px; padding: 0px; position: relative;">
+					<img id="icon" style="height: 40px; width: 50px; margin: 30px 10px;" src="">
+					<div class="mui-media-body" style="position: absolute; top: 25px; left: 70px; right: 60px;">
+						<div id="articletitle" style="font-size: 14px;">
+							<!--注册薪人薪事-->
+						</div>
+						<p id="awarddescription" class="mui-ellipsis" style="font-size: 13px;">
+							<!--总奖励1000薪豆，审核通过后即可获得<br/>提供的商机如果成交即可获得提成！--></br/>
+						</p>
+					</div>
+					<p id="status" style="position: absolute; top: 42px; right: 10px; font-size: 15px;">
+						<b>
+							<!--未开始-->
+						</b>
+					</p>
+				</li>
+			</ul>
+			<div class="mui-card my-card" style="margin-top: 10px;">
+				<div class="mui-card-header" style="">
+					<p id="stepTitle" style="margin-bottom: 0px;color: #333333;font-size: 14px;">
+						任务步骤
+					</p>
+				</div>
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner" style="padding: 10px 25px;">
+						<p id="steps" style="font-size: 13px; color: #333333;">
+							<!--1.点击“提供线索”填写线索-->
+						</p>
+						<p style="color: #333333; text-align: center; font-size: 13px; color: #FB5237;">分享更多好友可提升阅读率</p>
+					</div>
+				</div>
+			</div>
+
+			<p id="read" style="margin-bottom: 0px;font-size:18px;text-align: center;position: fixed;bottom: 0px;left:0px;background: #FB5237;width: 100%;color: white;padding: 10px; ">
+				阅读文章
+			</p>
+		</div>
+
+	</body>
+
+</html>

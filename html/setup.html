@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.my-p-style {
+				font-size: 0.32rem;
+				line-height: 0.48rem;
+				color: #333333;
+			}
+			
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+			
+			.mui-table-view:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-table-view:after {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-table-view-cell:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 0.02rem;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.mui-popup-button {
+				color: #FB5237;
+				font-size: 0.3rem;
+				height: 0.8rem;
+			}
+			.mui-popup-text {
+				padding: 0.2rem;
+				color: #333333;
+				font-size: 0.3rem;
+			}
+			
+			.mui-bar-nav~.mui-content{
+	            padding-top: 0.88rem;
+	        }
+		</style>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				for(var i = 0; i < localStorage.length; i++) {
+					var key = localStorage.key(i)
+					console.log(i + ">>>" + key + ">>>>" + localStorage.getItem(key));
+				}
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				var loginbutton = document.getElementById('loginbutton');
+				if(localStorage.islogin == "1") {
+					loginbutton.innerHTML = "退出登录";
+				} else {
+					loginbutton.innerHTML = "登录";
+				}
+				document.getElementById("clear").addEventListener('tap', function(event) {
+					//mui.alert("暂无缓存","提示");
+					mui.toast('暂无缓存');
+					/*window.setTimeout(function() {
+						document.getElementById("cache").innerText = "无缓存";
+						mui.toast('清除缓存成功');
+					}, 3000);*/
+				});
+				document.getElementById("about").addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'about.html',
+						id: 'about',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				document.getElementById("testpage").addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'test1.html',
+						id: 'test1',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+				loginbutton.addEventListener('tap', function(event) {
+					var islogin = localStorage.islogin;
+					if(islogin == "1") {
+						var btnArray = ['否', '是'];
+						mui.confirm('退出登录？', ' ', btnArray, function(e) {
+							if(e.index == 1) {
+								logout();
+								localStorage.islogin = "0";
+								localStorage.phonenumber = '';
+								localStorage.password = '';
+								localStorage.isPartner = 0;
+								localStorage.showPartnerResult = 0;
+								//刷新页面		
+								var homepage = plus.webview.getWebviewById('html/homepage.html');
+								mui.fire(homepage, 'initpage', {});
+								var mypage = plus.webview.getWebviewById('html/mypage.html');
+								mui.fire(mypage, 'initpage', {});
+								var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+								mui.fire(fanspage, 'initpage', {});
+								var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+								mui.fire(taskpage, 'initpage', {});
+								mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+								//设置标志
+								loginbutton.innerHTML = "登录"
+								mui.back();
+							} else {}
+						}, 'div');
+
+					} else {
+						//打开登录页
+						mui.openWindow({
+							url: '../login.html',
+							id: 'login',
+							show: {
+								duration: 200
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+						mui.later(closeself, 800);
+					}
+				});
+
+				function logout() {
+					var url = getBaseUrl() + '/user/ClientUser/logout';
+					console.log("退出登录 url:" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							//alert('登出成功！');
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+
+				function closeself() {
+					mui.currentWebview.close();
+				}
+			});
+		</script>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">设置</h1>
+		</header>
+
+		<div class="mui-content">
+			<ul class="mui-table-view mui-table-view-chevron">
+				<li id="clear" class="mui-table-view-cell mui-media">
+					<a>
+						<div class="mui-media-body">
+							<div class="my-p-style"><span>清除缓存</span></div>
+						</div>
+
+						<p id="cache" class="mui-btn" style="border: none;color: #999999;background-color: #FFFFFF;font-size: 0.32rem;line-height: 0.48rem;">
+							0M
+						</p>
+					</a>
+				</li>
+				<li id="about" class="mui-table-view-cell mui-media">
+					<a>
+						<div class="mui-media-body">
+							<p class="my-p-style">关于我们</p>
+						</div>
+					</a>
+				</li>
+				<li id="testpage" class="mui-table-view-cell mui-media" style="display: none;">
+					<a>
+						<div class="mui-media-body">
+							<p class="my-p-style">测试页面</p>
+						</div>
+					</a>
+				</li>
+
+			</ul>
+
+			<p id="loginbutton" style="margin-bottom: 0;font-size:0.36rem;text-align: center;position: fixed;bottom: 0;left:0;background-color: #ffffff;width: 100%;color:#fb5237 ;padding: 0.3rem;">
+				退出登录
+			</p>
+		</div>
+
+	</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mydefine.css">
+		<script src="../../js/mui.picker.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.picker.css" rel="stylesheet" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../../js/mui.picker.js"></script>
+		<script src="../../js/mui.poppicker.js"></script>
+		<script src="../../js/jquery-3.1.1.min.js"></script>
+		<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+
+			.mui-input-row {
+				color: #333333;
+			}
+
+			.mui-input-group:before {
+				background-color: #FFFFFF;
+			}
+
+			.paragraph {
+				line-height: 2em; //行间距（应该是2倍行间距的意思）
+				text-align: justify;
+				text-justify: inter-ideograph;
+				text-indent: 2em;
+			}
+		</style>
+		<script type="text/javascript" src="../../js/app.js" ></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				var taskId = plus.webview.currentWebview().taskId;
+				var articleLink = plus.webview.currentWebview().articleLink;
+				mui.init({
+					swipeBack: true, //启用右滑关闭功能
+				});
+
+				//点进来就算已完成，刷新任务详情页和任务列表
+				var task_reading_homepage = plus.webview.getWebviewById('readinghomepage');
+				mui.fire(task_reading_homepage, 'initpage', {});  //刷新问卷详情页
+				var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+				mui.fire(taskpage, 'initpage', {});
+				var signin = plus.webview.getWebviewById('signin');
+				mui.fire(signin, 'initpage', {});  //刷新问卷详情页
+
+				var url = getBaseUrl() + 'taskmanage/DailyTaskApp/readDailyTask?dt_id=' + taskId + '&cu_id=' + localStorage.userId;
+				console.log(url);
+				mui.ajax(url, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(data.status=='success') {
+							localStorage.readInfo = data.data;
+						}
+						else {
+							localStorage.readInfo = data.error_code;
+						}
+						console.log(localStorage.readInfo);
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log("error!");
+						console.log(JSON.stringify(xhr));
+						console.log(type);
+					}
+				});
+
+				var imageWv = plus.webview.create(articleLink, "image", {
+					position: "absolute",
+					zindex : "0",
+					top: "44px",
+					bottom: "44px",
+				});
+
+				/**
+				 * 窗口对象添加JS文件
+				 * http://www.html5plus.org/doc/zh_cn/webview.html#plus.webview.WebviewObject.appendJsFile
+				 */
+				imageWv.appendJsFile("../../js/mui.min.js");
+				imageWv.appendJsFile("../../js/downloadImage.js");
+
+
+				/**
+				 * 展示窗口
+				 * http://www.html5plus.org/doc/zh_cn/webview.html#plus.webview.WebviewObject.show
+				 */
+				imageWv.show("fade-in");
+
+				//看完文章回到上一页
+				document.getElementById('finish').addEventListener('tap', function(event) {
+					var task_reading_homepage = plus.webview.getWebviewById('readinghomepage');
+					mui.fire(task_reading_homepage, 'initpage', {});  //刷新问卷详情页
+					var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+					mui.fire(taskpage, 'initpage', {});
+					mui.fire(task_reading_homepage,"close",{});
+
+					//有可能回到签到页
+					var signin = plus.webview.getWebviewById('signin');
+					mui.fire(signin, 'initpage', {});  //刷新问卷详情页
+					mui.back();
+				});
+
+			});
+
+			function tixing(){
+				//document.getElementById('wenan').innerText = '已完成任务，获得50薪豆';
+				alert(localStorage.readInfo);
+			}
+
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">阅读文章</h1>
+		</header>
+
+		<div id="allcontent" class="mui-content" style="background-color: #FFFFFF;">
+			<!--<p id="title" style="font-size: 17px; margin-top: 20px;margin-left: 15px; margin-bottom: 25px; color: #333333; ">Saaa产品心得分享</p>
+			<div id='context' style="background-color: #FFFFFF;">
+				<p class="paragraph" id="context" style="font-size: 14px; color: #999999;"> 采用业内领先的安全散列算法，对运算过程进行高级加密，且加密操作不可逆，系统只保存加密后的结果，最大限度保证操作安全。</p>
+				<p class="paragraph" id="context" style="font-size: 14px; color: #999999;"> 采用业内领先的安全散列算法，对运算过程进行高级加密，且加密操作不可逆，系统只保存加密后的结果，最大限度保证操作安全。</p>
+				<p class="paragraph" id="context" style="font-size: 14px; color: #999999;"> 采用业内领先的安全散列算法，对运算过程进行高级加密，且加密操作不可逆，系统只保存加密后的结果，最大限度保证操作安全。</p>
+				<p class="paragraph" id="context" style="font-size: 14px; color: #999999;"> 采用业内领先的安全散列算法，对运算过程进行高级加密，且加密操作不可逆，系统只保存加密后的结果，最大限度保证操作安全。</p>
+			</div>
+			<div id="info" style="text-align: center; height: 43px; background-color: ;">
+				<p id="save" style="padding: 30px 0px; font-size: 13px; padding: 15px; color: #FB5237;">
+					已完成任务，获得50薪豆
+				</p>
+			</div>-->
+
+			<p id="wenan" style="padding:15px;font-size:13px;text-align: center;position: fixed;bottom: 30px;left:0px;background: #EEEEEE;width: 100%;color: #FB5237;"></p>
+			<p id="finish" style="margin-bottom: 0px;font-size:18px;text-align: center;position: fixed;bottom: 0px;left:0px;background: #FB5237;width: 100%;color: white;padding: 10px; height: 43px;">
+				我看完了
+			</p>
+
+		</div>
+
+	</body>
+
+</html>

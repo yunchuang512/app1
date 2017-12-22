@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/mydefine.css">
+		<link rel="stylesheet" href="../css/style1.css">
+
+		<style>
+			html,
+			body {
+				background-color: #F8F8F8;
+			}
+			
+			.mui-popup-button {
+				color: #FB5237;
+			}
+			
+			.my-p-style {
+				font-size: 0.28rem;
+				line-height: 1.3rem;
+				color: #333333;
+			}
+			
+			.mui-content>.mui-table-view:first-child {
+				margin-top: 0;
+			}
+			
+			.mui-table-view:before {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-table-view:after {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-toast-container {
+			    bottom: 40% !important;/*离布局底部的距离*/
+			}
+			
+			.mui-toast-message {
+				opacity: 0.6;
+				color: #fff;
+				width: 3.6rem;
+				align: center;
+				font-size: 0.26rem;
+				border-radius: 0.2rem;
+				padding: 0.7rem 0.4rem;
+			}
+			
+			.mui-table-view-cell.mui-media .mui-navigate-right{
+				height: 1.2rem;
+				line-height: 1.2rem;
+				padding-top: 0;
+			}
+			
+			.mui-navigate-right:after, .mui-push-left:after, .mui-push-right:after{
+				font-size: 0.24rem;
+				line-height: 0.36rem;
+			}
+		</style>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			var bindstatus = false; //绑定状态
+			document.addEventListener('plusready', function() {
+				plus.screen.lockOrientation("portrait-primary");
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				getBindingStatus();
+				document.getElementById('bankcardwithdraw').addEventListener('tap', function(event) {
+					var url = getBaseUrl() + 'user/ClientUser/marketingPartner';
+					console.log("确定是否大C" + url);
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == "success") {
+								if (data.type == 1) {  //是大C
+									mui.openWindow({
+										url: 'cardwithdraw.html',
+										id: 'cardwithdraw',
+										show: {
+											duration: 200
+										},
+										waiting: {
+											autoShow: false
+										}
+									});
+								} else {  //是小c
+									mui.toast('银行卡提现只对营销合伙人开放',{type:'div'});
+								}
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log("error!");
+							console.log(JSON.stringify(xhr) + errorThrown);
+							console.log(type);
+						}
+					});
+				});
+
+				document.getElementById('wechatwithdraw').addEventListener('tap', function(event) {
+
+					var url = '';
+					var id = '';
+
+					if(bindstatus == false) {
+						url = 'binding_weixin.html';
+						id = 'binding_weixin';
+						
+					} else {
+						url = 'weixinwithdraw.html';
+						id = 'weixinwithdraw';
+					}
+					mui.openWindow({
+						url: url,
+						id: id,
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+
+				function getBindingStatus() {
+
+					var url = getBaseUrl() + 'person/Operation/checkIfBound?phoneNumber=' + localStorage.phonenumber;
+					mui.ajax(url, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if(data.status == 'success') {
+								if(data.bound == 'true') {
+									bindstatus = true;
+								}
+								else {
+									bindstatus = false;
+								}
+
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(JSON.stringify(xhr));
+							console.log(type);
+						}
+					});
+				}
+				window.addEventListener('closeself', function(event){
+					setTimeout(function(){
+						plus.webview.currentWebview().hide();
+						plus.webview.currentWebview().close();
+					}, 1000);
+				});
+				
+				document.getElementById('record').addEventListener('tap', function(event) {
+					mui.openWindow({
+						url: 'withdrawrecord.html',
+						id: 'withdrawrecord',
+						show: {
+							duration: 200
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<header id="header" class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+			<h1 class="mui-title" style="color: #333333;font-size: 0.32rem;margin-right: 0.21rem;padding-left: 0.21rem;line-height: 0.88rem;font-weight: normal;">提现</h1>
+			<p id="record" style="color: #333333;text-align: center;font-size:0.24rem;line-height: 0.88rem;float: right;">提现记录</p>
+		</header>
+
+		<div class="mui-content" style="margin-top: 0.3rem;">
+			<ul class="mui-table-view mui-table-view-chevron">
+				<li id="wechatwithdraw" class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<img class="mui-media-object mui-pull-left" style="width: 0.4rem;height: 0.4rem;max-width: none;margin-top: 0.45rem;" src="../images/weixin.png">
+						<div class="mui-media-body">
+							<div class="my-p-style"><span>微信提现</span></div>
+						</div>
+
+						<button type="button" class="mui-btn" style="border: none;color: #fb5327;background-color: #FFFFFF;font-size: 0.24rem;line-height: 1.3rem;">
+							推荐
+						</button>
+					</a>
+				</li>
+				<li id="bankcardwithdraw" class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<!--<img class="mui-media-object mui-pull-left" src="../images/60x60.gif">-->
+						<span class="mui-media-object mui-pull-left icon-yinhangka1"
+							  style="font-size:0.36rem;line-height:1.3rem;color: dodgerblue;"></span>
+						<div class="mui-media-body">
+							<p class="my-p-style">银行卡提现</p>
+						</div>
+					</a>
+				</li>
+
+			</ul>
+		</div>
+
+	</body>
+
+</html>

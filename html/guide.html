@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<script src="../js/jquery-3.1.1.min.js"></script>
+	<script src="../js/app.js"></script>
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<style>
+		body {
+			background-color: #ffffff;
+		}
+
+		.mui-slider-indicator .mui-active.mui-indicator {
+			background-image: url(../images/guidebean.png) ;
+		}
+
+		.mui-slider-item{
+			position: relative;
+		}
+		.my-img-container{
+			margin-top: 10%;
+		}
+
+		.my-text-container{
+			height:0.4rem;
+			position: relative;
+		}
+		.my-auto-margin{
+			margin: 0 auto;
+		}
+
+		.my-text{
+			font-size: 0.4rem;
+			line-height: 0.4rem;
+			color: #fb5237;
+		}
+		.my-text-decoration{
+			width: 0.3rem!important;
+			margin-bottom: 0.2rem;
+		}
+
+		.my-nav-container{
+			position: absolute;
+			bottom: 5%;
+			left: 50%;
+			transform: translate(-50%,0);
+			-ms-transform:translate(-50%,0);
+			-moz-transform:translate(-50%,0);
+			-webkit-transform:translate(-50%,0);
+			-o-transform:translate(-50%,0);
+		}
+		.my-nav-bar{
+			width: 1.5rem!important;
+		}
+	</style>
+	<script src="../js/mui.min.js "></script>
+	<script>
+        document.addEventListener('plusready', function() {
+            plus.screen.lockOrientation("portrait-primary ");
+//				plus.navigator.setFullscreen(true);
+            localStorage.isFirst = 1;
+
+            document.getElementById("startearn").addEventListener('tap', function() {
+                plus.navigator.setFullscreen(false);
+                mui.back();
+            });
+        });
+        $(function(){
+            var deviceheight = document.body.scrollHeight;
+
+            var html = document.getElementsByTagName('html');
+            var htmlFontSize = Number(html[0].style.fontSize.replace("px", ""));
+            if(htmlFontSize > 100) {
+                htmlFontSize = 100;
+            }
+
+            var textcontainerheight = deviceheight - deviceheight*0.1 - deviceheight*0.05 - htmlFontSize*8.88
+                -htmlFontSize*0.29;
+            if(textcontainerheight >= htmlFontSize*0.4){
+                $(".my-text-container").removeClass('my-auto-margin');
+                var margintb = Math.floor((textcontainerheight - htmlFontSize*0.4)/2);
+                $(".my-text-container").css('margin',margintb + 'px auto');
+            }
+            if(textcontainerheight >= htmlFontSize*0.88){
+                $(".my-text-container").removeClass('my-auto-margin');
+                var margintb = Math.floor((textcontainerheight - htmlFontSize*0.88)/2);
+                $("#startearn").css('margin',margintb + 'px auto');
+            }
+        })
+
+	</script>
+</head>
+
+<body>
+<div id="slider" class="mui-slider mui-fullscreen">
+	<div class="mui-slider-group">
+		<div class="mui-slider-item " style="text-align: center; height: 100%;background-color: white;">
+			<section class="my-img-container">
+				<img src="../images/guide/guide_01.png" style="width: 6.5rem;">
+			</section>
+			<section class="my-text-container my-auto-margin">
+				<img class="my-text-decoration" src="../images/guide/textDecoration_01.png">
+				<span class="my-text">成为合伙人，赢取20%分红奖励</span>
+				<img class="my-text-decoration" src="../images/guide/textDecoration_02.png" >
+			</section>
+			<nav class="my-nav-container">
+				<img class="my-nav-bar" src="../images/guide/navbar_01.png">
+			</nav>
+		</div>
+		<div class="mui-slider-item " style="text-align: center; height: 100%;background-color: white;">
+			<section class="my-img-container">
+				<img src="../images/guide/guide_02.png" style="width: 6.5rem;">
+			</section>
+			<section class="my-text-container my-auto-margin">
+				<img class="my-text-decoration" src="../images/guide/textDecoration_03.png" style="margin-top: -0.4rem;">
+				<span class="my-text">发展粉丝，持续享受粉丝收益</span>
+				<img class="my-text-decoration" src="../images/guide/textDecoration_04.png" style="margin-top: -0.4rem;">
+			</section>
+			<nav class="my-nav-container">
+				<img class="my-nav-bar" src="../images/guide/navbar_02.png">
+			</nav>
+		</div>
+		<div class="mui-slider-item " style="text-align: center; height: 100%;background-color: white;">
+			<section class="my-img-container">
+				<img src="../images/guide/guide_03.png" style="width: 6.5rem;">
+			</section>
+			<section class="my-text-container my-auto-margin">
+				<img class="my-text-decoration" src="../images/guide/textDecoration_01.png">
+				<span class="my-text">完成任务，碎片时间赢取现金</span>
+				<img class="my-text-decoration" src="../images/guide/textDecoration_02.png" >
+			</section>
+			<nav class="my-nav-container">
+				<img class="my-nav-bar" src="../images/guide/navbar_03.png">
+			</nav>
+		</div>
+		<div class="mui-slider-item " style="text-align: center;height: 100%;background-color: white;">
+			<section class="my-img-container my-auto-margin">
+				<img src="../images/guide/guide_04.png" style="width: 6.5rem;">
+			</section>
+			<section class="my-text-container">
+				<img id="startearn" src="../images/guidestart.png" style="width:3rem;" />
+			</section>
+			<nav class="my-nav-container my-auto-margin">
+				<img class="my-nav-bar" src="../images/guide/navbar_04.png">
+			</nav>
+		</div>
+
+	</div>
+	<!--<div class="mui-slider-indicator ">-->
+	<!--<div class="mui-indicator mui-active "></div>-->
+	<!--<div class="mui-indicator "></div>-->
+	<!--<div class="mui-indicator "></div>-->
+	<!--<div class="mui-indicator "></div>-->
+	<!--</div>-->
+</div>
+
+</body>
+
+</html>

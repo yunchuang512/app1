@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title></title>
+	<link href="css/mui.min.css" rel="stylesheet" />
+	<link href="css/style.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/mydefine.css">
+	<link rel="stylesheet" href="css/style1.css">
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<style type="text/css">
+		.txt {
+			color: #005aa7;
+			border-bottom: 0.02rem solid #005aa7;
+			/* 下划线效果 */
+			border-top: 0;
+			border-left: 0;
+			border-right: 0;
+			background-color: transparent;
+			/* 背景色透明 */
+		}
+
+		.myicon {
+			font-size: 0.3rem;
+			line-height: 1rem;
+			color: #FB5237;
+			margin-left: 0.21rem;
+			margin-right: 0.21rem;
+		}
+
+		.mui-popup-button {
+			color: #FB5237;
+			font-size: 0.31rem;
+			height: 0.83rem;
+		}
+
+		.mui-popup-text {
+			padding: 0.21rem;
+			color: #333333;
+			font-size: 0.31rem;
+		}
+		
+		.mui-icon-clear{
+			line-height: 0.7rem;
+		}
+	</style>
+
+</head>
+
+<body style="background: #FFFFFF;">
+<header class="mui-bar mui-bar-nav" style="background-color: #FFFFFF;height: 0.88rem;border-bottom: none;">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: #333333;line-height: 0.88rem;padding: 0;margin: 0;"></a>
+</header>
+<div class="mui-content" style="background-color: #FFFFFF;">
+	<div align="center">
+		<img src="images/logo1.png" style="height:0.8rem; align: center; margin-top: 0.68rem;" />
+	</div>
+
+	<form id='login-form' style="padding-top: 1rem;width: 94%;margin: 0 auto;">
+		<div align="left" class="mui-input-row" style="border:0;border-bottom:#d5d5d5 0.02rem solid;height: 1rem;">
+			<div class="mui-icon icon-shouji myicon"></div>
+			<input id="account" class="mui-input-clear" type="tel" placeholder="请输入手机号" style="font-size:0.28rem ; line-height:0.4rem;height:0.4rem;width: 80%; border: 0.02rem solid #FFFFFF;margin-bottom: 0;padding: 0;" />
+		</div>
+		<div align="left" class="mui-input-row" style="border:0;border-bottom:#d5d5d5 0.02rem solid;height: 1rem;">
+			<div class="mui-icon icon-mima myicon"></div>
+			<input id="password" class="mui-input-clear" type="password" placeholder="请输入密码" style="font-size:0.28rem;line-height:0.4rem;height:0.4rem;border: 0.02rem solid #FFFFFF; width: 80%; margin-bottom: 0;padding: 0;">
+		</div>
+	</form>
+	<span id='forgetPassword' style="text-align:right; margin: 0;padding-right: 0.42rem; float: right; color: #999999; font-size: 0.28rem;line-height: 0.68rem;">忘记密码?</span>
+
+	<div style="width: 94%;margin: 0 auto;">
+		<button id='login' class="mui-btn mui-btn-grey mui-btn-block" style="border:none;font-size: 0.3rem; text-align: center; height:0.92rem; background-color:#eeeeee;padding: 0.21rem;text-decoration: none;color:#999999; border: 0;">登录</button>
+		<button id='register' class="mui-btn mui-btn-block mui-btn-outlined" style="font-size: 0.3rem; border: 0.02rem solid #fb5237; color:#fb5237;padding: 0.19rem">快速注册</button>
+	</div>
+</div>
+<div id='welcome_view' style="position: fixed; display: none; top: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.4); z-index: 999;">
+	<img src="images/beijingguang.png" style="height: 7.08rem; width: 100%; position: fixed; top: 0; left: 0; right: 0; margin: auto;" />
+	<div style="position: fixed; top: 4.54rem; left: 0; right: 0; height: 3.75rem; width: 5.21rem; border-radius: 0.21rem; background: #FFFFFF; margin:auto; text-align: center; z-index: 1;">
+		<img src="images/welcome_head.png" style="width: 4.02rem; position: relative; margin-top: -0.9rem;" />
+		<div style="font-size: 0.31rem; color: #FB5237; margin-top: 0.17rem;"><b>营销合伙人</b></div>
+		<div style="font-size: 0.27rem; color: #333333; margin-top: 0.21rem; line-height: 0.42rem;">您已获得 <span id="awardbean" style="color: #FB5237;" >200 </span> 薪豆，赶快成为<br />营销合伙人开始您的赚钱之旅吧！</div>
+		<img id="welcome_button" src="images/welcome_button.png" style="width: 2.71rem; margin-top: 0.29rem;" />
+	</div>
+</div>
+
+<script src="js/mui.min.js"></script>
+<script src="js/mui.enterfocus.js"></script>
+<script src="js/app.js"></script>
+<script type="text/javascript">
+    document.addEventListener('plusready', function() {
+        plus.screen.lockOrientation("portrait-primary");
+        //isLoginButtonClickable 标记登录按钮是否可点，当手机号和密码均不为空时可点，其余状态不可点
+        var isLoginButtonClickable = false;
+        //全局默认的服务器地址
+        var loginButton = document.getElementById('login');
+        var registerButton = document.getElementById('register');
+        var accountBox = document.getElementById('account');
+        var passwordBox = document.getElementById('password');
+        var forgetPasswordBox = document.getElementById('forgetPassword')
+
+        var sourceOpenerId = plus.webview.currentWebview().opener().id;
+        //监听文本框的输入事件，以判断登录按钮是否可点
+        accountBox.addEventListener('input', function() {
+            //					console.log(accountBox.value);
+            var flag = true;
+            var reg = /^\d{11}$/;
+            if((!accountBox.value) || reg.test(accountBox.value) == false) flag = false;
+            if((!passwordBox.value) || passwordBox.value.length == 0) flag = false;
+            if(flag) {
+                loginButton.style.backgroundColor = "#fb5237";
+                loginButton.style.color = "#ffffff";
+                isLoginButtonClickable = true;
+            } else {
+                loginButton.style.backgroundColor = "#eeeeee";
+                loginButton.style.color = "#999999";
+                isLoginButtonClickable = false;
+            }
+
+        });
+
+        passwordBox.addEventListener('input', function() {
+            //					console.log(passwordBox.value);
+            var flag = true;
+            var reg = /^\d{11}$/;
+            if((!accountBox.value) || reg.test(accountBox.value) == false) flag = false;
+            if((!passwordBox.value) || passwordBox.value.length == 0) flag = false;
+            if(flag) {
+                loginButton.style.backgroundColor = "#fb5237";
+                loginButton.style.color = "#ffffff";
+                isLoginButtonClickable = true;
+            } else {
+                loginButton.style.backgroundColor = "#eeeeee";
+                loginButton.style.color = "#999999";
+                isLoginButtonClickable = false;
+            }
+        });
+
+        loginButton.addEventListener('tap', function() {
+            var reg = /^\d{11}$/;
+            if(!isLoginButtonClickable) {
+                if(accountBox.value.length == 0) {
+                    plus.nativeUI.toast("请输入手机号");
+                } else if(reg.test(accountBox.value) == false) {
+                    plus.nativeUI.toast("请输入正确的手机号");
+                } else if(passwordBox.value.length == 0) {
+                    plus.nativeUI.toast("请输入密码");
+                }
+                return;
+            }
+
+            var url = getBaseUrl() + 'user/ClientUser/login';
+            console.log(url);
+            mui.ajax(url, {
+                data: {
+                    cu_phonenumber: accountBox.value,
+                    cu_password: passwordBox.value
+                },
+                dataType: 'json', //服务器返回json格式数据
+                type: 'post', //HTTP请求类型
+                timeout: 10000, //超时时间设置为10秒；
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function(data) {
+                    console.log("成功");
+                    console.log(JSON.stringify(data));
+                    if(data.status == 'success') {
+                        //登录成功，跳转到主页，若以后加了安全验证，在此处写jessionId
+                        localStorage.userId = data.cu_id;
+                        console.log(data.cu_id);
+                        localStorage.phonenumber = accountBox.value;
+                        localStorage.password = passwordBox.value;
+                        localStorage.islogin = "1";
+                        var market = parseInt(data.marketing_partner);
+                        if(market == 1 && data.isPop == '1') {
+                            localStorage.isPartner = 1;
+                        } else {
+                            localStorage.isPartner = 0;
+                        }
+
+                        mui.fire(plus.webview.getWebviewById(localStorage.mainPageId), 'changetabtext', {});
+                        var homepage = plus.webview.getWebviewById('html/homepage.html');
+                        mui.fire(homepage, 'reload', {});
+                        var mypage = plus.webview.getWebviewById('html/mypage.html');
+                        mui.fire(mypage, 'initpage', {});
+                        var fanspage = plus.webview.getWebviewById('html/fanspage.html');
+                        mui.fire(fanspage, 'initpage', {});
+                        var taskpage = plus.webview.getWebviewById('html/taskpage.html');
+                        mui.fire(taskpage, 'reload', {});
+                        mui.fire(plus.webview.getWebviewById("html/fanspage.html"), "refreshallmessagecount", {});
+
+                        if(data.is_first_login == '0') {
+                            document.getElementById("awardbean").innerHTML = data.bean;
+                            document.getElementById("welcome_view").style.display = 'block';
+                        } else {
+                            mui.back();
+                        }
+                    } else {
+                        switch(parseInt(data.error_code)) {
+                            case 1:
+                                mui.toast('该手机号尚未注册哦！');
+                                break;
+                            case 2:
+                                mui.toast('用户名或密码错误！');
+                                break;
+                            case 3:
+                                mui.toast('该账号已被停用！');
+                                break;
+                            default:
+                                break;
+                        }
+
+                    }
+                },
+                error: function(xhr, type, errorThrown) {
+                    //异常处理；
+                    //							alert(JSON.stringify(xhr));
+                    console.log(JSON.stringify(xhr));
+                    console.log(type);
+                }
+            });
+        });
+
+
+        document.getElementById("welcome_view").addEventListener('tap', function(e) {
+            var target = $(e.target);
+            if($(target).is("#welcome_view, #welcome_button")) {
+                document.getElementById("welcome_view").style.display = 'none';
+                plus.webview.currentWebview().close();
+            }
+        });
+        forgetPasswordBox.addEventListener('tap', function() {
+            mui.openWindow({
+                url: 'html/forget_password_confirm_phonenumber.html',
+                id: 'forget_password_confirm_phonenumber',
+                show: {
+                    duration: 400
+                },
+                waiting: {
+                    autoShow: false
+                },
+                extras: {
+                    sourceOpenerId: sourceOpenerId
+                }
+            });
+
+        });
+        registerButton.addEventListener('tap', function() {
+            mui.openWindow({
+                url: 'html/register_send_verify_code.html',
+                id: 'register_send_verify_code',
+                show: {
+                    duration: 200
+                },
+                waiting: {
+                    autoShow: false
+                },
+                extras: {
+                    sourceOpenerId: sourceOpenerId
+                }
+            });
+
+        });
+        window.addEventListener('close', function(event) {
+            //获得事件参数
+            var self = plus.webview.currentWebview();
+            setTimeout(function() {
+                self.hide();
+                self.close();
+            }, 1000);
+        });
+    });
+</script>
+
+</body>
+
+</html>
